@@ -1,0 +1,172 @@
+Main
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud File Access</title>
+    <style>
+        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px; }
+        
+        .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
+        .live-dot { height: 8px; width: 8px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .download-card {
+            background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative;
+        }
+
+        .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
+        .icon-svg.secure { fill: #28a745; }
+
+        .scan-line { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px; 
+            background: #28a745; box-shadow: 0 0 8px #28a745;
+            animation: scanMove 2s infinite; z-index: 10;
+        }
+        @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
+
+        .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
+        .css-check {
+            display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%;
+            position: relative; margin-left: 8px;
+        }
+        .css-check::after {
+            content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px;
+            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+
+        .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
+        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
+
+        .btn {
+            width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold;
+            color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s;
+        }
+        .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
+
+        .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
+        .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
+        .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
+        .time-stamp { color: #999; font-style: italic; }
+        .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
+
+        .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="live-status">
+    <span class="live-dot"></span> <span id="visitorCount">847</span> people are currently on this page
+</div>
+
+<div class="download-card">
+    <div class="icon-box">
+        <div id="scanLine" class="scan-line"></div>
+        <svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+        </svg>
+    </div>
+    
+    <h2 id="title" style="margin:0; font-size: 22px;">Security Protocol</h2>
+    <div class="status-text">
+        <span id="statusTxt">INITIALIZING...</span>
+        <div id="finalCheck" class="css-check"></div>
+    </div>
+    <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
+
+    <div class="loader-bg">
+        <div id="fill" class="loader-fill"></div>
+    </div>
+
+    <button id="dlBtn" class="btn" onclick="startRedirect()" disabled>PLEASE WAIT (<span id="sec">5</span>s)</button>
+</div>
+
+<div class="comments-header">
+    <span>Community Feedback</span>
+    <span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span>
+</div>
+
+<div id="commentList" class="comments"></div>
+
+<div class="footer-note">
+    <strong>Cloud Security Alliance Verified</strong><br>
+    Automated Virus Scan: COMPLETED. Encrypted Transfer: ENABLED.
+</div>
+
+<script>
+    const adLink = "https://www.effectivegatecpm.com/f50bvf7wrt?key=8c9854a0cf2df006f8c1e9b5912dec49";
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
+    const realFile = urlParams.get('file');
+
+    const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99", "Alex_Crypto", "Pavel_88", "Elena_Works", "John_D", "Sam_Bit", "Maria_G", "Chris_Dev", "SoftwareKing", "BetaTester", "LinkChecker"];
+    const uComments = ["Fast download and no issues with the file. Clean scan.", "Worked perfectly on my phone. Finally found a real link.", "High speed mirror. Security check is a nice touch.", "Downloaded and installed. 100% working as described.", "Best download gateway I've used this week. Simple.", "No malware found, checked with Norton. Good upload.", "Appreciate the fast server. Worked on first try.", "Very professional looking site. Exactly what I needed.", "I used the mirror link, very high speed. Thanks!", "Verified safe by my browser. Thanks for sharing.", "Easy to use interface. Zero issues here.", "File hash is correct. Safe to use guys!", "Quickest download I've had all day.", "Great work, keeping this link for later.", "Direct link is working fine. No redirects before timer.", "The virus scan actually caught my attention. Trusted."];
+
+    function loadFeedback() {
+        const container = document.getElementById('commentList');
+        let shuffledNames = uNames.sort(() => 0.5 - Math.random());
+        let shuffledComments = uComments.sort(() => 0.5 - Math.random());
+        for(let i=0; i < 10; i++) {
+            const mins = Math.floor(Math.random() * 50) + 2;
+            const isV = Math.random() > 0.4;
+            const b = isV ? '<span class="v-badge">VERIFIED</span>' : '';
+            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${shuffledNames[i]} ${b}</strong><span class="time-stamp">${mins}m ago</span></div>${shuffledComments[i % shuffledComments.length]}</div>`;
+        }
+    }
+    loadFeedback();
+
+    // Set Viewers to 847
+    let visitors = 847;
+    setInterval(() => {
+        visitors += Math.floor(Math.random() * 5) - 2;
+        document.getElementById('visitorCount').innerText = visitors;
+    }, 3000);
+
+    // NEW 5 SECOND TIMER LOGIC
+    let timeLeft = 5;
+    const timer = setInterval(() => {
+        timeLeft--;
+        if(timeLeft >= 0) {
+            document.getElementById('sec').innerText = timeLeft;
+            // Fills 20% every second (100 / 5 = 20)
+            document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
+            
+            if(timeLeft > 3) document.getElementById('statusTxt').innerText = "SCANNING...";
+            else if(timeLeft > 1) document.getElementById('statusTxt').innerText = "INTEGRITY CHECK...";
+            else document.getElementById('statusTxt').innerText = "SECURITY VERIFIED";
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            const btn = document.getElementById('dlBtn');
+            btn.disabled = false;
+            btn.classList.add('active');
+            btn.innerText = "DOWNLOAD NOW";
+            document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
+            document.getElementById('finalCheck').style.display = "inline-block"; 
+            document.getElementById('title').innerText = "System Secure";
+            document.getElementById('scanLine').style.display = "none";
+            
+            const icon = document.getElementById('mainIcon');
+            icon.classList.add('secure');
+            // FIXED FULL SHIELD PATH
+            icon.innerHTML = '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>';
+        }
+    }, 1000);
+
+    function startRedirect() {
+        window.open(adLink, "_blank");
+        setTimeout(() => {
+            if (realFile) { window.location.href = decodeURIComponent(realFile); }
+            else { window.location.href = adLink; }
+        }, 500);
+    }
+</script>
+</body>
+</html>
