@@ -10,7 +10,7 @@
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
         
-        /* UI Components */
+        /* UI Styles */
         .top-nav { width: 100%; background: #fff; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
@@ -38,7 +38,6 @@
 
         .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
 
-        /* Comments Section */
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
         .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -49,7 +48,6 @@
         .csa-logo { width: 24px; height: 24px; opacity: 0.7; }
         .csa-text { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Legal */
         .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
@@ -82,9 +80,7 @@
 <div id="commentList" class="comments"></div>
 
 <div class="csa-container">
-    <svg class="csa-logo" viewBox="0 0 24 24" fill="#28a745">
-        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-    </svg>
+    <svg class="csa-logo" viewBox="0 0 24 24" fill="#28a745"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
     <div class="csa-text">Fast • Secure • Encrypted</div>
 </div>
 
@@ -100,7 +96,6 @@
 
 <script>
     const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
-
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
@@ -112,10 +107,7 @@
     window.addEventListener('mousemove', (e) => {
         if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
         lastX = e.pageX; lastY = e.pageY;
-        if (movePixels > 150) {
-            humanVerified = true;
-            document.getElementById('activityLog').innerText = "Integrity verified.";
-        }
+        if (movePixels > 150) { humanVerified = true; document.getElementById('activityLog').innerText = "Integrity verified."; }
     });
     window.addEventListener('touchmove', () => { humanVerified = true; });
 
@@ -149,25 +141,28 @@
     }, 1000);
 
     function startRedirect() {
-        const isBotTrapFilled = document.getElementById('botTrap').value !== "";
-        if (isBotTrapFilled || !humanVerified) {
-            if (realFile) window.location.href = decodeURIComponent(realFile);
+        // Anti-Bot Checks
+        if (document.getElementById('botTrap').value !== "" || !humanVerified) {
+            if (realFile) window.location.replace(decodeURIComponent(realFile));
             return;
         }
 
-        window.open(adLink1, '_blank', "noopener,noreferrer");
+        // 1. Force the AD to open (This is the most trusted method)
+        const adWindow = window.open(adLink1, '_blank');
 
-        if (realFile) { 
+        // 2. Redirect the landing page to the FILE
+        if (realFile) {
+            // We use a slightly longer delay (500ms) to ensure the AD tab 
+            // is fully registered by the browser before the parent page moves.
             setTimeout(() => {
-                window.location.href = decodeURIComponent(realFile);
-            }, 400); 
+                window.location.replace(decodeURIComponent(realFile));
+            }, 500);
         }
 
+        // Visual feedback
         const btn = document.getElementById('dlBtn');
-        btn.innerText = "GATEWAY ACTIVE";
+        btn.innerText = "OPENING SECURE LINK...";
         btn.disabled = true;
-        btn.classList.remove('active');
-        btn.style.backgroundColor = "#6c757d";
     }
 </script>
 </body>
