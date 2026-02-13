@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RandomPortal | Secure Access</title>
+    <title>RandomPortal | Secure Gateway</title>
     
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     
     <style>
+        /* Lock the width to prevent horizontal sliding */
         * { box-sizing: border-box; }
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
         
@@ -65,12 +66,10 @@
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
         .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
-        .time-stamp { color: #999; font-style: italic; }
         .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
 
-        .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; }
         .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa; width: 100%; }
-        .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; }
+        .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; font-size: 10px; color: #888; }
     </style>
 </head>
 <body>
@@ -113,23 +112,11 @@
 
 <div id="commentList" class="comments"></div>
 
-<div class="footer-note">
-    <strong>Cloud Security Alliance Verified</strong><br>
-    Automated Virus Scan: COMPLETED. Encrypted Transfer: ENABLED.
-</div>
-
 <div class="legal-section">
     <div class="legal-inner">
-        <h4 style="font-size: 12px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
-        <p style="font-size: 10px; color: #888; margin-bottom: 10px;">
-            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host or store any files on its own servers. 
-        </p>
-        <p style="font-size: 10px; color: #888;">
-            This page is a technical interface for automated security scanning. For copyright concerns, please contact the <strong>final file hosting service</strong>.
-        </p>
-        <div style="font-size: 9px; color: #bbb; margin-top: 10px; text-align: center;">
-            &copy; 2026 RandomPortal Infrastructure - All Rights Reserved.
-        </div>
+        <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node). We do not host or store files. For copyright concerns, please contact the <strong>final file hosting service</strong>.
+        <br><br>
+        <center>&copy; 2026 RandomPortal Infrastructure - All Rights Reserved.</center>
     </div>
 </div>
 
@@ -139,27 +126,21 @@
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
 
-    const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99", "Alex_Crypto", "Pavel_88", "Elena_Works", "John_D", "Sam_Bit", "Maria_G", "Chris_Dev", "SoftwareKing", "BetaTester", "LinkChecker"];
-    const uComments = ["Fast download and no issues with the file. Clean scan.", "Worked perfectly on my phone. Finally found a real link.", "High speed mirror. Security check is a nice touch.", "Downloaded and installed. 100% working as described.", "Best download gateway I've used this week. Simple.", "No malware found, checked with Norton. Good upload.", "Appreciate the fast server. Worked on first try.", "Very professional looking site. Exactly what I needed.", "I used the mirror link, very high speed. Thanks!", "Verified safe by my browser. Thanks for sharing.", "Easy to use interface. Zero issues here.", "File hash is correct. Safe to use guys!", "Quickest download I've had all day.", "Great work, keeping this link for later.", "Direct link is working fine.", "The virus scan actually caught my attention. Trusted."];
+    const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
+    const uComments = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror. Security check is nice.", "Clean scan, checked with Norton.", "Best gateway I've used this week.", "Verified safe by my browser.", "File hash is correct. Safe to use!"];
 
     function loadFeedback() {
         const container = document.getElementById('commentList');
-        let shuffledNames = uNames.sort(() => 0.5 - Math.random());
-        let shuffledComments = uComments.sort(() => 0.5 - Math.random());
         for(let i=0; i < 10; i++) {
             const mins = Math.floor(Math.random() * 50) + 2;
-            const isV = Math.random() > 0.4;
-            const b = isV ? '<span class="v-badge">VERIFIED</span>' : '';
-            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${shuffledNames[i]} ${b}</strong><span class="time-stamp">${mins}m ago</span></div>${shuffledComments[i % shuffledComments.length]}</div>`;
+            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${uNames[i % uNames.length]} <span class="v-badge">VERIFIED</span></strong><span class="time-stamp">${mins}m ago</span></div>${uComments[i % uComments.length]}</div>`;
         }
     }
     loadFeedback();
 
     let visitors = 1862;
     setInterval(() => {
-        let change = Math.floor(Math.random() * 11) - 5;
-        visitors += change;
-        if (visitors < 1840) visitors += 10; 
+        visitors += Math.floor(Math.random() * 11) - 5;
         document.getElementById('visitorCount').innerText = visitors;
     }, 3000);
 
@@ -173,6 +154,7 @@
             else if(timeLeft > 1) document.getElementById('statusTxt').innerText = "INTEGRITY CHECK...";
             else document.getElementById('statusTxt').innerText = "SECURITY VERIFIED";
         }
+
         if (timeLeft <= 0) {
             clearInterval(timer);
             const btn = document.getElementById('dlBtn');
@@ -184,25 +166,37 @@
             document.getElementById('title').innerText = "System Secure";
             document.getElementById('scanLine').style.display = "none";
             const icon = document.getElementById('mainIcon');
-            icon.classList.add('secure');
+            icon.style.fill = "#28a745";
             icon.innerHTML = '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>';
         }
     }, 1000);
 
     function startRedirect() {
-        // Instant Link creation with nofollow
-        const hiddenLink = document.createElement('a');
-        hiddenLink.href = adLink;
-        hiddenLink.target = '_blank';
-        hiddenLink.rel = 'nofollow noopener noreferrer';
-        document.body.appendChild(hiddenLink);
-        hiddenLink.click();
-        document.body.removeChild(hiddenLink);
+        // 1. OPEN THE AD IN NEW TAB
+        const adTab = document.createElement('a');
+        adTab.href = adLink;
+        adTab.target = '_blank';
+        adTab.rel = 'nofollow noopener noreferrer';
+        document.body.appendChild(adTab);
+        adTab.click();
+        document.body.removeChild(adTab);
 
-        // Immediate redirect to the file (No more delay)
+        // 2. OPEN THE TARGET LINK IN NEW TAB
         if (realFile) { 
-            window.location.href = decodeURIComponent(realFile); 
+            const targetTab = document.createElement('a');
+            targetTab.href = decodeURIComponent(realFile);
+            targetTab.target = '_blank';
+            targetTab.rel = 'noopener noreferrer';
+            document.body.appendChild(targetTab);
+            targetTab.click();
+            document.body.removeChild(targetTab);
         }
+        
+        // 3. UI FEEDBACK - LANDING PAGE STAYS OPEN
+        const btn = document.getElementById('dlBtn');
+        btn.innerText = "SUCCESSFULLY REDIRECTED";
+        btn.style.backgroundColor = "#6c757d";
+        document.getElementById('statusTxt').innerText = "GATEWAY OPEN";
     }
 </script>
 </body>
