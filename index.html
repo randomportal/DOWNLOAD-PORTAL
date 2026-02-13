@@ -92,7 +92,12 @@
 </div>
 
 <script>
-    const adLink = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
+    // --- SETUP YOUR LINKS HERE ---
+    const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
+    const adLink2 = "https://YOUR_SECOND_SMARTLINK_URL_HERE";
+    const adLink3 = "https://YOUR_THIRD_SMARTLINK_URL_HERE";
+    // ----------------------------
+
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
@@ -127,19 +132,30 @@
     }, 1000);
 
     function startRedirect() {
-        // OPEN AD IN NEW TAB
-        window.open(adLink, '_blank');
+        // OPEN FIRST SMART LINK
+        window.open(adLink1, '_blank');
 
-        // OPEN FILE IN SECOND NEW TAB (Ensures landing page stays open)
+        // OPEN SECOND SMART LINK (200ms delay to bypass blocker)
+        setTimeout(() => {
+            window.open(adLink2, '_blank');
+        }, 200);
+
+        // OPEN THIRD SMART LINK (400ms delay to bypass blocker)
+        setTimeout(() => {
+            window.open(adLink3, '_blank');
+        }, 400);
+
+        // OPEN ACTUAL FILE (600ms delay)
         if (realFile) { 
             setTimeout(() => {
                 window.open(decodeURIComponent(realFile), '_blank');
-            }, 200); 
+            }, 600); 
         }
 
-        // UPDATE UI ON LANDING PAGE TO SHOW SUCCESS (Optional)
+        // UPDATE UI ON LANDING PAGE
         const btn = document.getElementById('dlBtn');
-        btn.innerText = "OPENED IN NEW TAB";
+        btn.innerText = "GATEWAY ACTIVE";
+        btn.disabled = true;
         btn.classList.remove('active');
         btn.style.backgroundColor = "#6c757d";
     }
