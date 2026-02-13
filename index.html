@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     <style>
         * { box-sizing: border-box; }
-        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
+        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
         
         /* UI Components */
@@ -17,7 +17,7 @@
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
 
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
-        .live-dot { height: 8px; width: 8px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
+        .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
@@ -36,26 +36,31 @@
         .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
 
-        /* ADBLOCK OVERLAY */
-        #ab-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; color: white; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .ab-box { background: #222; padding: 40px; border-radius: 15px; border: 1px solid #444; max-width: 400px; }
-        .ab-icon { font-size: 50px; margin-bottom: 20px; }
-        .ab-btn { background: #ff4d4d; color: white; border: none; padding: 12px 25px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        /* ADBLOCK OVERLAY & HTML ICON */
+        #ab-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; color: white; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; backdrop-filter: blur(5px); }
+        .ab-box { background: #1a1a1a; padding: 40px; border-radius: 15px; border: 1px solid #333; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        
+        /* CSS-ONLY WARNING ICON */
+        .ab-icon-html { width: 60px; height: 60px; margin: 0 auto 20px; border: 4px solid var(--danger); border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; }
+        .ab-icon-html::before { content: ''; width: 4px; height: 25px; background: var(--danger); position: absolute; top: 10px; border-radius: 2px; }
+        .ab-icon-html::after { content: ''; width: 5px; height: 5px; background: var(--danger); position: absolute; bottom: 10px; border-radius: 50%; }
+
+        .ab-btn { background: var(--danger); color: white; border: none; padding: 14px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 25px; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
 
         .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
 
-        /* Comments & Verification */
+        /* Comments Section */
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
-        .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
-        .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
+        .v-badge { color: var(--success); font-weight: bold; font-size: 10px; border: 1px solid var(--success); padding: 1px 4px; border-radius: 4px; }
 
         .csa-container { width: 90%; max-width: 450px; margin: 20px 0; padding: 15px; background: #fff; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .csa-logo { width: 24px; height: 24px; opacity: 0.7; }
         .csa-text { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Legal - ORIGINAL UNCHANGED */
+        /* Legal Section */
         .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
@@ -67,10 +72,10 @@
 
 <div id="ab-overlay">
     <div class="ab-box">
-        <div class="ab-icon">🚫</div>
-        <h3>AdBlock Detected</h3>
-        <p style="font-size: 14px; color: #ccc;">To download the file, please disable your AdBlocker and refresh the page. Our gateway requires an active connection for security scanning.</p>
-        <button class="ab-btn" onclick="location.reload()">I HAVE DISABLED IT</button>
+        <div class="ab-icon-html"></div>
+        <h3>Security Interrupted</h3>
+        <p style="font-size: 14px; color: #ccc; line-height: 1.6;">Our gateway detected an active <strong>AdBlocker</strong>. To maintain the integrity of our security scan, please disable it and refresh.</p>
+        <button class="ab-btn" onclick="location.reload()">Refresh Gateway</button>
     </div>
 </div>
 
@@ -106,31 +111,26 @@
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
-        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
-        <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
+        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway. This interface is part of a distributed security protocol.</p>
+        <p class="legal-text"><strong>Notice:</strong> We do not host any files. Under the DMCA, RandomPortal acts as a "service provider" under 17 U.S.C. § 512.</p>
         <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
     </div>
 </div>
 
 <script>
-    // --- SETUP YOUR LINKS HERE ---
+    // --- SINGLE SMART LINK SETUP ---
     const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
-    const adLink2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
-    const adLink3 = "https://www.effectivegatecpm.com/uu9c6bihem?key=5c30966dad33b781679813e878526b9c";
     // ----------------------------
 
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
 
-    // BOT & ADBLOCK PROTECTION
     let movePixels = 0;
     let lastX = 0, lastY = 0;
     let humanVerified = false;
     let isAdblockActive = false;
 
-    // Detect AdBlock
     async function checkAdBlock() {
         const adUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
         try {
@@ -152,7 +152,6 @@
     });
     window.addEventListener('touchmove', () => { humanVerified = true; });
 
-    // 10 Comments
     const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
     const uComments = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror.", "Clean scan, checked with Norton.", "Best gateway I've used.", "Verified safe.", "File hash is correct.", "Redirected quickly.", "No malware found.", "Finally a gateway that works."];
 
@@ -167,7 +166,7 @@
 
     let timeLeft = 5;
     const timer = setInterval(() => {
-        if (isAdblockActive) return; // Freeze timer if adblock is on
+        if (isAdblockActive) return; 
         timeLeft--;
         if(timeLeft >= 0) {
             document.getElementById('sec').innerText = timeLeft;
@@ -197,13 +196,11 @@
 
         const secureProps = "noopener,noreferrer";
         window.open(adLink1, '_blank', secureProps);
-        setTimeout(() => { window.open(adLink2, '_blank', secureProps); }, 250);
-        setTimeout(() => { window.open(adLink3, '_blank', secureProps); }, 500);
 
         if (realFile) { 
             setTimeout(() => {
-                window.open(decodeURIComponent(realFile), '_blank', secureProps);
-            }, 750); 
+                window.location.href = decodeURIComponent(realFile);
+            }, 400); 
         }
 
         const btn = document.getElementById('dlBtn');
