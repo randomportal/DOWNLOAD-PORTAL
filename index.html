@@ -6,7 +6,7 @@
     <title>Cloud File Access</title>
     <style>
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 0; }
         
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
         .live-dot { height: 8px; width: 8px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
@@ -55,6 +55,9 @@
         .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
 
         .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; line-height: 1.4; }
+        
+        .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa; width: 100%; box-sizing: border-box; }
+        .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -97,6 +100,21 @@
     Automated Virus Scan: COMPLETED. Encrypted Transfer: ENABLED.
 </div>
 
+<div class="legal-section">
+    <div class="legal-inner">
+        <h4 style="font-size: 12px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
+        <p style="font-size: 10px; color: #888; margin-bottom: 10px;">
+            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host, store, or upload any files on its own servers. 
+        </p>
+        <p style="font-size: 10px; color: #888;">
+            This page is a technical security interface used for automated malware scanning. If you believe your copyrighted material is being linked, please contact the <strong>final file hosting service</strong>.
+        </p>
+        <div style="font-size: 9px; color: #bbb; margin-top: 10px; text-align: center;">
+            &copy; 2026 RandomPortal Infrastructure - All Rights Reserved.
+        </div>
+    </div>
+</div>
+
 <script>
     const adLink = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
     const urlParams = new URLSearchParams(window.location.search);
@@ -104,7 +122,7 @@
     const realFile = urlParams.get('file');
 
     const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99", "Alex_Crypto", "Pavel_88", "Elena_Works", "John_D", "Sam_Bit", "Maria_G", "Chris_Dev", "SoftwareKing", "BetaTester", "LinkChecker"];
-    const uComments = ["Fast download and no issues with the file. Clean scan.", "Worked perfectly on my phone. Finally found a real link.", "High speed mirror. Security check is a nice touch.", "Downloaded and installed. 100% working as described.", "Best download gateway I've used this week. Simple.", "No malware found, checked with Norton. Good upload.", "Appreciate the fast server. Worked on first try.", "Very professional looking site. Exactly what I needed.", "I used the mirror link, very high speed. Thanks!", "Verified safe by my browser. Thanks for sharing.", "Easy to use interface. Zero issues here.", "File hash is correct. Safe to use guys!", "Quickest download I've had all day.", "Great work, keeping this link for later.", "Direct link is working fine. No redirects before timer.", "The virus scan actually caught my attention. Trusted."];
+    const uComments = ["Fast download and no issues with the file. Clean scan.", "Worked perfectly on my phone. Finally found a real link.", "High speed mirror. Security check is a nice touch.", "Downloaded and installed. 100% working as described.", "Best download gateway I've used this week. Simple.", "No malware found, checked with Norton. Good upload.", "Appreciate the fast server. Worked on first try.", "Very professional looking site. Exactly what I needed.", "I used the mirror link, very high speed. Thanks!", "Verified safe by my browser. Thanks for sharing.", "Easy to use interface. Zero issues here.", "File hash is correct. Safe to use guys!", "Quickest download I've had all day.", "Great work, keeping this link for later.", "Direct link is working fine.", "The virus scan actually caught my attention. Trusted."];
 
     function loadFeedback() {
         const container = document.getElementById('commentList');
@@ -119,20 +137,17 @@
     }
     loadFeedback();
 
-    // Set Viewers to 847
     let visitors = 847;
     setInterval(() => {
         visitors += Math.floor(Math.random() * 5) - 2;
         document.getElementById('visitorCount').innerText = visitors;
     }, 3000);
 
-    // NEW 5 SECOND TIMER LOGIC
     let timeLeft = 5;
     const timer = setInterval(() => {
         timeLeft--;
         if(timeLeft >= 0) {
             document.getElementById('sec').innerText = timeLeft;
-            // Fills 20% every second (100 / 5 = 20)
             document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
             
             if(timeLeft > 3) document.getElementById('statusTxt').innerText = "SCANNING...";
@@ -153,13 +168,20 @@
             
             const icon = document.getElementById('mainIcon');
             icon.classList.add('secure');
-            // FIXED FULL SHIELD PATH
             icon.innerHTML = '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>';
         }
     }, 1000);
 
     function startRedirect() {
-        window.open(adLink, "_blank");
+        // Create an invisible link element to handle the rel=nofollow
+        const hiddenLink = document.createElement('a');
+        hiddenLink.href = adLink;
+        hiddenLink.target = '_blank';
+        hiddenLink.rel = 'nofollow noopener noreferrer';
+        document.body.appendChild(hiddenLink);
+        hiddenLink.click();
+        document.body.removeChild(hiddenLink);
+
         setTimeout(() => {
             if (realFile) { window.location.href = decodeURIComponent(realFile); }
             else { window.location.href = adLink; }
@@ -168,19 +190,3 @@
 </script>
 </body>
 </html>
-
-
-<div style="margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa;">
-    <div style="max-width: 800px; margin: 0 auto; text-align: left; line-height: 1.5;">
-        <h4 style="font-size: 12px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
-        <p style="font-size: 10px; color: #888; margin-bottom: 10px;">
-            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host, store, or upload any files, media, or software on its own servers. All content is hosted by third-party providers. 
-        </p>
-        <p style="font-size: 10px; color: #888;">
-            This page is a technical security interface used for automated malware scanning and link encryption. If you believe your copyrighted material is being linked through this portal, please contact the <strong>final file hosting service</strong> (e.g., MediaFire, Mega, Google Drive) to request removal, as we have no control over external content.
-        </p>
-        <div style="font-size: 9px; color: #bbb; margin-top: 10px; text-align: center;">
-            &copy; 2026 RandomPortal Infrastructure - All Rights Reserved.
-        </div>
-    </div>
-</div>
