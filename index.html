@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cloud File Access</title>
     <style>
-        /* THE FIX: This prevents any element from pushing the width past the screen */
+        /* Prevents horizontal overflow/sliding */
         * { box-sizing: border-box; }
         
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
@@ -18,11 +18,10 @@
             flex-direction: column; 
             align-items: center; 
             padding-bottom: 0;
-            overflow-x: hidden; /* Extra safety: hides horizontal scroll */
+            overflow-x: hidden;
             width: 100%;
         }
         
-        /* UPDATED HEADER: Fixed width logic */
         .top-nav { 
             width: 100%; 
             background: #fff; 
@@ -34,7 +33,7 @@
             border-top: 4px solid var(--primary); 
         }
 
-        .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; }
+        .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
 
@@ -93,7 +92,7 @@
 <body>
 
 <div class="top-nav">
-    <div class="logo-text">CLOUD<span>PORTAL</span></div>
+    <div class="logo-text">RANDOM<span>PORTAL</span></div>
     <div class="server-tag">Secure Gateway v2.4</div>
 </div>
 
@@ -139,13 +138,13 @@
     <div class="legal-inner">
         <h4 style="font-size: 12px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
         <p style="font-size: 10px; color: #888; margin-bottom: 10px;">
-            <strong>CloudPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host, store, or upload any files on its own servers. 
+            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host, store, or upload any files on its own servers. 
         </p>
         <p style="font-size: 10px; color: #888;">
             This page is a technical security interface used for automated malware scanning. If you believe your copyrighted material is being linked, please contact the <strong>final file hosting service</strong>.
         </p>
         <div style="font-size: 9px; color: #bbb; margin-top: 10px; text-align: center;">
-            &copy; 2026 CloudPortal Infrastructure - All Rights Reserved.
+            &copy; 2026 RandomPortal Infrastructure - All Rights Reserved.
         </div>
     </div>
 </div>
