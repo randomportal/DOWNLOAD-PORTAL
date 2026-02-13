@@ -3,33 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cloud File Access</title>
+    <title>RandomPortal | Secure Access</title>
+    
+    <link rel="preconnect" href="https://www.effectivegatecpm.com">
+    
     <style>
-        /* Prevents horizontal overflow/sliding */
         * { box-sizing: border-box; }
-        
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
         
         body { 
             font-family: 'Segoe UI', Tahoma, Arial, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding-bottom: 0;
-            overflow-x: hidden;
-            width: 100%;
+            background: var(--bg); margin: 0; display: flex; flex-direction: column; 
+            align-items: center; overflow-x: hidden; width: 100%;
         }
         
         .top-nav { 
-            width: 100%; 
-            background: #fff; 
-            padding: 12px 20px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            width: 100%; background: #fff; padding: 12px 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; 
+            justify-content: space-between; align-items: center; 
             border-top: 4px solid var(--primary); 
         }
 
@@ -43,7 +34,7 @@
 
         .download-card {
             background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative;
+            width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center;
         }
 
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -58,14 +49,8 @@
         @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
 
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
-        .css-check {
-            display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%;
-            position: relative; margin-left: 8px;
-        }
-        .css-check::after {
-            content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px;
-            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg);
-        }
+        .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
+        .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
@@ -83,8 +68,7 @@
         .time-stamp { color: #999; font-style: italic; }
         .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
 
-        .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; line-height: 1.4; }
-        
+        .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; }
         .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; }
     </style>
@@ -138,10 +122,10 @@
     <div class="legal-inner">
         <h4 style="font-size: 12px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
         <p style="font-size: 10px; color: #888; margin-bottom: 10px;">
-            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host, store, or upload any files on its own servers. 
+            <strong>RandomPortal</strong> operates as a neutral transit gateway (Mirror Node) and does not host or store any files on its own servers. 
         </p>
         <p style="font-size: 10px; color: #888;">
-            This page is a technical security interface used for automated malware scanning. If you believe your copyrighted material is being linked, please contact the <strong>final file hosting service</strong>.
+            This page is a technical interface for automated security scanning. For copyright concerns, please contact the <strong>final file hosting service</strong>.
         </p>
         <div style="font-size: 9px; color: #bbb; margin-top: 10px; text-align: center;">
             &copy; 2026 RandomPortal Infrastructure - All Rights Reserved.
@@ -185,12 +169,10 @@
         if(timeLeft >= 0) {
             document.getElementById('sec').innerText = timeLeft;
             document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
-            
             if(timeLeft > 3) document.getElementById('statusTxt').innerText = "SCANNING...";
             else if(timeLeft > 1) document.getElementById('statusTxt').innerText = "INTEGRITY CHECK...";
             else document.getElementById('statusTxt').innerText = "SECURITY VERIFIED";
         }
-
         if (timeLeft <= 0) {
             clearInterval(timer);
             const btn = document.getElementById('dlBtn');
@@ -201,7 +183,6 @@
             document.getElementById('finalCheck').style.display = "inline-block"; 
             document.getElementById('title').innerText = "System Secure";
             document.getElementById('scanLine').style.display = "none";
-            
             const icon = document.getElementById('mainIcon');
             icon.classList.add('secure');
             icon.innerHTML = '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>';
@@ -209,6 +190,7 @@
     }, 1000);
 
     function startRedirect() {
+        // Instant Link creation with nofollow
         const hiddenLink = document.createElement('a');
         hiddenLink.href = adLink;
         hiddenLink.target = '_blank';
@@ -217,10 +199,10 @@
         hiddenLink.click();
         document.body.removeChild(hiddenLink);
 
-        setTimeout(() => {
-            if (realFile) { window.location.href = decodeURIComponent(realFile); }
-            else { window.location.href = adLink; }
-        }, 500);
+        // Immediate redirect to the file (No more delay)
+        if (realFile) { 
+            window.location.href = decodeURIComponent(realFile); 
+        }
     }
 </script>
 </body>
