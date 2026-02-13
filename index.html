@@ -131,28 +131,32 @@
         }
     }, 1000);
 
+    // SECURE REDIRECT FUNCTION (Nofollow alternative)
     function startRedirect() {
-        // OPEN FIRST AD
-        window.open(adLink1, '_blank');
+        // We use "noopener,noreferrer" which works similarly to nofollow for JS-opened windows
+        const secureProps = "noopener,noreferrer";
 
-        // OPEN SECOND AD (Staggered to prevent browser block)
+        // OPEN FIRST SMART LINK
+        window.open(adLink1, '_blank', secureProps);
+
+        // OPEN SECOND SMART LINK
         setTimeout(() => {
-            window.open(adLink2, '_blank');
+            window.open(adLink2, '_blank', secureProps);
         }, 250);
 
-        // OPEN THIRD AD
+        // OPEN THIRD SMART LINK
         setTimeout(() => {
-            window.open(adLink3, '_blank');
+            window.open(adLink3, '_blank', secureProps);
         }, 500);
 
-        // OPEN FILE IF EXISTS
+        // OPEN ACTUAL FILE
         if (realFile) { 
             setTimeout(() => {
-                window.open(decodeURIComponent(realFile), '_blank');
+                window.open(decodeURIComponent(realFile), '_blank', secureProps);
             }, 750); 
         }
 
-        // UPDATE BUTTON STATE
+        // UPDATE UI
         const btn = document.getElementById('dlBtn');
         btn.innerText = "GATEWAY ACTIVE";
         btn.disabled = true;
