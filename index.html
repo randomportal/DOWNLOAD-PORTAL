@@ -36,14 +36,6 @@
         .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
 
-        /* ADBLOCK OVERLAY & HTML ICON */
-        #ab-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; color: white; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; backdrop-filter: blur(5px); }
-        .ab-box { background: #1a1a1a; padding: 40px; border-radius: 15px; border: 1px solid #333; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .ab-icon-html { width: 60px; height: 60px; margin: 0 auto 20px; border: 4px solid var(--danger); border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; }
-        .ab-icon-html::before { content: ''; width: 4px; height: 25px; background: var(--danger); position: absolute; top: 10px; border-radius: 2px; }
-        .ab-icon-html::after { content: ''; width: 5px; height: 5px; background: var(--danger); position: absolute; bottom: 10px; border-radius: 50%; }
-        .ab-btn { background: var(--danger); color: white; border: none; padding: 14px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 25px; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
-
         .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
 
         /* Comments Section */
@@ -57,7 +49,7 @@
         .csa-logo { width: 24px; height: 24px; opacity: 0.7; }
         .csa-text { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Legal - ORIGINAL RESTORED */
+        /* Legal */
         .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
@@ -66,15 +58,6 @@
     </style>
 </head>
 <body>
-
-<div id="ab-overlay">
-    <div class="ab-box">
-        <div class="ab-icon-html"></div>
-        <h3>Security Interrupted</h3>
-        <p style="font-size: 14px; color: #ccc; line-height: 1.6;">Our gateway detected an active <strong>AdBlocker</strong>. To maintain the integrity of our security scan, please disable it and refresh.</p>
-        <button class="ab-btn" onclick="location.reload()">Refresh Gateway</button>
-    </div>
-</div>
 
 <div class="hp-field"><input type="text" id="botTrap" value=""></div>
 
@@ -116,9 +99,7 @@
 </div>
 
 <script>
-    // --- SINGLE SMART LINK SETUP ---
     const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
-    // ----------------------------
 
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
@@ -127,18 +108,6 @@
     let movePixels = 0;
     let lastX = 0, lastY = 0;
     let humanVerified = false;
-    let isAdblockActive = false;
-
-    async function checkAdBlock() {
-        const adUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-        try {
-            await fetch(new Request(adUrl), { mode: 'no-cors' });
-        } catch (e) {
-            isAdblockActive = true;
-            document.getElementById('ab-overlay').style.display = 'flex';
-        }
-    }
-    checkAdBlock();
 
     window.addEventListener('mousemove', (e) => {
         if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
@@ -164,7 +133,6 @@
 
     let timeLeft = 5;
     const timer = setInterval(() => {
-        if (isAdblockActive) return; 
         timeLeft--;
         if(timeLeft >= 0) {
             document.getElementById('sec').innerText = timeLeft;
@@ -181,19 +149,13 @@
     }, 1000);
 
     function startRedirect() {
-        if (isAdblockActive) {
-            document.getElementById('ab-overlay').style.display = 'flex';
-            return;
-        }
-
         const isBotTrapFilled = document.getElementById('botTrap').value !== "";
         if (isBotTrapFilled || !humanVerified) {
             if (realFile) window.location.href = decodeURIComponent(realFile);
             return;
         }
 
-        const secureProps = "noopener,noreferrer";
-        window.open(adLink1, '_blank', secureProps);
+        window.open(adLink1, '_blank', "noopener,noreferrer");
 
         if (realFile) { 
             setTimeout(() => {
