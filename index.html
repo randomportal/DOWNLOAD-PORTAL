@@ -105,7 +105,7 @@
     window.addEventListener('mousemove', (e) => {
         if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
         lastX = e.pageX; lastY = e.pageY;
-        if (movePixels > 120) { humanVerified = true; document.getElementById('activityLog').innerText = "Integrity verified."; }
+        if (movePixels > 100) { humanVerified = true; document.getElementById('activityLog').innerText = "Integrity verified."; }
     });
     window.addEventListener('touchmove', () => { humanVerified = true; });
 
@@ -138,20 +138,20 @@
     }, 1000);
 
     function startRedirect() {
-        // Anti-Bot: Only show ads to humans
         if (document.getElementById('botTrap').value !== "" || !humanVerified) {
             if (realFile) window.location.href = decodeURIComponent(realFile);
             return;
         }
 
-        // 1. OPEN AD (In new tab)
-        window.open(adLink1, '_blank');
+        // Optimized Ad Trigger with Security Parameters (JS version of nofollow/noopener)
+        const adWindow = window.open(adLink1, '_blank', 'noopener,noreferrer');
+        if (adWindow) { adWindow.focus(); }
 
-        // 2. FILE REDIRECT (In same tab, .href preserves back button)
+        // Delayed file redirect to ensure ad initializes
         if (realFile) {
             setTimeout(() => {
                 window.location.href = decodeURIComponent(realFile);
-            }, 450); 
+            }, 600); 
         }
 
         const btn = document.getElementById('dlBtn');
