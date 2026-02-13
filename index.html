@@ -63,7 +63,7 @@
 <body>
 
 <div class="live-status">
-    <span class="live-dot"></span> <span id="visitorCount">1863</span> people are currently on this page
+    <span class="live-dot"></span> <span id="visitorCount">1862</span> people are currently on this page
 </div>
 
 <div class="download-card">
@@ -137,9 +137,16 @@
     }
     loadFeedback();
 
-    let visitors = 847;
+    // UPDATED VIEWER LOGIC
+    let visitors = 1862;
     setInterval(() => {
-        visitors += Math.floor(Math.random() * 5) - 2;
+        // Generates a random change between -5 and +5
+        let change = Math.floor(Math.random() * 11) - 5;
+        visitors += change;
+        
+        // Safety: Don't let it drop too far below your target
+        if (visitors < 1840) visitors += 10; 
+        
         document.getElementById('visitorCount').innerText = visitors;
     }, 3000);
 
@@ -173,7 +180,6 @@
     }, 1000);
 
     function startRedirect() {
-        // Create an invisible link element to handle the rel=nofollow
         const hiddenLink = document.createElement('a');
         hiddenLink.href = adLink;
         hiddenLink.target = '_blank';
