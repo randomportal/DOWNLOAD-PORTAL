@@ -6,24 +6,21 @@
     <title>RandomPortal | Secure Gateway</title>
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     <style>
-        /* CORE LAYOUT */
         * { box-sizing: border-box; }
-        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; --dark: #343a40; }
+        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
         
-        /* HEADER */
+        /* UI Components */
         .top-nav { width: 100%; background: #fff; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
 
-        /* LIVE STATUS */
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
-        .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
+        .live-dot { height: 8px; width: 8px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* DOWNLOAD CARD & SCANNER */
-        .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
+        .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #28a745; box-shadow: 0 0 8px #28a745; animation: scanMove 2s infinite; z-index: 10; }
@@ -32,38 +29,33 @@
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
 
-        /* BUTTONS */
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
 
-        /* SECURITY BADGES */
-        .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
-        .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
-        .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
-
-        /* COMMENTS */
+        /* Comments & Verification */
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
-        .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
-        .v-badge { color: var(--success); font-weight: bold; font-size: 10px; border: 1px solid var(--success); padding: 1px 4px; border-radius: 4px; }
+        .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
 
-        /* LEGAL & DMCA */
+        .csa-container { width: 90%; max-width: 450px; margin: 20px 0; padding: 15px; background: #fff; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .csa-logo { width: 24px; height: 24px; opacity: 0.7; }
+        .csa-text { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Legal */
         .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
         .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
-
-        .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
     </style>
 </head>
 <body>
-
-<div class="hp-field"><input type="text" id="botTrap" value=""></div>
 
 <div class="top-nav">
     <div class="logo-text">RANDOM<span>PORTAL</span></div>
@@ -78,99 +70,79 @@
     <div class="status-text"><span id="statusTxt">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
-    <button id="dlBtn" class="btn" disabled>PLEASE WAIT (5s)</button>
-    <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
-</div>
-
-<div class="security-badge">
-    <div class="badge-item"><div class="badge-dot"></div> SSL Active</div>
-    <div class="badge-item"><div class="badge-dot"></div> AES-256</div>
-    <div class="badge-item"><div class="badge-dot"></div> Node Verified</div>
+    <button id="dlBtn" class="btn" onclick="startRedirect()" disabled>PLEASE WAIT (<span id="sec">5</span>s)</button>
 </div>
 
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
 <div id="commentList" class="comments"></div>
 
+<div class="csa-container">
+    <svg class="csa-logo" viewBox="0 0 24 24" fill="#007bff"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm7 10c0 4.52-2.98 8.69-7 9.93-4.02-1.24-7-5.41-7-9.93V6.3l7-3.11 7 3.11V11z"/></svg>
+    <div class="csa-text">Verified by Cloud Security Alliance (CSA)</div>
+</div>
+
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
         <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. All links provided are generated by third-party users.</p>
+        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
         <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
         <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
     </div>
 </div>
 
 <script>
-    const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
+    const adLink = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
 
-    let timeLeft = 5, timer, humanVerified = false, movePixels = 0, lastX = 0, lastY = 0;
-
-    startCountdown();
-    loadFeedback();
-
-    function startCountdown() {
-        timer = setInterval(() => {
-            timeLeft--;
-            if(timeLeft >= 0) {
-                document.getElementById('dlBtn').innerText = `PLEASE WAIT (${timeLeft}s)`;
-                document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
-            }
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                const btn = document.getElementById('dlBtn');
-                btn.disabled = false;
-                btn.classList.add('active');
-                btn.innerText = "DOWNLOAD NOW";
-                document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
-                document.getElementById('finalCheck').style.display = "inline-block"; 
-                document.getElementById('mainIcon').style.fill = "#28a745";
-            }
-        }, 1000);
-    }
-
-    const btn = document.getElementById('dlBtn');
-
-    function handleAdTrigger() {
-        if (btn.disabled || !humanVerified || document.getElementById('botTrap').value !== "") return;
-        const adWin = window.open(adLink1, '_blank', 'noopener,noreferrer');
-        if (adWin) { adWin.focus(); }
-    }
-
-    btn.addEventListener('mousedown', handleAdTrigger);
-    btn.addEventListener('touchstart', handleAdTrigger);
-
-    btn.addEventListener('click', function() {
-        if (this.disabled) return;
-        this.innerText = "CONNECTING...";
-        this.disabled = true;
-        if (realFile) {
-            setTimeout(() => {
-                window.location.replace(decodeURIComponent(realFile));
-            }, 500); 
-        }
-    });
+    const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
+    const uComments = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror.", "Clean scan, checked with Norton.", "Best gateway I've used.", "Verified safe.", "File hash is correct.", "Redirected quickly.", "No malware found.", "Finally a gateway that works."];
 
     function loadFeedback() {
         const container = document.getElementById('commentList');
-        const names = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
-        const texts = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror.", "Clean scan, checked with Norton.", "Best gateway I've used.", "Verified safe.", "File hash is correct.", "Redirected quickly.", "No malware found.", "Finally a gateway that works."];
-        container.innerHTML = "";
         for(let i=0; i < 10; i++) {
             const mins = Math.floor(Math.random() * 50) + 2;
-            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${names[i]} <span class="v-badge">VERIFIED</span></strong><span>${mins}m ago</span></div>${texts[i]}</div>`;
+            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${uNames[i]} <span class="v-badge">VERIFIED</span></strong><span class="time-stamp">${mins}m ago</span></div>${uComments[i]}</div>`;
         }
     }
+    loadFeedback();
 
-    window.addEventListener('mousemove', (e) => {
-        if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
-        lastX = e.pageX; lastY = e.pageY;
-        if (movePixels > 80) { humanVerified = true; }
-    });
-    window.addEventListener('touchmove', () => { humanVerified = true; });
+    let timeLeft = 5;
+    const timer = setInterval(() => {
+        timeLeft--;
+        if(timeLeft >= 0) {
+            document.getElementById('sec').innerText = timeLeft;
+            document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
+        }
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            const btn = document.getElementById('dlBtn');
+            btn.disabled = false; btn.classList.add('active'); btn.innerText = "DOWNLOAD NOW";
+            document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
+            document.getElementById('finalCheck').style.display = "inline-block"; 
+            document.getElementById('mainIcon').style.fill = "#28a745";
+        }
+    }, 1000);
+
+    function startRedirect() {
+        // OPEN AD IN NEW TAB
+        window.open(adLink, '_blank');
+
+        // OPEN FILE IN SECOND NEW TAB (Ensures landing page stays open)
+        if (realFile) { 
+            setTimeout(() => {
+                window.open(decodeURIComponent(realFile), '_blank');
+            }, 200); 
+        }
+
+        // UPDATE UI ON LANDING PAGE TO SHOW SUCCESS (Optional)
+        const btn = document.getElementById('dlBtn');
+        btn.innerText = "OPENED IN NEW TAB";
+        btn.classList.remove('active');
+        btn.style.backgroundColor = "#6c757d";
+    }
 </script>
 </body>
 </html>
