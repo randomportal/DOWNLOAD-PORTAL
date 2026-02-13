@@ -22,7 +22,7 @@
         .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* DOWNLOAD CARD & SCANNER */
+        /* DOWNLOAD CARD */
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
@@ -94,8 +94,8 @@
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
-        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway. This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text">Under the DMCA, RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
+        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
+        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. Under the DMCA, RandomPortal acts as a "service provider" under 17 U.S.C. § 512.</p>
         <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
     </div>
 </div>
@@ -110,7 +110,7 @@
 
     document.getElementById('fileName').innerText = fileNameParam;
 
-    let timeLeft = 5, timer, humanVerified = false, movePixels = 0, lastX = 0, lastY = 0;
+    let timeLeft = 5, timer;
 
     startCountdown();
     loadFeedback();
@@ -137,31 +137,25 @@
 
     const btn = document.getElementById('dlBtn');
 
-    // Trigger Ad on Interaction
-    function handleAdTrigger() {
-        if (btn.disabled || document.getElementById('botTrap').value !== "") return;
-        const adWin = window.open(adLink1, '_blank', 'noopener,noreferrer');
-        if (adWin) { adWin.focus(); }
-    }
-
-    btn.addEventListener('mousedown', handleAdTrigger);
-    btn.addEventListener('touchstart', handleAdTrigger);
-
-    // Trigger File Download
+    // REPAIRED REDIRECT LOGIC
     btn.addEventListener('click', function() {
         if (this.disabled) return;
         
+        // 1. OPEN THE AD IMMEDIATELY
+        const adWin = window.open(adLink1, '_blank', 'noopener,noreferrer');
+        if (adWin) { adWin.focus(); }
+
+        // 2. SHOW CONNECTING STATUS
         this.innerText = "CONNECTING...";
         this.disabled = true;
 
+        // 3. EXECUTE REDIRECT AFTER 500MS NO MATTER WHAT
         if (realFile) {
             setTimeout(() => {
-                // Ensure the URL is decoded properly
                 window.location.replace(decodeURIComponent(realFile));
             }, 500); 
         } else {
-            console.error("Error: 'file' parameter is missing from URL.");
-            alert("Download link expired or invalid. Please refresh.");
+            alert("Download link error. Please ensure the URL ends with ?file=YOUR_URL");
         }
     });
 
@@ -175,14 +169,6 @@
             container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${names[i]} <span class="v-badge">VERIFIED</span></strong><span>${mins}m ago</span></div>${texts[i]}</div>`;
         }
     }
-
-    // Capture movements to prove human
-    window.addEventListener('mousemove', (e) => {
-        if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
-        lastX = e.pageX; lastY = e.pageY;
-        if (movePixels > 30) { humanVerified = true; } // Reduced from 80 to 30
-    });
-    window.addEventListener('touchmove', () => { humanVerified = true; });
 </script>
 </body>
 </html>
