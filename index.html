@@ -2,14 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cloud File Access</title>
     <style>
-        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 0; }
+        /* THE FIX: This prevents any element from pushing the width past the screen */
+        * { box-sizing: border-box; }
         
-        /* NEW TOP HEADER DESIGN */
-        .top-nav { width: 100%; background: #fff; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; border-top: 4px solid var(--primary); }
+        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-bottom: 0;
+            overflow-x: hidden; /* Extra safety: hides horizontal scroll */
+            width: 100%;
+        }
+        
+        /* UPDATED HEADER: Fixed width logic */
+        .top-nav { 
+            width: 100%; 
+            background: #fff; 
+            padding: 12px 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-top: 4px solid var(--primary); 
+        }
+
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; }
         .logo-text span { color: var(--primary); }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
@@ -62,7 +86,7 @@
 
         .footer-note { width: 90%; max-width: 450px; margin-top: 20px; font-size: 11px; color: #999; text-align: center; line-height: 1.4; }
         
-        .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa; width: 100%; box-sizing: border-box; }
+        .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; font-family: sans-serif; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; }
     </style>
 </head>
