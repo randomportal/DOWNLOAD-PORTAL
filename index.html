@@ -71,7 +71,7 @@
     <div class="status-text"><span id="statusTxt">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
-    <button id="dlBtn" class="btn" onclick="startRedirect()" disabled>PLEASE WAIT (<span id="sec">5</span>s)</button>
+    <button id="dlBtn" class="btn" disabled>PLEASE WAIT (5s)</button>
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
 </div>
 
@@ -100,39 +100,17 @@
     document.getElementById('fileName').innerText = urlParams.get('n') || "secure_access_file.zip";
     const realFile = urlParams.get('file');
 
-    let timeLeft, timer, humanVerified = false, movePixels = 0, lastX = 0, lastY = 0;
+    let timeLeft = 5, timer, humanVerified = false, movePixels = 0, lastX = 0, lastY = 0;
 
-    // --- RESET LOGIC FOR BACK BUTTON ---
-    window.addEventListener('pageshow', (event) => {
-        resetTimer();
-        loadFeedback(); // Reload comments to ensure UI is fresh
-    });
-
-    function resetTimer() {
-        clearInterval(timer);
-        timeLeft = 5;
-        humanVerified = false;
-        movePixels = 0;
-        
-        const btn = document.getElementById('dlBtn');
-        btn.disabled = true;
-        btn.classList.remove('active');
-        btn.innerHTML = 'PLEASE WAIT (<span id="sec">5</span>s)';
-        
-        document.getElementById('fill').style.width = "0%";
-        document.getElementById('statusTxt').innerText = "INITIALIZING...";
-        document.getElementById('finalCheck').style.display = "none";
-        document.getElementById('mainIcon').style.fill = "#007bff";
-        document.getElementById('activityLog').innerText = "Waiting for user verification...";
-
-        startCountdown();
-    }
+    // Start timer on load
+    startCountdown();
+    loadFeedback();
 
     function startCountdown() {
         timer = setInterval(() => {
             timeLeft--;
             if(timeLeft >= 0) {
-                document.getElementById('sec').innerText = timeLeft;
+                document.getElementById('dlBtn').innerText = `PLEASE WAIT (${timeLeft}s)`;
                 document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
             }
             if (timeLeft <= 0) {
@@ -148,6 +126,31 @@
         }, 1000);
     }
 
+    document.getElementById('dlBtn').addEventListener('click', function() {
+        if (this.disabled) return;
+        
+        if (document.getElementById('botTrap').value !== "" || !humanVerified) {
+            if (realFile) window.location.replace(decodeURIComponent(realFile));
+            return;
+        }
+
+        // 1. OPEN AD
+        const adWin = window.open(adLink1, '_blank', 'noopener,noreferrer');
+        if (adWin) { adWin.focus(); }
+
+        // 2. FILE REDIRECT (REPLACE HISTORY)
+        // replace() deletes the landing page from the browser's back-history.
+        if (realFile) {
+            setTimeout(() => {
+                window.location.replace(decodeURIComponent(realFile));
+            }, 800);
+        }
+
+        this.innerText = "CONNECTING...";
+        this.disabled = true;
+    });
+
+    // Verification Logic
     window.addEventListener('mousemove', (e) => {
         if (lastX !== 0) movePixels += Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY);
         lastX = e.pageX; lastY = e.pageY;
@@ -160,36 +163,12 @@
 
     function loadFeedback() {
         const container = document.getElementById('commentList');
-        container.innerHTML = ""; // Clear old comments
-        const names = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
-        const texts = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror.", "Clean scan, checked with Norton.", "Best gateway I've used.", "Verified safe.", "File hash is correct.", "Redirected quickly.", "No malware found.", "Finally a gateway that works."];
-        for(let i=0; i < 10; i++) {
+        const names = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3"];
+        const texts = ["Fast download.", "Perfect on mobile.", "High speed.", "Clean scan.", "Verified safe."];
+        for(let i=0; i < 5; i++) {
             const mins = Math.floor(Math.random() * 50) + 2;
             container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${names[i]} <span class="v-badge">VERIFIED</span></strong><span>${mins}m ago</span></div>${texts[i]}</div>`;
         }
-    }
-
-    function startRedirect() {
-        if (document.getElementById('botTrap').value !== "" || !humanVerified) {
-            if (realFile) window.location.href = decodeURIComponent(realFile);
-            return;
-        }
-
-        // Open Ad with privacy parameters
-        const adWindow = window.open(adLink1, '_blank', 'noopener,noreferrer');
-        if (adWindow) { adWindow.focus(); }
-
-        // Trigger file download/redirect
-        if (realFile) {
-            setTimeout(() => {
-                window.location.href = decodeURIComponent(realFile);
-            }, 600); 
-        }
-
-        const btn = document.getElementById('dlBtn');
-        btn.innerText = "OPENING SECURE LINK...";
-        btn.disabled = true;
-        btn.classList.remove('active');
     }
 </script>
 </body>
