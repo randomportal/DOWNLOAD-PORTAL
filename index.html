@@ -10,42 +10,47 @@
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
         
-        /* Nav & Status */
         .top-nav { width: 100%; background: #fff; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
         .live-dot { height: 8px; width: 8px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* Main Card */
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #28a745; box-shadow: 0 0 8px #28a745; animation: scanMove 2s infinite; z-index: 10; }
         @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
+
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
+
         .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
 
-        /* Comments & CSA Badge */
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
         .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
         .v-badge { color: #28a745; font-weight: bold; font-size: 10px; border: 1px solid #28a745; padding: 1px 4px; border-radius: 4px; }
-        
+
         .csa-container { width: 90%; max-width: 450px; margin: 20px 0; padding: 15px; background: #fff; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .csa-logo { width: 30px; height: 30px; opacity: 0.7; }
+        .csa-logo { width: 24px; height: 24px; opacity: 0.7; }
         .csa-text { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Legal */
-        .legal-section { margin-top: 50px; padding: 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
-        .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; line-height: 1.5; font-size: 10px; color: #888; }
+        /* LEGAL SECTION */
+        .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
+        .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
+        .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
+        .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
+        .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -58,7 +63,10 @@
 <div class="live-status"><span class="live-dot"></span> <span id="visitorCount">1862</span> active node connections</div>
 
 <div class="download-card">
-    <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
+    <div class="icon-box">
+        <div id="scanLine" class="scan-line"></div>
+        <svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+    </div>
     <h2 id="title" style="margin:0; font-size: 22px;">Security Protocol</h2>
     <div class="status-text"><span id="statusTxt">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
@@ -76,9 +84,11 @@
 
 <div class="legal-section">
     <div class="legal-inner">
-        <h4 style="font-size: 11px; color: #555; margin-bottom: 5px;">Legal Disclaimer & DMCA</h4>
-        <p><strong>RandomPortal</strong> is an automated transit gateway. We do not host files. All links are user-generated. For copyright, contact the final host. Under DMCA 17 U.S.C. § 512.</p>
-        <center style="font-size: 9px; margin-top: 10px;">&copy; 2026 RandomPortal Infrastructure</center>
+        <h4>Legal Disclaimer & DMCA</h4>
+        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
+        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
+        <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway. For takedown requests, please contact the final host.</p>
+        <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
     </div>
 </div>
 
@@ -89,10 +99,13 @@
     const realFile = urlParams.get('file');
 
     const uNames = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882"];
+    const uComments = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror. Security check is nice.", "Clean scan, checked with Norton.", "Best gateway I've used this week.", "Verified safe by my browser."];
+
     function loadFeedback() {
         const container = document.getElementById('commentList');
         for(let i=0; i < 6; i++) {
-            container.innerHTML += `<div class="comment"><strong>${uNames[i % uNames.length]} <span class="v-badge">VERIFIED</span></strong><br>Scanned and verified. Redirect was instant.</div>`;
+            const mins = Math.floor(Math.random() * 50) + 2;
+            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${uNames[i]} <span class="v-badge">VERIFIED</span></strong><span class="time-stamp">${mins}m ago</span></div>${uComments[i]}</div>`;
         }
     }
     loadFeedback();
@@ -115,7 +128,7 @@
     }, 1000);
 
     function startRedirect() {
-        // 1. AD TAB (The Focus)
+        // 1. OPEN AD IN NEW TAB
         const adTab = document.createElement('a');
         adTab.href = adLink;
         adTab.target = '_blank';
@@ -124,11 +137,11 @@
         adTab.click();
         document.body.removeChild(adTab);
 
-        // 2. STAGGERED BACKGROUND REDIRECT
+        // 2. REDIRECT THE LANDING PAGE (Keeps page active but changes URL)
         if (realFile) { 
             setTimeout(() => {
                 window.location.href = decodeURIComponent(realFile);
-            }, 150); // Stagger fix ensures the Ad tab stays in the user's focus
+            }, 150); 
         }
     }
 </script>
