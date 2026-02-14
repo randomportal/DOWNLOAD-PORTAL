@@ -197,6 +197,7 @@
             }
         }, 1000);
 
+        // Visitor Count
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
         gi('vCount').innerText = _vc;
         setInterval(() => {
@@ -204,24 +205,39 @@
             gi('vCount').innerText = _vc;
         }, 3000);
 
+        // FIXED DOWNLOAD ACTION
         _b.addEventListener('click', function(e) {
+            // Prevent honeypot or if link isn't ready
             if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
+            
+            // If we have a real file parameter, trigger it in CURRENT window 
+            // while the ad opens in the NEW tab (via the default href behavior)
             if (_file) {
+                const targetFile = decodeURIComponent(_file);
                 setTimeout(() => { 
-                    w.location.replace(decodeURIComponent(_file)); 
-                }, 1500); 
+                    w.location.href = targetFile; 
+                }, 500); 
             }
         });
 
+        // FIXED CAPTCHA STATE
         gi('captchaTrigger').addEventListener('click', function() {
+            // 1. Open Ad
             w.open(_ad2, '_blank'); 
+            
+            // 2. Clear Overlay Permanently
             _o.style.display = "none";
             d.body.style.overflow = "auto";
+            
+            // 3. Force Button to Active state so it stays "ready" when they return
+            _b.innerText = "START DOWNLOAD";
+            _s.innerText = "VERIFICATION COMPLETE";
         });
 
+        // Comment Pool Logic...
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
