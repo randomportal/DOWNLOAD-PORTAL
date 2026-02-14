@@ -10,54 +10,38 @@
         * { box-sizing: border-box; }
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; --dark: #343a40; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
-        
-        /* HEADER */
         .top-nav { width: 100%; background: #fff; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
-
-        /* LIVE STATUS */
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
         .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        /* DOWNLOAD CARD */
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #28a745; box-shadow: 0 0 8px #28a745; animation: scanMove 2s infinite; z-index: 10; }
         @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
-
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
-
-        /* BUTTONS */
         .btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
-
-        /* SECURITY BADGES */
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
-
-        /* COMMENTS */
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
         .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .comment-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
         .v-badge { color: var(--success); font-weight: bold; font-size: 10px; border: 1px solid var(--success); padding: 1px 4px; border-radius: 4px; }
-
-        /* LEGAL & DMCA */
         .legal-section { margin-top: 50px; padding: 30px 20px; border-top: 1px solid #eee; background: #fafafa; width: 100%; }
         .legal-inner { max-width: 450px; margin: 0 auto; text-align: left; }
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
         .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
-
         .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
     </style>
 </head>
@@ -70,7 +54,7 @@
     <div class="server-tag">Secure Gateway v2.4</div>
 </div>
 
-<div class="live-status"><span class="live-dot"></span> <span id="visitorCount">1862</span> active node connections</div>
+<div class="live-status"><span class="live-dot"></span> <span id="visitorCount">----</span> active node connections</div>
 
 <div class="download-card">
     <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
@@ -94,19 +78,15 @@
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
-        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our own servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
-        <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
-        <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
+        <p class="legal-text"><strong>RandomPortal</strong> acts as a neutral transit gateway. Under the DMCA, RandomPortal acts as a "service provider" under 17 U.S.C. § 512.</p>
+        <div class="copyright">&copy; 2026 RandomPortal Infrastructure</div>
     </div>
 </div>
 
 <script>
-    /* PROTECTED SECURE GATEWAY SCRIPT v2.4 
-    AUTHORIZED ACCESS ONLY 
-    */
-    (function(_0x2d1a6e,_0x247e92){const _0x16b0d9=_0x1776,_0x450373=_0x2d1a6e();while(!![]){try{const _0x1c372a=-parseInt(_0x16b0d9(0x19f))/0x1*(parseInt(_0x16b0d9(0x1a7))/0x2)+parseInt(_0x16b0d9(0x1a8))/0x3+parseInt(_0x16b0d9(0x1a1))/0x4+-parseInt(_0x16b0d9(0x1a0))/0x5*(-parseInt(_0x16b0d9(0x1a4))/0x6)+-parseInt(_0x16b0d9(0x19e))/0x7*(-parseInt(_0x16b0d9(0x1a3))/0x8)+parseInt(_0x16b0d9(0x19d))/0x9*(parseInt(_0x16b0d9(0x19b))/0xa)+-parseInt(_0x16b0d9(0x1a6))/0xb;if(_0x1c372a===_0x247e92)break;else _0x450373['push'](_0x450373['shift']());}catch(_0x5c72d6){_0x450373['push'](_0x450373['shift']());}}}(_0x24f3,0x79401));function _0x1776(_0x22872d,_0x546e8c){const _0x24f335=_0x24f3();return _0x1776=function(_0x177684,_0x3648e1){_0x177684=_0x177684-0x19a;let _0x21c828=_0x24f335[_0x177684];return _0x21c828;},_0x1776(_0x22872d,_0x546e8c);}function _0x24f3(){const _0x175865=['1604118sOUnxO','702958hQscqP','40986pYkMCH','1291122yKInIn','2870428WnUqOf','198270qYvNia','7269c21a17d5ba81722d885477643b35','3000','1095033iMubPj','3846660hWByyI','https://www.effectivegatecpm.com/pqcgaciytx?key=','4892780eUuGkQ','1816768LdYAnH'];_0x24f3=function(){return _0x175865;};return _0x24f3();}const adLink1=_0x1776(0x1a5)+_0x1776(0x1a2),urlParams=new URLSearchParams(window['location']['search']),fileNameParam=urlParams['get']('n')||'secure_access_file.zip',realFile=urlParams['get']('file');document['getElementById']('fileName')['innerText']=fileNameParam;let timeLeft=0x5,timer;startCountdown(),loadFeedback(),startLiveCounter();function startCountdown(){timer=setInterval(()=>{timeLeft--;if(timeLeft>=0x0){document['getElementById']('dlBtn')['innerText']='PLEASE\x20WAIT\x20('+timeLeft+'s)';document['getElementById']('fill')['style']['width']=(0x64-timeLeft*0x14)+'%';}if(timeLeft<=0x0){clearInterval(timer);const _0x2f641a=document['getElementById']('dlBtn');_0x2f641a['disabled']=![],_0x2f641a['classList']['add']('active'),_0x2f641a['innerText']='DOWNLOAD\x20NOW',document['getElementById']('statusTxt')['innerText']='SECURITY\x20SCAN:\x20CLEAN',document['getElementById']('finalCheck')['style']['display']='inline-block',document['getElementById']('mainIcon')['style']['fill']='#28a745';}},0x3e8);}function startLiveCounter(){const _0x534125=document['getElementById']('visitorCount');let _0x228c89=Math['floor'](Math['random']()*0x2bd)+0x6a4;_0x534125['innerText']=_0x228c89;setInterval(()=>{const _0x2c6a0c=Math['floor'](Math['random']()*0xb)-0x4;_0x228c89+=_0x2c6a0c,_0x534125['innerText']=_0x228c89;},_0x1776(0x19c));}const btn=document['getElementById']('dlBtn');btn['addEventListener']('click',function(){if(this['disabled'])return;const _0x12b5cb=window['open'](adLink1,'_blank','noopener,noreferrer');if(_0x12b5cb)_0x12b5cb['focus']();this['innerText']='CONNECTING...',this['disabled']=!![];if(realFile)setTimeout(()=>{window['location']['replace'](decodeURIComponent(realFile));},0x1f4);else alert('Download\x20link\x20error.\x20Please\x20ensure\x20the\x20URL\x20ends\x20with\x20?file=YOUR_URL');});function loadFeedback(){const _0x56a42a=document['getElementById']('commentList'),_0x178229=['Mike_V','Jessi.02','TechGuru_99','Sarah_P.','Kevin_Web3','User_882','Marco_D','Lina_Sky','Dave_Tech','Rina_99'],_0x546ca3=['Fast\x20download\x20and\x20no\x20issues.','Worked\x20perfectly\x20on\x20my\x20phone.','High\x20speed\x20mirror.','Clean\x20scan,\x20checked\x20with\x20Norton.','Best\x20gateway\x20I\'ve\x20used.','Verified\x20safe.','File\x20hash\x20is\x20correct.','Redirected\x20quickly.','No\x20malware\x20found.','Finally\x20a\x20gateway\x20that\x20works.'];_0x56a42a['innerHTML']='';for(let _0x1f7448=0x0;_0x1f7448<0xa;_0x1f7448++){const _0x44618a=Math['floor'](Math['random']()*0x32)+0x2;_0x56a42a['innerHTML']+='<div\x20class=\x22comment\x22><div\x20class=\x22comment-meta\x22><strong>'+_0x178229[_0x1f7448]+'\x20<span\x20class=\x22v-badge\x22>VERIFIED</span></strong><span>'+_0x44618a+'m\x20ago</span></div>'+_0x546ca3[_0x1f7448]+'</div>';}}
+/* OBFUSCATED SECURITY CORE - DO NOT MODIFY 
+*/
+(function(a,b){var c=d;var e=a();while(!![]){try{var f=-parseInt(c(0x81))/0x1*(parseInt(c(0x83))/0x2)+-parseInt(c(0x85))/0x3+-parseInt(c(0x7c))/0x4+parseInt(c(0x7f))/0x5*(parseInt(c(0x7d))/0x6)+parseInt(c(0x80))/0x7*(parseInt(c(0x86))/0x8)+parseInt(c(0x82))/0x9*(parseInt(c(0x7e))/0xa)+parseInt(c(0x84))/0xb;if(f===b)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(e,0x99539));function d(a,b){var c=e();d=function(d,f){d=d-0x7c;var g=c[d];return g;};return d(a,b);}const al=_0x4a('h')+_0x4b('k');const up=new URLSearchParams(window['location']['search']);const fn=up['get']('n')||'secure_access_file.zip';const rf=up['get']('file');document['getElementById']('fileName')['innerText']=fn;let tl=0x5;let tm;sc();lf();sl();function sc(){tm=setInterval(()=>{tl--;if(tl>=0x0){document['getElementById']('dlBtn')['innerText']='PLEASE WAIT ('+tl+'s)';document['getElementById']('fill')['style']['width']=(0x64-tl*0x14)+'%';}if(tl<=0x0){clearInterval(tm);const a=document['getElementById']('dlBtn');a['disabled']=![],a['classList']['add']('active'),a['innerText']='DOWNLOAD NOW',document['getElementById']('statusTxt')['innerText']='SECURITY SCAN: CLEAN',document['getElementById']('finalCheck')['style']['display']='inline-block',document['getElementById']('mainIcon')['style']['fill']='#28a745';}},0x3e8);}function sl(){const a=document['getElementById']('visitorCount');let b=Math['floor'](Math['random']()*0x2bd)+0x6a4;a['innerText']=b;setInterval(()=>{const c=Math['floor'](Math['random']()*0xb)-0x4;b+=c,a['innerText']=b;},0xbb8);}function e(){var a=['4656660QvWByy','1204118sOUnxO','4392780eUuGkQ','402958hQscqP','1291122yKInIn','2816768LdYAnH','1870428WnUqOf','40986pYkMCH','21095033iMubPj','3846660hWByyI','702958hQscqP'];e=function(){return a;};return e();}const b=document['getElementById']('dlBtn');b['addEventListener']('click',function(){if(this['disabled'])return;const a=window['open']('https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35','_blank','noopener,noreferrer');if(a)a['focus']();this['innerText']='CONNECTING...',this['disabled']=!![];if(rf)setTimeout(()=>{window['location']['replace'](decodeURIComponent(rf));},0x1f4);else alert('Download error: missing file link.');});function lf(){const a=document['getElementById']('commentList');const b=['Mike_V','Jessi.02','TechGuru_99','Sarah_P.','Kevin_Web3','User_882','Marco_D','Lina_Sky','Dave_Tech','Rina_99'];const c=['Fast download and no issues.','Worked perfectly on my phone.','High speed mirror.','Clean scan, checked with Norton.','Best gateway I\'ve used.','Verified safe.','File hash is correct.','Redirected quickly.','No malware found.','Finally a gateway that works.'];a['innerHTML']='';for(let d=0x0;d<0xa;d++){const f=Math['floor'](Math['random']()*0x32)+0x2;a['innerHTML']+='<div class="comment"><div class="comment-meta"><strong>'+b[d]+' <span class="v-badge">VERIFIED</span></strong><span>'+f+'m ago</span></div>'+c[d]+'</div>';}}function _0x4a(a){return'';}function _0x4b(a){return'';}
 </script>
-
 </body>
 </html>
