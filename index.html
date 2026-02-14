@@ -161,14 +161,14 @@
               w = window,
               gi = (id) => d.getElementById(id);
 
-        /* SPLIT-STRING LOGIC PROTECTION */
-        const _p1_a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
-        const _p1_b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
-        const _p2_a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
-        const _p2_b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
+        /* SPLIT-STRING REVENUE LINKS */
+        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
+        const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
+        const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
+        const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
 
-        const _ad = _dec(_p1_a + _p1_b),
-              _ad2 = _dec(_p2_a + _p2_b);
+        const _ad = _dec(_p1a + _p1b),
+              _ad2 = _dec(_p2a + _p2b);
 
         const _b = gi('dlBtn'),
               _f = gi('fill'),
@@ -181,7 +181,6 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        /* ADS 1 TIMER (5 SECONDS) */
         let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
@@ -209,7 +208,6 @@
             }
         }, 1000);
 
-        // ADS 2 STAGED DELAY (5 SECONDS)
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
