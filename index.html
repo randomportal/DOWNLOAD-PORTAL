@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RandomPortal | Secure Gateway</title>
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
-    <link rel="dns-prefetch" href="https://www.effectivegatecpm.com">
     
     <style>
         /* CORE LAYOUT - NO CHANGES */
@@ -94,14 +93,14 @@
 
 <script>
     (function(){
-        /* 1. CONFIG & URL (Highest Priority) */
+        /* 1. CONFIG & URL (Priority) */
         const _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
         const _params = new URLSearchParams(window.location.search);
         const _name = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
         document.getElementById('fileName').innerText = _name;
 
-        /* 2. TIMER & CLEAN BUTTON ACTIVATION (Highest Priority) */
+        /* 2. TIMER & CLEAN BUTTON ACTIVATION (Priority) */
         let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
@@ -122,21 +121,20 @@
             }
         }, 1000);
 
-        /* 3. CLICK LOGIC (Handles ad and then file) */
+        /* 3. CLICK LOGIC */
         document.getElementById('dlBtn').addEventListener('click', function(e) {
             if (document.getElementById('btp').value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
             if (_file) {
-                // Short delay to ensure Adsterra tracking triggers before page redirect
                 setTimeout(() => { 
                     window.location.replace(decodeURIComponent(_file)); 
                 }, 1200); 
             }
         });
 
-        /* 4. VISITOR COUNT (Delayed start to prioritize ad loading) */
+        /* 4. VISITOR COUNT (Delayed start) */
         setTimeout(() => {
             let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
             document.getElementById('vCount').innerText = _vc;
@@ -184,7 +182,7 @@
             {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
         ];
 
-        /* 6. SHUFFLE & RENDER (Low Priority - loads last) */
+        /* 6. SHUFFLE & RENDER (Low Priority) */
         function u() {
             for (let i = pool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -198,7 +196,6 @@
             document.getElementById('commentList').innerHTML = h;
         }
         
-        // Final optimization: wait for page to settle before loading comments
         setTimeout(u, 800); 
         setInterval(u, 15000);
     })();
