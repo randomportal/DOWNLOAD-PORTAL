@@ -32,11 +32,20 @@
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
-        /* NEW: Professional Full-Screen Verification */
+        /* OVERLAY SYSTEM */
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 320px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
-        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s; }
-        .captcha-box:hover { background: #f1f1f1; }
+        .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
+        
+        /* Browser Check Animation */
+        #browserCheck { display: block; }
+        .mini-loader { height: 4px; width: 100%; background: #f0f0f0; border-radius: 2px; margin: 15px 0; overflow: hidden; }
+        .mini-fill { height: 100%; width: 30%; background: var(--primary); animation: slide 1.5s infinite ease-in-out; }
+        @keyframes slide { from { margin-left: -30%; } to { margin-left: 100%; } }
+
+        /* Captcha Box */
+        #captchaContainer { display: none; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
         .captcha-left { display: flex; align-items: center; gap: 12px; }
         .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; }
         .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; }
@@ -66,16 +75,24 @@
 
 <div id="verifyOverlay">
     <div class="verify-modal">
-        <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #333;">Verification Required</h3>
-        <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please confirm your connection is secure.</p>
-        <div class="captcha-box" id="captchaTrigger">
-            <div class="captcha-left">
-                <div class="captcha-check"></div>
-                <div class="captcha-text">I'm not a robot</div>
-            </div>
-            <div class="captcha-right">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png" alt="reCAPTCHA">
-                <span>privacy - terms</span>
+        <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333;">Security Check</h3>
+        
+        <div id="browserCheck">
+            <p style="font-size: 13px; color: #666; margin: 0;">Checking your browser connection...</p>
+            <div class="mini-loader"><div class="mini-fill"></div></div>
+        </div>
+
+        <div id="captchaContainer">
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Please confirm you are not a robot to proceed.</p>
+            <div class="captcha-box" id="captchaTrigger">
+                <div class="captcha-left">
+                    <div class="captcha-check"></div>
+                    <div class="captcha-text">I'm not a robot</div>
+                </div>
+                <div class="captcha-right">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png" alt="reCAPTCHA">
+                    <span>privacy - terms</span>
+                </div>
             </div>
         </div>
     </div>
@@ -121,7 +138,6 @@
 
 <script>
     (function(){
-        /* 1. CONFIG & URL */
         const _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
         const _ad2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
         const _params = new URLSearchParams(window.location.search);
@@ -129,7 +145,7 @@
         const _file = _params.get('file');
         document.getElementById('fileName').innerText = _name;
 
-        /* 2. TIMER & CLEAN BUTTON ACTIVATION (7 SECONDS) */
+        /* MAIN TIMER (7 SECONDS) */
         let _sec = 7;
         const _ti = setInterval(() => {
             _sec--;
@@ -148,13 +164,18 @@
                 document.getElementById('finalCheck').style.display = "inline-block"; 
                 document.getElementById('mainIcon').style.fill = "#28a745";
                 
-                // Show Full-Screen Captcha Overlay
+                // Show Overlay and Start Simulation
                 document.getElementById('verifyOverlay').style.display = "flex";
-                document.body.style.overflow = "hidden"; // Disable background scroll
+                document.body.style.overflow = "hidden";
+                
+                // CHECK BROWSER LOADING DELAY (1.5 SECONDS)
+                setTimeout(() => {
+                    document.getElementById('browserCheck').style.display = "none";
+                    document.getElementById('captchaContainer').style.display = "block";
+                }, 1500); 
             }
         }, 1000);
 
-        /* 3. VISITOR COUNT */
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
         document.getElementById('vCount').innerText = _vc;
         setInterval(() => {
@@ -162,7 +183,6 @@
             document.getElementById('vCount').innerText = _vc;
         }, 3000);
 
-        /* 4. CLICK LOGIC */
         document.getElementById('dlBtn').addEventListener('click', function(e) {
             if (document.getElementById('btp').value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
@@ -175,14 +195,12 @@
             }
         });
 
-        // Professional Captcha Click Logic
         document.getElementById('captchaTrigger').addEventListener('click', function() {
             window.open(_ad2, '_blank'); 
             document.getElementById('verifyOverlay').style.display = "none";
-            document.body.style.overflow = "auto"; // Re-enable background scroll
+            document.body.style.overflow = "auto";
         });
 
-        /* 5. POOL OF 100 UNIQUE COMMENTS */
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
@@ -220,7 +238,6 @@
             {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
         ];
 
-        /* 6. SHUFFLE & RENDER */
         function u() {
             for (let i = pool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
