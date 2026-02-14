@@ -115,6 +115,7 @@
 
     startCountdown();
     loadFeedback();
+    startLiveCounter(); // New function for the fluctuation
 
     function startCountdown() {
         timer = setInterval(() => {
@@ -134,6 +135,19 @@
                 document.getElementById('mainIcon').style.fill = "#28a745";
             }
         }, 1000);
+    }
+
+    // FLUCTUATING LIVE COUNTER LOGIC
+    function startLiveCounter() {
+        const countEl = document.getElementById('visitorCount');
+        let currentCount = 1862;
+        
+        setInterval(() => {
+            // Random change between -5 and +8 to keep it moving upward slowly
+            const change = Math.floor(Math.random() * 13) - 5; 
+            currentCount += change;
+            countEl.innerText = currentCount;
+        }, 3000); // Updates every 3 seconds
     }
 
     const btn = document.getElementById('dlBtn');
