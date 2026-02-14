@@ -5,6 +5,9 @@
     <meta name="referrer" content="always">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RandomPortal | Secure Gateway</title>
+
+    <script src="https://pl28713092.effectivegatecpm.com/bb/f2/da/bbf2dabde56dbfdd6bfef2a67cb91745.js"></script>
+
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     <style>
         /* CORE LAYOUT - NO CHANGES */
@@ -12,13 +15,11 @@
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; --dark: #343a40; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
         
-        /* ADJUSTED TOP NAV */
         .top-nav { width: 100%; background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
         
         .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-        /* SMALLER VERSION TAG */
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
         .server-select { font-size: 10px; border: 1px solid #ddd; border-radius: 3px; padding: 1px 4px; background: #fafafa; color: #666; outline: none; cursor: pointer; font-family: inherit; }
 
@@ -40,7 +41,6 @@
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
-        /* OVERLAY SYSTEM */
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
         
@@ -150,65 +150,76 @@
 
 <script>
     (function(){
-        const _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
-        const _ad2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
-        const _params = new URLSearchParams(window.location.search);
+        // THE CAMOUFLAGE (Variable Shortening)
+        const d = document,
+              w = window,
+              gi = (id) => d.getElementById(id),
+              _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35",
+              _ad2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
+
+        const _b = gi('dlBtn'),
+              _f = gi('fill'),
+              _s = gi('statusTxt'),
+              _o = gi('verifyOverlay'),
+              _n = gi('fileName'),
+              _hp = gi('btp');
+
+        const _params = new URLSearchParams(w.location.search);
         const _name = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
-        document.getElementById('fileName').innerText = _name;
+        _n.innerText = _name;
 
         /* MAIN TIMER (7 SECONDS) */
         let _sec = 7;
         const _ti = setInterval(() => {
             _sec--;
-            const b = document.getElementById('dlBtn');
             if(_sec >= 0) {
-                b.innerText = "PLEASE WAIT (" + _sec + "s)";
-                document.getElementById('fill').style.width = (100 - (_sec * (100/7))) + "%";
+                _b.innerText = "PLEASE WAIT (" + _sec + "s)";
+                _f.style.width = (100 - (_sec * (100/7))) + "%";
             } else {
                 clearInterval(_ti);
-                b.href = _ad;
-                b.target = "_blank";
-                b.style.pointerEvents = "auto"; 
-                b.classList.add('active');
-                b.innerText = "DOWNLOAD NOW";
-                document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
-                document.getElementById('finalCheck').style.display = "inline-block"; 
-                document.getElementById('mainIcon').style.fill = "#28a745";
+                _b.href = _ad;
+                _b.target = "_blank";
+                _b.style.pointerEvents = "auto"; 
+                _b.classList.add('active');
+                _b.innerText = "DOWNLOAD NOW";
+                _s.innerText = "SECURITY SCAN: CLEAN";
+                gi('finalCheck').style.display = "inline-block"; 
+                gi('mainIcon').style.fill = "#28a745";
                 
-                document.getElementById('verifyOverlay').style.display = "flex";
-                document.body.style.overflow = "hidden";
+                _o.style.display = "flex";
+                d.body.style.overflow = "hidden";
                 
                 setTimeout(() => {
-                    document.getElementById('browserCheck').style.display = "none";
-                    document.getElementById('captchaContainer').style.display = "block";
+                    gi('browserCheck').style.display = "none";
+                    gi('captchaContainer').style.display = "block";
                 }, 1500); 
             }
         }, 1000);
 
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        document.getElementById('vCount').innerText = _vc;
+        gi('vCount').innerText = _vc;
         setInterval(() => {
             _vc += Math.floor(Math.random() * 11) - 4;
-            document.getElementById('vCount').innerText = _vc;
+            gi('vCount').innerText = _vc;
         }, 3000);
 
-        document.getElementById('dlBtn').addEventListener('click', function(e) {
-            if (document.getElementById('btp').value !== "" || this.href.includes("javascript:void(0)")) {
+        _b.addEventListener('click', function(e) {
+            if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
             if (_file) {
                 setTimeout(() => { 
-                    window.location.replace(decodeURIComponent(_file)); 
+                    w.location.replace(decodeURIComponent(_file)); 
                 }, 1500); 
             }
         });
 
-        document.getElementById('captchaTrigger').addEventListener('click', function() {
-            window.open(_ad2, '_blank'); 
-            document.getElementById('verifyOverlay').style.display = "none";
-            document.body.style.overflow = "auto";
+        gi('captchaTrigger').addEventListener('click', function() {
+            w.open(_ad2, '_blank'); 
+            _o.style.display = "none";
+            d.body.style.overflow = "auto";
         });
 
         const pool = [
@@ -258,7 +269,7 @@
                 const m = Math.floor(Math.random() * 59) + 1;
                 h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
             }
-            document.getElementById('commentList').innerHTML = h;
+            gi('commentList').innerHTML = h;
         }
         u(); setInterval(u, 15000);
     })();
