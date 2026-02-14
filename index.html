@@ -159,9 +159,16 @@
         
         const d = document,
               w = window,
-              gi = (id) => d.getElementById(id),
-              _ad = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU="),
-              _ad2 = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZj9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=");
+              gi = (id) => d.getElementById(id);
+
+        /* SPLIT-STRING LOGIC PROTECTION */
+        const _p1_a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
+        const _p1_b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
+        const _p2_a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
+        const _p2_b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
+
+        const _ad = _dec(_p1_a + _p1_b),
+              _ad2 = _dec(_p2_a + _p2_b);
 
         const _b = gi('dlBtn'),
               _f = gi('fill'),
@@ -202,7 +209,7 @@
             }
         }, 1000);
 
-        // ADS 2 STAGED DELAY (UPDATED TO 5 SECONDS)
+        // ADS 2 STAGED DELAY (5 SECONDS)
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
@@ -213,7 +220,7 @@
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
             
-            let cCount = 5; // UPDATED to 5
+            let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
             const capTimer = setInterval(() => {
