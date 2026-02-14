@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RandomPortal | Secure Gateway</title>
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
-    
     <style>
         /* CORE LAYOUT - NO CHANGES */
         * { box-sizing: border-box; }
@@ -33,6 +32,18 @@
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
+        /* NEW: Professional Full-Screen Verification */
+        #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 320px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
+        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s; }
+        .captcha-box:hover { background: #f1f1f1; }
+        .captcha-left { display: flex; align-items: center; gap: 12px; }
+        .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; }
+        .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; }
+        .captcha-right { text-align: center; }
+        .captcha-right img { width: 35px; display: block; margin: 0 auto; }
+        .captcha-right span { font-size: 8px; color: #9b9b9b; }
+
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
@@ -53,6 +64,23 @@
 
 <div class="hp-field"><input type="text" id="btp" value=""></div>
 
+<div id="verifyOverlay">
+    <div class="verify-modal">
+        <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #333;">Verification Required</h3>
+        <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please confirm your connection is secure.</p>
+        <div class="captcha-box" id="captchaTrigger">
+            <div class="captcha-left">
+                <div class="captcha-check"></div>
+                <div class="captcha-text">I'm not a robot</div>
+            </div>
+            <div class="captcha-right">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png" alt="reCAPTCHA">
+                <span>privacy - terms</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="top-nav">
     <div class="logo-text">RANDOM<span>PORTAL</span></div>
     <div class="server-tag">Secure Gateway v2.4</div>
@@ -67,7 +95,7 @@
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
-    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
+    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (7s)</a>
     
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
 </div>
@@ -93,21 +121,22 @@
 
 <script>
     (function(){
-        /* 1. CONFIG & URL (Priority) */
+        /* 1. CONFIG & URL */
         const _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
+        const _ad2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
         const _params = new URLSearchParams(window.location.search);
         const _name = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
         document.getElementById('fileName').innerText = _name;
 
-        /* 2. TIMER & CLEAN BUTTON ACTIVATION (Priority) */
-        let _sec = 5;
+        /* 2. TIMER & CLEAN BUTTON ACTIVATION (7 SECONDS) */
+        let _sec = 7;
         const _ti = setInterval(() => {
             _sec--;
             const b = document.getElementById('dlBtn');
             if(_sec >= 0) {
                 b.innerText = "PLEASE WAIT (" + _sec + "s)";
-                document.getElementById('fill').style.width = (100 - (_sec * 20)) + "%";
+                document.getElementById('fill').style.width = (100 - (_sec * (100/7))) + "%";
             } else {
                 clearInterval(_ti);
                 b.href = _ad;
@@ -118,10 +147,22 @@
                 document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
                 document.getElementById('finalCheck').style.display = "inline-block"; 
                 document.getElementById('mainIcon').style.fill = "#28a745";
+                
+                // Show Full-Screen Captcha Overlay
+                document.getElementById('verifyOverlay').style.display = "flex";
+                document.body.style.overflow = "hidden"; // Disable background scroll
             }
         }, 1000);
 
-        /* 3. CLICK LOGIC */
+        /* 3. VISITOR COUNT */
+        let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
+        document.getElementById('vCount').innerText = _vc;
+        setInterval(() => {
+            _vc += Math.floor(Math.random() * 11) - 4;
+            document.getElementById('vCount').innerText = _vc;
+        }, 3000);
+
+        /* 4. CLICK LOGIC */
         document.getElementById('dlBtn').addEventListener('click', function(e) {
             if (document.getElementById('btp').value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
@@ -130,19 +171,16 @@
             if (_file) {
                 setTimeout(() => { 
                     window.location.replace(decodeURIComponent(_file)); 
-                }, 1200); 
+                }, 1500); 
             }
         });
 
-        /* 4. VISITOR COUNT (Delayed start) */
-        setTimeout(() => {
-            let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-            document.getElementById('vCount').innerText = _vc;
-            setInterval(() => {
-                _vc += Math.floor(Math.random() * 11) - 4;
-                document.getElementById('vCount').innerText = _vc;
-            }, 3000);
-        }, 500);
+        // Professional Captcha Click Logic
+        document.getElementById('captchaTrigger').addEventListener('click', function() {
+            window.open(_ad2, '_blank'); 
+            document.getElementById('verifyOverlay').style.display = "none";
+            document.body.style.overflow = "auto"; // Re-enable background scroll
+        });
 
         /* 5. POOL OF 100 UNIQUE COMMENTS */
         const pool = [
@@ -182,7 +220,7 @@
             {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
         ];
 
-        /* 6. SHUFFLE & RENDER (Low Priority) */
+        /* 6. SHUFFLE & RENDER */
         function u() {
             for (let i = pool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -195,9 +233,7 @@
             }
             document.getElementById('commentList').innerHTML = h;
         }
-        
-        setTimeout(u, 800); 
-        setInterval(u, 15000);
+        u(); setInterval(u, 15000);
     })();
 </script>
 </body>
