@@ -174,35 +174,51 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        /* ADS 1 TIMER (5 SECONDS) */
-        let _sec = 5;
-        const _ti = setInterval(() => {
-            _sec--;
-            if(_sec >= 0) {
-                _b.innerText = "PLEASE WAIT (" + _sec + "s)";
-                _f.style.width = (100 - (_sec * 20)) + "%";
-            } else {
-                clearInterval(_ti);
-                _b.href = _ad;
-                _b.target = "_blank";
-                _b.style.pointerEvents = "auto"; 
-                _b.classList.add('active');
-                _b.innerText = "DOWNLOAD NOW";
-                _s.innerText = "SECURITY SCAN: CLEAN";
-                gi('finalCheck').style.display = "inline-block"; 
-                gi('mainIcon').style.fill = "#28a745";
-                
-                _o.style.display = "flex";
-                d.body.style.overflow = "hidden";
-                
-                setTimeout(() => {
-                    gi('browserCheck').style.display = "none";
-                    gi('captchaContainer').style.display = "block";
-                }, 1500); 
-            }
-        }, 1000);
+        // NEW: SESSION CHECK TO STOP LOOPS
+        const isVerified = sessionStorage.getItem('portal_verified');
 
-        // ADS 2 STAGED DELAY (UPDATED TO 5 SECONDS)
+        if(isVerified) {
+            // If already verified in this session, skip the wait
+            _b.href = _ad;
+            _b.target = "_blank";
+            _b.style.pointerEvents = "auto"; 
+            _b.classList.add('active');
+            _b.innerText = "START DOWNLOAD";
+            _f.style.width = "100%";
+            _s.innerText = "VERIFICATION COMPLETE";
+            gi('finalCheck').style.display = "inline-block"; 
+            gi('mainIcon').style.fill = "#28a745";
+        } else {
+            /* ADS 1 TIMER (5 SECONDS) */
+            let _sec = 5;
+            const _ti = setInterval(() => {
+                _sec--;
+                if(_sec >= 0) {
+                    _b.innerText = "PLEASE WAIT (" + _sec + "s)";
+                    _f.style.width = (100 - (_sec * 20)) + "%";
+                } else {
+                    clearInterval(_ti);
+                    _b.href = _ad;
+                    _b.target = "_blank";
+                    _b.style.pointerEvents = "auto"; 
+                    _b.classList.add('active');
+                    _b.innerText = "DOWNLOAD NOW";
+                    _s.innerText = "SECURITY SCAN: CLEAN";
+                    gi('finalCheck').style.display = "inline-block"; 
+                    gi('mainIcon').style.fill = "#28a745";
+                    
+                    _o.style.display = "flex";
+                    d.body.style.overflow = "hidden";
+                    
+                    setTimeout(() => {
+                        gi('browserCheck').style.display = "none";
+                        gi('captchaContainer').style.display = "block";
+                    }, 1500); 
+                }
+            }, 1000);
+        }
+
+        // ADS 2 STAGED DELAY (5 SECONDS)
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
@@ -213,7 +229,7 @@
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
             
-            let cCount = 5; // UPDATED to 5
+            let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
             const capTimer = setInterval(() => {
@@ -225,6 +241,9 @@
                     cTxt.innerText = "Verified!";
                     cBox.classList.remove('loading');
                     cBox.classList.add('done');
+
+                    // STORE VERIFICATION TO PREVENT BACK-BUTTON LOOP
+                    sessionStorage.setItem('portal_verified', 'true');
 
                     setTimeout(() => {
                         _o.style.display = "none";
@@ -253,6 +272,7 @@
             }
         });
 
+        // POOL DATA
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
