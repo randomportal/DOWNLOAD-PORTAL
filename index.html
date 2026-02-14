@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RandomPortal | Secure Gateway</title>
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
+    <link rel="dns-prefetch" href="https://www.effectivegatecpm.com">
+    
     <style>
         /* CORE LAYOUT - NO CHANGES */
         * { box-sizing: border-box; }
@@ -29,7 +31,6 @@
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
         
-        /* FIX: Changed button to anchor tag styling */
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
@@ -93,14 +94,14 @@
 
 <script>
     (function(){
-        /* 1. CONFIG & URL */
+        /* 1. CONFIG & URL (Highest Priority) */
         const _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
         const _params = new URLSearchParams(window.location.search);
         const _name = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
         document.getElementById('fileName').innerText = _name;
 
-        /* 2. TIMER & CLEAN BUTTON ACTIVATION */
+        /* 2. TIMER & CLEAN BUTTON ACTIVATION (Highest Priority) */
         let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
@@ -110,7 +111,6 @@
                 document.getElementById('fill').style.width = (100 - (_sec * 20)) + "%";
             } else {
                 clearInterval(_ti);
-                // FIX: Setting the real HREF and enabling interaction properly
                 b.href = _ad;
                 b.target = "_blank";
                 b.style.pointerEvents = "auto"; 
@@ -122,37 +122,31 @@
             }
         }, 1000);
 
-        /* 3. VISITOR COUNT */
-        let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        document.getElementById('vCount').innerText = _vc;
-        setInterval(() => {
-            _vc += Math.floor(Math.random() * 11) - 4;
-            document.getElementById('vCount').innerText = _vc;
-        }, 3000);
-
-        /* 4. CLICK LOGIC (Handling secondary redirect to file) */
+        /* 3. CLICK LOGIC (Handles ad and then file) */
         document.getElementById('dlBtn').addEventListener('click', function(e) {
-            // Honeypot check
-            if (document.getElementById('btp').value !== "") {
+            if (document.getElementById('btp').value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
-            
-            // If the timer is still running, do nothing
-            if (this.href.includes("javascript:void(0)")) {
-                e.preventDefault();
-                return;
-            }
-
-            // Logic to handle the original file download after the ad click
             if (_file) {
+                // Short delay to ensure Adsterra tracking triggers before page redirect
                 setTimeout(() => { 
                     window.location.replace(decodeURIComponent(_file)); 
-                }, 1500); // 1.5s delay to ensure the Adsterra click fires first
+                }, 1200); 
             }
         });
 
-        /* 5. POOL OF 100 UNIQUE COMMENTS (Shortened for brevity but kept in logic) */
+        /* 4. VISITOR COUNT (Delayed start to prioritize ad loading) */
+        setTimeout(() => {
+            let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
+            document.getElementById('vCount').innerText = _vc;
+            setInterval(() => {
+                _vc += Math.floor(Math.random() * 11) - 4;
+                document.getElementById('vCount').innerText = _vc;
+            }, 3000);
+        }, 500);
+
+        /* 5. POOL OF 100 UNIQUE COMMENTS */
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
@@ -190,7 +184,7 @@
             {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
         ];
 
-        /* 6. SHUFFLE & RENDER */
+        /* 6. SHUFFLE & RENDER (Low Priority - loads last) */
         function u() {
             for (let i = pool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -203,7 +197,10 @@
             }
             document.getElementById('commentList').innerHTML = h;
         }
-        u(); setInterval(u, 15000);
+        
+        // Final optimization: wait for page to settle before loading comments
+        setTimeout(u, 800); 
+        setInterval(u, 15000);
     })();
 </script>
 </body>
