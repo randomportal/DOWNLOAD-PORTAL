@@ -102,92 +102,11 @@
 </div>
 
 <script>
-    const adLink1 = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35";
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Get parameters
-    const fileNameParam = urlParams.get('n') || "secure_access_file.zip";
-    const realFile = urlParams.get('file');
-
-    document.getElementById('fileName').innerText = fileNameParam;
-
-    let timeLeft = 5, timer;
-
-    startCountdown();
-    loadFeedback();
-    startLiveCounter(); // New function for the fluctuation
-
-    function startCountdown() {
-        timer = setInterval(() => {
-            timeLeft--;
-            if(timeLeft >= 0) {
-                document.getElementById('dlBtn').innerText = `PLEASE WAIT (${timeLeft}s)`;
-                document.getElementById('fill').style.width = (100 - (timeLeft * 20)) + "%";
-            }
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                const btn = document.getElementById('dlBtn');
-                btn.disabled = false;
-                btn.classList.add('active');
-                btn.innerText = "DOWNLOAD NOW";
-                document.getElementById('statusTxt').innerText = "SECURITY SCAN: CLEAN";
-                document.getElementById('finalCheck').style.display = "inline-block"; 
-                document.getElementById('mainIcon').style.fill = "#28a745";
-            }
-        }, 1000);
-    }
-
-        // FLUCTUATING LIVE COUNTER LOGIC
-    function startLiveCounter() {
-        const countEl = document.getElementById('visitorCount');
-        
-        // SET A RANDOM STARTING NUMBER BETWEEN 1700 AND 2400
-        let currentCount = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        countEl.innerText = currentCount;
-        
-        setInterval(() => {
-            // Random change between -4 and +7 to keep it organic
-            const change = Math.floor(Math.random() * 11) - 4; 
-            currentCount += change;
-            countEl.innerText = currentCount;
-        }, 3000); 
-    }
-
-
-    const btn = document.getElementById('dlBtn');
-
-    // REPAIRED REDIRECT LOGIC
-    btn.addEventListener('click', function() {
-        if (this.disabled) return;
-        
-        // 1. OPEN THE AD IMMEDIATELY
-        const adWin = window.open(adLink1, '_blank', 'noopener,noreferrer');
-        if (adWin) { adWin.focus(); }
-
-        // 2. SHOW CONNECTING STATUS
-        this.innerText = "CONNECTING...";
-        this.disabled = true;
-
-        // 3. EXECUTE REDIRECT AFTER 500MS NO MATTER WHAT
-        if (realFile) {
-            setTimeout(() => {
-                window.location.replace(decodeURIComponent(realFile));
-            }, 500); 
-        } else {
-            alert("Download link error. Please ensure the URL ends with ?file=YOUR_URL");
-        }
-    });
-
-    function loadFeedback() {
-        const container = document.getElementById('commentList');
-        const names = ["Mike_V", "Jessi.02", "TechGuru_99", "Sarah_P.", "Kevin_Web3", "User_882", "Marco_D", "Lina_Sky", "Dave_Tech", "Rina_99"];
-        const texts = ["Fast download and no issues.", "Worked perfectly on my phone.", "High speed mirror.", "Clean scan, checked with Norton.", "Best gateway I've used.", "Verified safe.", "File hash is correct.", "Redirected quickly.", "No malware found.", "Finally a gateway that works."];
-        container.innerHTML = "";
-        for(let i=0; i < 10; i++) {
-            const mins = Math.floor(Math.random() * 50) + 2;
-            container.innerHTML += `<div class="comment"><div class="comment-meta"><strong>${names[i]} <span class="v-badge">VERIFIED</span></strong><span>${mins}m ago</span></div>${texts[i]}</div>`;
-        }
-    }
+    /* PROTECTED SECURE GATEWAY SCRIPT v2.4 
+    AUTHORIZED ACCESS ONLY 
+    */
+    (function(_0x2d1a6e,_0x247e92){const _0x16b0d9=_0x1776,_0x450373=_0x2d1a6e();while(!![]){try{const _0x1c372a=-parseInt(_0x16b0d9(0x19f))/0x1*(parseInt(_0x16b0d9(0x1a7))/0x2)+parseInt(_0x16b0d9(0x1a8))/0x3+parseInt(_0x16b0d9(0x1a1))/0x4+-parseInt(_0x16b0d9(0x1a0))/0x5*(-parseInt(_0x16b0d9(0x1a4))/0x6)+-parseInt(_0x16b0d9(0x19e))/0x7*(-parseInt(_0x16b0d9(0x1a3))/0x8)+parseInt(_0x16b0d9(0x19d))/0x9*(parseInt(_0x16b0d9(0x19b))/0xa)+-parseInt(_0x16b0d9(0x1a6))/0xb;if(_0x1c372a===_0x247e92)break;else _0x450373['push'](_0x450373['shift']());}catch(_0x5c72d6){_0x450373['push'](_0x450373['shift']());}}}(_0x24f3,0x79401));function _0x1776(_0x22872d,_0x546e8c){const _0x24f335=_0x24f3();return _0x1776=function(_0x177684,_0x3648e1){_0x177684=_0x177684-0x19a;let _0x21c828=_0x24f335[_0x177684];return _0x21c828;},_0x1776(_0x22872d,_0x546e8c);}function _0x24f3(){const _0x175865=['1604118sOUnxO','702958hQscqP','40986pYkMCH','1291122yKInIn','2870428WnUqOf','198270qYvNia','7269c21a17d5ba81722d885477643b35','3000','1095033iMubPj','3846660hWByyI','https://www.effectivegatecpm.com/pqcgaciytx?key=','4892780eUuGkQ','1816768LdYAnH'];_0x24f3=function(){return _0x175865;};return _0x24f3();}const adLink1=_0x1776(0x1a5)+_0x1776(0x1a2),urlParams=new URLSearchParams(window['location']['search']),fileNameParam=urlParams['get']('n')||'secure_access_file.zip',realFile=urlParams['get']('file');document['getElementById']('fileName')['innerText']=fileNameParam;let timeLeft=0x5,timer;startCountdown(),loadFeedback(),startLiveCounter();function startCountdown(){timer=setInterval(()=>{timeLeft--;if(timeLeft>=0x0){document['getElementById']('dlBtn')['innerText']='PLEASE\x20WAIT\x20('+timeLeft+'s)';document['getElementById']('fill')['style']['width']=(0x64-timeLeft*0x14)+'%';}if(timeLeft<=0x0){clearInterval(timer);const _0x2f641a=document['getElementById']('dlBtn');_0x2f641a['disabled']=![],_0x2f641a['classList']['add']('active'),_0x2f641a['innerText']='DOWNLOAD\x20NOW',document['getElementById']('statusTxt')['innerText']='SECURITY\x20SCAN:\x20CLEAN',document['getElementById']('finalCheck')['style']['display']='inline-block',document['getElementById']('mainIcon')['style']['fill']='#28a745';}},0x3e8);}function startLiveCounter(){const _0x534125=document['getElementById']('visitorCount');let _0x228c89=Math['floor'](Math['random']()*0x2bd)+0x6a4;_0x534125['innerText']=_0x228c89;setInterval(()=>{const _0x2c6a0c=Math['floor'](Math['random']()*0xb)-0x4;_0x228c89+=_0x2c6a0c,_0x534125['innerText']=_0x228c89;},_0x1776(0x19c));}const btn=document['getElementById']('dlBtn');btn['addEventListener']('click',function(){if(this['disabled'])return;const _0x12b5cb=window['open'](adLink1,'_blank','noopener,noreferrer');if(_0x12b5cb)_0x12b5cb['focus']();this['innerText']='CONNECTING...',this['disabled']=!![];if(realFile)setTimeout(()=>{window['location']['replace'](decodeURIComponent(realFile));},0x1f4);else alert('Download\x20link\x20error.\x20Please\x20ensure\x20the\x20URL\x20ends\x20with\x20?file=YOUR_URL');});function loadFeedback(){const _0x56a42a=document['getElementById']('commentList'),_0x178229=['Mike_V','Jessi.02','TechGuru_99','Sarah_P.','Kevin_Web3','User_882','Marco_D','Lina_Sky','Dave_Tech','Rina_99'],_0x546ca3=['Fast\x20download\x20and\x20no\x20issues.','Worked\x20perfectly\x20on\x20my\x20phone.','High\x20speed\x20mirror.','Clean\x20scan,\x20checked\x20with\x20Norton.','Best\x20gateway\x20I\'ve\x20used.','Verified\x20safe.','File\x20hash\x20is\x20correct.','Redirected\x20quickly.','No\x20malware\x20found.','Finally\x20a\x20gateway\x20that\x20works.'];_0x56a42a['innerHTML']='';for(let _0x1f7448=0x0;_0x1f7448<0xa;_0x1f7448++){const _0x44618a=Math['floor'](Math['random']()*0x32)+0x2;_0x56a42a['innerHTML']+='<div\x20class=\x22comment\x22><div\x20class=\x22comment-meta\x22><strong>'+_0x178229[_0x1f7448]+'\x20<span\x20class=\x22v-badge\x22>VERIFIED</span></strong><span>'+_0x44618a+'m\x20ago</span></div>'+_0x546ca3[_0x1f7448]+'</div>';}}
 </script>
+
 </body>
 </html>
