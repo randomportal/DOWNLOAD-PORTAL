@@ -202,7 +202,7 @@
             }
         }, 1000);
 
-        // ADS 2 STAGED DELAY (5 SECONDS)
+        // ADS 2 STAGED DELAY (UPDATED TO 5 SECONDS)
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
@@ -213,7 +213,7 @@
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
             
-            let cCount = 5; 
+            let cCount = 5; // UPDATED to 5
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
             const capTimer = setInterval(() => {
@@ -244,14 +244,12 @@
         }, 3000);
 
         _b.addEventListener('click', function(e) {
-            // FIX: Prevent "location.replace" behavior to keep history alive
             if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
             if (_file) {
-                // We use standard navigation to preserve the "Back" button path
-                setTimeout(() => { w.location.assign(decodeURIComponent(_file)); }, 500); 
+                setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 500); 
             }
         });
 
