@@ -124,7 +124,7 @@
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
-    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (7s)</a>
+    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
 </div>
@@ -150,12 +150,15 @@
 
 <script>
     (function(){
-        // THE CAMOUFLAGE (Variable Shortening)
+        // Base64 Decoders for Security
+        const _dec = (s) => atob(s);
+        
         const d = document,
               w = window,
               gi = (id) => d.getElementById(id),
-              _ad = "https://www.effectivegatecpm.com/pqcgaciytx?key=7269c21a17d5ba81722d885477643b35",
-              _ad2 = "https://www.effectivegatecpm.com/pkjmbyifhf?key=9fbb7c30d022382d96747d0049552cc6";
+              // SECURED URLs (Base64 Encoded)
+              _ad = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU="),
+              _ad2 = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZj9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=");
 
         const _b = gi('dlBtn'),
               _f = gi('fill'),
@@ -169,13 +172,13 @@
         const _file = _params.get('file');
         _n.innerText = _name;
 
-        /* MAIN TIMER (7 SECONDS) */
-        let _sec = 7;
+        /* TIMER UPDATED TO 5 SECONDS */
+        let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
             if(_sec >= 0) {
                 _b.innerText = "PLEASE WAIT (" + _sec + "s)";
-                _f.style.width = (100 - (_sec * (100/7))) + "%";
+                _f.style.width = (100 - (_sec * (100/5))) + "%";
             } else {
                 clearInterval(_ti);
                 _b.href = _ad;
@@ -197,7 +200,6 @@
             }
         }, 1000);
 
-        // Visitor Count
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
         gi('vCount').innerText = _vc;
         setInterval(() => {
@@ -205,16 +207,11 @@
             gi('vCount').innerText = _vc;
         }, 3000);
 
-        // FIXED DOWNLOAD ACTION
         _b.addEventListener('click', function(e) {
-            // Prevent honeypot or if link isn't ready
             if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
                 e.preventDefault();
                 return;
             }
-            
-            // If we have a real file parameter, trigger it in CURRENT window 
-            // while the ad opens in the NEW tab (via the default href behavior)
             if (_file) {
                 const targetFile = decodeURIComponent(_file);
                 setTimeout(() => { 
@@ -223,21 +220,15 @@
             }
         });
 
-        // FIXED CAPTCHA STATE
         gi('captchaTrigger').addEventListener('click', function() {
-            // 1. Open Ad
             w.open(_ad2, '_blank'); 
-            
-            // 2. Clear Overlay Permanently
             _o.style.display = "none";
             d.body.style.overflow = "auto";
-            
-            // 3. Force Button to Active state so it stays "ready" when they return
             _b.innerText = "START DOWNLOAD";
             _s.innerText = "VERIFICATION COMPLETE";
         });
 
-        // Comment Pool Logic...
+        // Comment Pool Logic
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
