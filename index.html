@@ -10,7 +10,7 @@
 
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     <style>
-        /* CORE LAYOUT - NO CHANGES */
+        /* CORE LAYOUT */
         * { box-sizing: border-box; }
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; --dark: #343a40; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
@@ -54,7 +54,6 @@
         .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
         .captcha-left { display: flex; align-items: center; gap: 12px; }
         
-        /* UPDATED CAPTCHA CHECKBOX STYLES */
         .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; }
         .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
         @keyframes spinCap { to { transform: rotate(360deg); } }
@@ -175,7 +174,7 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        /* TIMER LOGIC */
+        /* ADS 1 TIMER (5 SECONDS) */
         let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
@@ -203,7 +202,7 @@
             }
         }, 1000);
 
-        // STAGED CAPTCHA LOGIC 3S DELAY
+        // ADS 2 STAGED DELAY (UPDATED TO 5 SECONDS)
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
@@ -214,7 +213,7 @@
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
             
-            let cCount = 3;
+            let cCount = 5; // UPDATED to 5
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
             const capTimer = setInterval(() => {
@@ -254,7 +253,6 @@
             }
         });
 
-        // FULL COMMENT POOL RESTORED
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
