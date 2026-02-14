@@ -137,18 +137,22 @@
         }, 1000);
     }
 
-    // FLUCTUATING LIVE COUNTER LOGIC
+        // FLUCTUATING LIVE COUNTER LOGIC
     function startLiveCounter() {
         const countEl = document.getElementById('visitorCount');
-        let currentCount = 1862;
+        
+        // SET A RANDOM STARTING NUMBER BETWEEN 1700 AND 2400
+        let currentCount = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
+        countEl.innerText = currentCount;
         
         setInterval(() => {
-            // Random change between -5 and +8 to keep it moving upward slowly
-            const change = Math.floor(Math.random() * 13) - 5; 
+            // Random change between -4 and +7 to keep it organic
+            const change = Math.floor(Math.random() * 11) - 4; 
             currentCount += change;
             countEl.innerText = currentCount;
-        }, 3000); // Updates every 3 seconds
+        }, 3000); 
     }
+
 
     const btn = document.getElementById('dlBtn');
 
