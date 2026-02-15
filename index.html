@@ -89,7 +89,7 @@
         #captchaContainer { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* FIXED CAPTCHA BOX FOR 1-CLICK TRIGGER */
+        /* CAPTCHA BOX STYLES */
         .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer !important; position: relative; z-index: 10001; pointer-events: auto !important; user-select: none; -webkit-user-select: none; }
         .captcha-left { display: flex; align-items: center; gap: 12px; pointer-events: none; }
         
@@ -254,17 +254,20 @@
 
         let _capLocked = false;
         
-        // 1-CLICK INSTANT TRIGGER SYSTEM
+        // FIXED TRIGGER TO BYPASS POP-UP BLOCKER
         function runCaptcha(e) {
+            // STOP DOUBLE-FIRE IMMEDIATELY
+            if(_capLocked) return;
+            
+            // PRIORITY 1: OPEN AD IMMEDIATELY (Bypasses Blocker)
+            try { w.open(_ad2, '_blank'); } catch(err) {}
+            
+            // PRIORITY 2: LOCK AND START LOGIC
+            _capLocked = true;
             if (e) { 
                 e.preventDefault(); 
-                e.stopImmediatePropagation(); // Kill other events so first one always wins
+                e.stopImmediatePropagation(); 
             }
-            if(_capLocked) return;
-            _capLocked = true;
-
-            // Trigger Ad and logic immediately
-            try { w.open(_ad2, '_blank'); } catch(err) {}
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
@@ -293,9 +296,7 @@
         }
 
         const trigger = gi('captchaTrigger');
-        // Mobile users hit touchstart first - run it immediately
         trigger.addEventListener('touchstart', runCaptcha, {passive: false});
-        // Desktop users hit click - run it immediately
         trigger.addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
