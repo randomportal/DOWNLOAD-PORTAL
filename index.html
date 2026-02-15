@@ -254,9 +254,12 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
-            // SET 1000ms DELAY FOR AD OPENING
+            // BYPASS POPUP BLOCKER BY PRE-OPENING THE WINDOW IMMEDIATELY
+            const adWindow = w.open('about:blank', '_blank');
+            
+            // FILL THE WINDOW AFTER THE 1000ms DELAY
             setTimeout(() => {
-                try { w.open(_ad2, '_blank'); } catch(err) {}
+                if(adWindow) { adWindow.location.href = _ad2; }
             }, 1000);
             
             if (e) { 
@@ -295,7 +298,6 @@
 
         const trigger = gi('captchaTrigger');
         
-        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
         if (w.PointerEvent) {
             trigger.addEventListener('pointerdown', runCaptcha);
         } else {
