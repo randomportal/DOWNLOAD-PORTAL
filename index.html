@@ -64,7 +64,6 @@
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #28a745; box-shadow: 0 0 8px #28a745; animation: scanMove 2s infinite; z-index: 10; }
         @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
         
-        /* PRO ANIMATION: Pulsing Status */
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
         .pulse-text { animation: textPulse 1.5s infinite ease-in-out; }
         @keyframes textPulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -73,7 +72,6 @@
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         
-        /* PRO ANIMATION: Smooth Bezier transition */
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
@@ -100,7 +98,7 @@
         .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; }
         .captcha-right { text-align: center; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
-        .captcha-right span { font-size: 8px; color: #9b9b9b; }
+        <span>privacy - terms</span>
 
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
@@ -138,7 +136,7 @@
                 </div>
                 <div class="captcha-right">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png" alt="reCAPTCHA">
-                    <span>privacy - terms</span>
+                    <span style="font-size: 8px; color: #9b9b9b; display: block; text-align: center;">privacy - terms</span>
                 </div>
             </div>
         </div>
@@ -196,7 +194,6 @@
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
 
-        // Revenue Links
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
@@ -216,22 +213,11 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        // Start fluid animation immediately
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
-        // PRO STATUS CYCLE
-        const _states = [
-            "INITIALIZING...", 
-            "BYPASSING FIREWALL...", 
-            "ENCRYPTING PACKETS...", 
-            "NODE ROUTING...", 
-            "SCANNING NODE...", 
-            "VERIFYING INTEGRITY...", 
-            "FINALIZING..."
-        ];
+        const _states = ["INITIALIZING...", "BYPASSING FIREWALL...", "ENCRYPTING PACKETS...", "NODE ROUTING...", "SCANNING NODE...", "VERIFYING INTEGRITY...", "FINALIZING..."];
         
-        // Fast status cycle (every 700ms)
         let stateIdx = 0;
         const statusTi = setInterval(() => {
             if(_sec > 0) {
@@ -272,6 +258,7 @@
             if(_capLocked) return;
             _capLocked = true;
 
+            // Open ad link
             w.open(_ad2, '_blank'); 
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
@@ -280,6 +267,7 @@
             let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
+            // STABILIZED CAPTCHA TIMER
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) {
@@ -290,14 +278,14 @@
                     cBox.classList.remove('loading');
                     cBox.classList.add('done');
 
-                    // FORCE CLOSE LOGIC
+                    // Force Close
                     setTimeout(() => {
                         _o.style.display = "none";
                         _o.setAttribute('style', 'display:none !important');
                         d.body.style.overflow = "auto";
                         _b.innerText = "START DOWNLOAD";
                         _s.innerText = "VERIFICATION COMPLETE";
-                    }, 600);
+                    }, 800);
                 }
             }, 1000);
         });
