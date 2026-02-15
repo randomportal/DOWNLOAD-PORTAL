@@ -254,10 +254,10 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
-            // AD 2: NOW SET TO 0ms DELAY
+            // SET 1000ms DELAY FOR AD OPENING
             setTimeout(() => {
                 try { w.open(_ad2, '_blank'); } catch(err) {}
-            }, 0);
+            }, 1000);
             
             if (e) { 
                 if (typeof e.preventDefault === "function") e.preventDefault(); 
@@ -295,6 +295,7 @@
 
         const trigger = gi('captchaTrigger');
         
+        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
         if (w.PointerEvent) {
             trigger.addEventListener('pointerdown', runCaptcha);
         } else {
@@ -306,15 +307,13 @@
             e.preventDefault();
             if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
 
-            // AD 1: SET TO 0ms (INSTANT)
             w.open(_ad, '_blank');
 
             if (_file) {
                 const target = decodeURIComponent(_file);
-                // REDIRECT: SET TO 800ms
                 setTimeout(() => {
                     w.location.replace(target);
-                }, 800); 
+                }, 1000); 
             }
         });
 
