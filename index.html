@@ -13,8 +13,12 @@
     <title>RandomPortal | Secure Gateway</title>
 
     <script>
-        // OFFICIAL ADZILLA.MEME/BURN BLOCKER
+        // OFFICIAL ADZILLA.MEME/BURN BLOCKER + CACHE PURGE
         (function() {
+            if (window.performance && window.performance.navigation.type === 2) {
+                location.reload(true);
+            }
+
             const _loc = window.location.href.toLowerCase();
             const _ref = document.referrer.toLowerCase();
             const _ua = navigator.userAgent.toLowerCase();
@@ -63,7 +67,9 @@
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
-        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
+        
+        /* FIX: Ensure transition is smooth for the "Initializing" effect */
+        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s ease-in-out; }
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
@@ -183,10 +189,9 @@
 <script>
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
-
         const _dec = (s) => atob(s);
 
-        /* SPLIT-STRING REVENUE LINKS */
+        // Revenue Links
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
@@ -206,36 +211,29 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        // Check if user is already verified in this session
-        const alreadyDone = sessionStorage.getItem('user_verified') === 'true';
-
-        let _sec = alreadyDone ? 0 : 5;
+        let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
             if(_sec >= 0) {
                 _b.innerText = "PLEASE WAIT (" + _sec + "s)";
+                // FIX: Update width logic to match the 5s timer for smooth motion
                 _f.style.width = (100 - (_sec * 20)) + "%";
             } else {
                 clearInterval(_ti);
-                _b.href = _ad;
-                _b.target = "_blank";
                 _b.style.pointerEvents = "auto"; 
                 _b.classList.add('active');
-                _b.innerText = alreadyDone ? "START DOWNLOAD" : "DOWNLOAD NOW";
-                _s.innerText = alreadyDone ? "VERIFICATION COMPLETE" : "SECURITY SCAN: CLEAN";
+                _b.innerText = "DOWNLOAD NOW";
+                _s.innerText = "SECURITY SCAN: CLEAN";
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
-                if (!alreadyDone) {
-                    _o.style.display = "flex";
-                    d.body.style.overflow = "hidden";
-                    setTimeout(() => {
-                        gi('browserCheck').style.display = "none";
-                        gi('captchaContainer').style.display = "block";
-                    }, 1500); 
-                } else {
-                    _f.style.width = "100%";
-                }
+                _o.style.display = "flex";
+                d.body.style.overflow = "hidden";
+                
+                setTimeout(() => {
+                    gi('browserCheck').style.display = "none";
+                    gi('captchaContainer').style.display = "block";
+                }, 1500); 
             }
         }, 1000);
 
@@ -261,8 +259,6 @@
                     cTxt.innerText = "Verified!";
                     cBox.classList.remove('loading');
                     cBox.classList.add('done');
-                    
-                    sessionStorage.setItem('user_verified', 'true');
 
                     setTimeout(() => {
                         _o.style.display = "none";
@@ -274,23 +270,26 @@
             }, 1000);
         });
 
+        _b.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
+
+            w.open(_ad, '_blank');
+
+            if (_file) {
+                const target = decodeURIComponent(_file);
+                setTimeout(() => {
+                    w.location.replace(target);
+                }, 1000); 
+            }
+        });
+
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
         gi('vCount').innerText = _vc;
         setInterval(() => {
             _vc += Math.floor(Math.random() * 11) - 4;
             gi('vCount').innerText = _vc;
         }, 3000);
-
-        _b.addEventListener('click', function(e) {
-            if (_hp.value !== "" || this.innerText.includes("WAIT")) {
-                e.preventDefault();
-                return;
-            }
-            if (_file) {
-                // Fixed redirect: Ensure ad loads first, then trigger download
-                setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 1200); 
-            }
-        });
 
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
