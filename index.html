@@ -72,7 +72,6 @@
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         
-        /* UPDATED: NORMAL LOADING SPEED */
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5s linear; }
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
@@ -82,7 +81,7 @@
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
         
-        #browserCheck { display: block; }
+        #browserCheck { display: none; }
         .mini-loader { height: 4px; width: 100%; background: #f0f0f0; border-radius: 2px; margin: 15px 0; overflow: hidden; }
         .mini-fill { height: 100%; width: 30%; background: var(--primary); animation: slide 1.5s infinite ease-in-out; }
         @keyframes slide { from { margin-left: -30%; } to { margin-left: 100%; } }
@@ -116,7 +115,7 @@
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
         .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
-        .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
+        .hp-field { opacity: 0; position: absolute; z-1: -1; left: -9999px; }
     </style>
 </head>
 <body>
@@ -126,10 +125,6 @@
 <div id="verifyOverlay">
     <div class="verify-modal">
         <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333;">Security Check</h3>
-        <div id="browserCheck">
-            <p style="font-size: 13px; color: #666; margin: 0;">Checking your browser connection...</p>
-            <div class="mini-loader"><div class="mini-fill"></div></div>
-        </div>
         <div id="captchaContainer">
             <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Please confirm you are not a robot to proceed.</p>
             <div class="captcha-box" id="captchaTrigger">
@@ -164,7 +159,7 @@
 <div class="download-card">
     <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
     <h2 id="title" style="margin:0; font-size: 22px;">Security Protocol</h2>
-    <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#007bff">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
+    <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#007bff">SCANNING...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
@@ -216,11 +211,11 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        // FIXED LOADING: Instant Start
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
-        const _states = ["INITIALIZING...", "BYPASSING FIREWALL...", "ENCRYPTING PACKETS...", "NODE ROUTING...", "SCANNING NODE...", "VERIFYING INTEGRITY...", "FINALIZING..."];
+        // PRO TRANSITION: Scanning -> Initializing -> Decrypting
+        const _states = ["SCANNING...", "INITIALIZING...", "DECRYPTING..."];
         
         let stateIdx = 0;
         const statusTi = setInterval(() => {
@@ -230,7 +225,7 @@
             } else {
                 clearInterval(statusTi);
             }
-        }, 700);
+        }, 800);
 
         const _ti = setInterval(() => {
             _sec--;
@@ -247,13 +242,10 @@
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
+                // INSTANT POPUP: No delay between timer and captcha
                 _o.style.display = "flex";
+                gi('captchaContainer').style.display = "block";
                 d.body.style.overflow = "hidden";
-                
-                setTimeout(() => {
-                    gi('browserCheck').style.display = "none";
-                    gi('captchaContainer').style.display = "block";
-                }, 1500); 
             }
         }, 1000);
 
@@ -270,7 +262,6 @@
             let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
-            // UPDATED: INDEPENDENT FAIL-SAFE CAPTCHA TIMER
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) {
@@ -312,7 +303,6 @@
             gi('vCount').innerText = _vc;
         }, 3000);
 
-        // RESTORED: FULL ORIGINAL COMMENT POOL
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
             {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
