@@ -88,16 +88,16 @@
 
         #captchaContainer { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-        .captcha-left { display: flex; align-items: center; gap: 12px; }
+        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; z-index: 10001; pointer-events: auto !important; }
+        .captcha-left { display: flex; align-items: center; gap: 12px; pointer-events: none; }
         
         .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; }
         .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
         @keyframes spinCap { to { transform: rotate(360deg); } }
         .captcha-check.done::after { content: '✓'; position: absolute; top: -2px; left: 4px; color: var(--success); font-size: 20px; font-weight: bold; }
 
-        .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; }
-        .captcha-right { text-align: center; }
+        .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; pointer-events: none; }
+        .captcha-right { text-align: center; pointer-events: none; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
 
         /* Security Badges Styles */
@@ -215,7 +215,6 @@
 
         let _sec = 5;
         
-        // Status sequence
         const statusTi = setInterval(() => {
             if(_sec > 4) {
                 _s.innerText = "SCANNING FOR THREATS...";
@@ -245,7 +244,6 @@
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
-                // Show verification immediately
                 _o.style.display = "flex";
                 gi('captchaContainer').style.display = "block";
                 d.body.style.overflow = "hidden";
@@ -254,24 +252,20 @@
 
         let _capLocked = false;
         
-        // RE-TRIPLE CHECKED TRIGGER LOGIC
-        gi('captchaTrigger').addEventListener('click', function(e) {
-            e.preventDefault();
+        // SOLID TRIGGER FUNCTION
+        function runCaptcha(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             if(_capLocked) return;
             _capLocked = true;
 
-            // Trigger Ad immediately
             try { w.open(_ad2, '_blank'); } catch(err) {}
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
-            
-            // Force visual change immediately
             cBox.classList.add('loading');
             
             let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
-            // Reliable interval
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) {
@@ -290,7 +284,12 @@
                     }, 800);
                 }
             }, 1000);
-        });
+        }
+
+        // BINDING TO BOTH CLICK AND TOUCH TO ENSURE 100% TRIGGER
+        const trigger = gi('captchaTrigger');
+        trigger.addEventListener('click', runCaptcha);
+        trigger.addEventListener('touchstart', runCaptcha, {passive: false});
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
