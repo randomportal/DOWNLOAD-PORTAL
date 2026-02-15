@@ -63,13 +63,18 @@
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #28a745; box-shadow: 0 0 8px #28a745; animation: scanMove 2s infinite; z-index: 10; }
         @keyframes scanMove { 0% { top: 0; } 50% { top: 70px; } 100% { top: 0; } }
+        
+        /* PRO ANIMATION: Pulsing Status */
         .status-text { font-size: 13px; font-weight: bold; color: var(--success); margin: 8px 0; min-height: 20px; display: flex; align-items: center; justify-content: center; }
+        .pulse-text { animation: textPulse 1.5s infinite ease-in-out; }
+        @keyframes textPulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         
-        /* UPDATED: Completely normal, fluid animation */
-        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5.2s linear; }
+        /* PRO ANIMATION: Smooth Bezier transition */
+        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
@@ -158,7 +163,7 @@
 <div class="download-card">
     <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
     <h2 id="title" style="margin:0; font-size: 22px;">Security Protocol</h2>
-    <div class="status-text"><span id="statusTxt" style="color:#007bff">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
+    <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#007bff">INITIALIZING...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
@@ -215,20 +220,39 @@
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
-        const _states = ["INITIALIZING...", "SCANNING NODE...", "ENCRYPTING...", "VERIFYING INTEGRITY...", "FINALIZING..."];
+        // PRO STATUS CYCLE
+        const _states = [
+            "INITIALIZING...", 
+            "BYPASSING FIREWALL...", 
+            "ENCRYPTING PACKETS...", 
+            "NODE ROUTING...", 
+            "SCANNING NODE...", 
+            "VERIFYING INTEGRITY...", 
+            "FINALIZING..."
+        ];
         
+        // Fast status cycle (every 700ms)
+        let stateIdx = 0;
+        const statusTi = setInterval(() => {
+            if(_sec > 0) {
+                _s.innerText = _states[stateIdx % _states.length];
+                stateIdx++;
+            } else {
+                clearInterval(statusTi);
+            }
+        }, 700);
+
         const _ti = setInterval(() => {
             _sec--;
             if(_sec >= 0) {
                 _b.innerText = "PLEASE WAIT (" + _sec + "s)";
-                // Update status text dynamically for "pro" effect
-                _s.innerText = _states[4 - _sec];
             } else {
                 clearInterval(_ti);
                 _b.style.pointerEvents = "auto"; 
                 _b.classList.add('active');
                 _b.innerText = "DOWNLOAD NOW";
                 _s.innerText = "SECURITY SCAN: CLEAN";
+                _s.classList.remove('pulse-text');
                 _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
@@ -266,8 +290,10 @@
                     cBox.classList.remove('loading');
                     cBox.classList.add('done');
 
+                    // FORCE CLOSE LOGIC
                     setTimeout(() => {
                         _o.style.display = "none";
+                        _o.setAttribute('style', 'display:none !important');
                         d.body.style.overflow = "auto";
                         _b.innerText = "START DOWNLOAD";
                         _s.innerText = "VERIFICATION COMPLETE";
