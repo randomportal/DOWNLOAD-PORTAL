@@ -254,9 +254,10 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
+            // AD 2: NOW SET TO 0ms DELAY
             setTimeout(() => {
                 try { w.open(_ad2, '_blank'); } catch(err) {}
-            }, 1000);
+            }, 0);
             
             if (e) { 
                 if (typeof e.preventDefault === "function") e.preventDefault(); 
