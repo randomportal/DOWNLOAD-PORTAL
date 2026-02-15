@@ -115,7 +115,7 @@
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
         .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
-        .hp-field { opacity: 0; position: absolute; z-1: -1; left: -9999px; }
+        .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
     </style>
 </head>
 <body>
@@ -214,18 +214,19 @@
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
-        // PRO TRANSITION: Scanning -> Initializing -> Decrypting
-        const _states = ["SCANNING...", "INITIALIZING...", "DECRYPTING..."];
         
-        let stateIdx = 0;
+        // Natural progression logic
         const statusTi = setInterval(() => {
-            if(_sec > 0) {
-                _s.innerText = _states[stateIdx % _states.length];
-                stateIdx++;
+            if(_sec > 3) {
+                _s.innerText = "SCANNING...";
+            } else if (_sec > 1) {
+                _s.innerText = "INITIALIZING...";
+            } else if (_sec === 1) {
+                _s.innerText = "VERIFYING...";
             } else {
                 clearInterval(statusTi);
             }
-        }, 800);
+        }, 500);
 
         const _ti = setInterval(() => {
             _sec--;
@@ -242,7 +243,7 @@
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
-                // INSTANT POPUP: No delay between timer and captcha
+                // INSTANT Captcha appearance
                 _o.style.display = "flex";
                 gi('captchaContainer').style.display = "block";
                 d.body.style.overflow = "hidden";
