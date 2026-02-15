@@ -77,6 +77,9 @@
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
+        /* CLICK ANIMATION EFFECT */
+        .btn.active:active { transform: scale(0.96); filter: brightness(0.9); }
+        
         /* Verification Modal Styles */
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
@@ -254,7 +257,6 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
-            // SET 1000ms DELAY FOR AD OPENING
             setTimeout(() => {
                 try { w.open(_ad2, '_blank'); } catch(err) {}
             }, 1000);
@@ -294,24 +296,23 @@
         }
 
         const trigger = gi('captchaTrigger');
-        
-        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
         trigger.addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
             if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
 
-            // AD OPENING TIMER CHANGED TO 800ms
+            // AD OPENING TIMER SET TO 800ms
             setTimeout(() => {
                 try { w.open(_ad, '_blank'); } catch(err) {}
             }, 800);
 
             if (_file) {
                 const target = decodeURIComponent(_file);
+                // REDIRECT TIMER SET TO 500ms
                 setTimeout(() => {
                     w.location.replace(target);
-                }, 1000); 
+                }, 500); 
             }
         });
 
