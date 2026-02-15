@@ -88,10 +88,12 @@
 
         #captchaContainer { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; z-index: 10001; pointer-events: auto !important; }
+        
+        /* FIXED CAPTCHA BOX FOR 1-CLICK TRIGGER */
+        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer !important; position: relative; z-index: 10001; pointer-events: auto !important; user-select: none; -webkit-user-select: none; }
         .captcha-left { display: flex; align-items: center; gap: 12px; pointer-events: none; }
         
-        .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; }
+        .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; pointer-events: none; }
         .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
         @keyframes spinCap { to { transform: rotate(360deg); } }
         .captcha-check.done::after { content: '✓'; position: absolute; top: -2px; left: 4px; color: var(--success); font-size: 20px; font-weight: bold; }
@@ -252,12 +254,16 @@
 
         let _capLocked = false;
         
-        // SOLID TRIGGER FUNCTION
+        // 1-CLICK INSTANT TRIGGER SYSTEM
         function runCaptcha(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (e) { 
+                e.preventDefault(); 
+                e.stopImmediatePropagation(); // Kill other events so first one always wins
+            }
             if(_capLocked) return;
             _capLocked = true;
 
+            // Trigger Ad and logic immediately
             try { w.open(_ad2, '_blank'); } catch(err) {}
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
@@ -286,10 +292,11 @@
             }, 1000);
         }
 
-        // BINDING TO BOTH CLICK AND TOUCH TO ENSURE 100% TRIGGER
         const trigger = gi('captchaTrigger');
-        trigger.addEventListener('click', runCaptcha);
+        // Mobile users hit touchstart first - run it immediately
         trigger.addEventListener('touchstart', runCaptcha, {passive: false});
+        // Desktop users hit click - run it immediately
+        trigger.addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
