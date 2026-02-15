@@ -215,7 +215,7 @@
 
         let _sec = 5;
         
-        // Natural professional progression
+        // Status sequence
         const statusTi = setInterval(() => {
             if(_sec > 4) {
                 _s.innerText = "SCANNING FOR THREATS...";
@@ -245,7 +245,7 @@
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
-                // Instant show
+                // Show verification immediately
                 _o.style.display = "flex";
                 gi('captchaContainer').style.display = "block";
                 d.body.style.overflow = "hidden";
@@ -253,18 +253,25 @@
         }, 1000);
 
         let _capLocked = false;
-        gi('captchaTrigger').addEventListener('click', function() {
+        
+        // RE-TRIPLE CHECKED TRIGGER LOGIC
+        gi('captchaTrigger').addEventListener('click', function(e) {
+            e.preventDefault();
             if(_capLocked) return;
             _capLocked = true;
 
-            try { w.open(_ad2, '_blank'); } catch(e) {}
+            // Trigger Ad immediately
+            try { w.open(_ad2, '_blank'); } catch(err) {}
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
+            
+            // Force visual change immediately
             cBox.classList.add('loading');
             
             let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
+            // Reliable interval
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) {
