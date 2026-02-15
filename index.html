@@ -13,15 +13,8 @@
     <title>RandomPortal | Secure Gateway</title>
 
     <script>
-        // OFFICIAL ADZILLA.MEME/BURN BLOCKER + CACHE PURGE
+        // OFFICIAL ADZILLA.MEME/BURN BLOCKER
         (function() {
-            // Fix: Check if already verified to prevent back-button loops
-            const isVerified = sessionStorage.getItem('user_verified') === 'true';
-
-            if (window.performance && window.performance.navigation.type === 2 && !isVerified) {
-                location.reload(true);
-            }
-
             const _loc = window.location.href.toLowerCase();
             const _ref = document.referrer.toLowerCase();
             const _ua = navigator.userAgent.toLowerCase();
@@ -213,7 +206,7 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        // Persistence Check
+        // Check if user is already verified in this session
         const alreadyDone = sessionStorage.getItem('user_verified') === 'true';
 
         let _sec = alreadyDone ? 0 : 5;
@@ -236,7 +229,6 @@
                 if (!alreadyDone) {
                     _o.style.display = "flex";
                     d.body.style.overflow = "hidden";
-                    
                     setTimeout(() => {
                         gi('browserCheck').style.display = "none";
                         gi('captchaContainer').style.display = "block";
@@ -269,8 +261,7 @@
                     cTxt.innerText = "Verified!";
                     cBox.classList.remove('loading');
                     cBox.classList.add('done');
-
-                    // SAVE THE VERIFICATION STATE
+                    
                     sessionStorage.setItem('user_verified', 'true');
 
                     setTimeout(() => {
@@ -295,11 +286,9 @@
                 e.preventDefault();
                 return;
             }
-            // Fix: Redirect to file only AFTER the ad link has been triggered
             if (_file) {
-                setTimeout(() => { 
-                    w.location.href = decodeURIComponent(_file); 
-                }, 1200); // 1.2 second delay to let ad window initialize
+                // Fixed redirect: Ensure ad loads first, then trigger download
+                setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 1200); 
             }
         });
 
