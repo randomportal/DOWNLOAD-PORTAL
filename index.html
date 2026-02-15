@@ -13,23 +13,18 @@
     <title>RandomPortal | Secure Gateway</title>
 
     <script>
-        // OFFICIAL ADZILLA.MEME/BURN BLOCKER + CACHE PURGE
         (function() {
-            // Force reload if page is loaded from cache to ensure block-list is active
-            if (window.performance && window.performance.navigation.type === 2) {
+            const isVerified = sessionStorage.getItem('user_verified') === 'true';
+            if (window.performance && window.performance.navigation.type === 2 && !isVerified) {
                 location.reload(true);
             }
-
             const _loc = window.location.href.toLowerCase();
             const _ref = document.referrer.toLowerCase();
             const _ua = navigator.userAgent.toLowerCase();
-            
             const isAdzillaBurn = _loc.includes('adzilla') || _loc.includes('burn') || 
                                  _ref.includes('adzilla') || _ref.includes('burn') ||
                                  /adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot|headless/i.test(_ua);
-
             const isAdNetwork = /effectivegate|adsterra|trafficstars|propeller/i.test(_ua);
-
             if (isAdzillaBurn && !isAdNetwork) {
                 window.stop();
                 document.documentElement.innerHTML = "";
@@ -42,23 +37,18 @@
 
     <link rel="preconnect" href="https://www.effectivegatecpm.com">
     <style>
-        /* CORE LAYOUT */
         * { box-sizing: border-box; }
         :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; --danger: #ff4d4d; --dark: #343a40; }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; width: 100%; }
-        
         .top-nav { width: 100%; background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--primary); }
         .logo-text { font-weight: 800; color: #333; font-size: 16px; letter-spacing: -0.5px; text-transform: uppercase; }
         .logo-text span { color: var(--primary); }
-        
         .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
         .server-tag { background: #eef5ff; color: var(--primary); font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
         .server-select { font-size: 10px; border: 1px solid #ddd; border-radius: 3px; padding: 1px 4px; background: #fafafa; color: #666; outline: none; cursor: pointer; font-family: inherit; }
-
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
         .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
@@ -69,33 +59,26 @@
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 1s linear; }
-        
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
-        
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
-        
         #browserCheck { display: block; }
         .mini-loader { height: 4px; width: 100%; background: #f0f0f0; border-radius: 2px; margin: 15px 0; overflow: hidden; }
         .mini-fill { height: 100%; width: 30%; background: var(--primary); animation: slide 1.5s infinite ease-in-out; }
         @keyframes slide { from { margin-left: -30%; } to { margin-left: 100%; } }
-
         #captchaContainer { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
         .captcha-left { display: flex; align-items: center; gap: 12px; }
-        
         .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; }
         .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
         @keyframes spinCap { to { transform: rotate(360deg); } }
         .captcha-check.done::after { content: '✓'; position: absolute; top: -2px; left: 4px; color: var(--success); font-size: 20px; font-weight: bold; }
-
         .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; }
         .captcha-right { text-align: center; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
         .captcha-right span { font-size: 8px; color: #9b9b9b; }
-
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
@@ -178,9 +161,8 @@
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
-        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
-        <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
+        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node).</p>
+        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our servers. All links provided are generated by third-party users.</p>
         <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
     </div>
 </div>
@@ -188,30 +170,23 @@
 <script>
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
-
         const _dec = (s) => atob(s);
 
-        /* SPLIT-STRING REVENUE LINKS */
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
         const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
 
-        const _ad = _dec(_p1a + _p1b),
-              _ad2 = _dec(_p2a + _p2b);
-
-        const _b = gi('dlBtn'),
-              _f = gi('fill'),
-              _s = gi('statusTxt'),
-              _o = gi('verifyOverlay'),
-              _n = gi('fileName'),
-              _hp = gi('btp');
+        const _ad = _dec(_p1a + _p1b), _ad2 = _dec(_p2a + _p2b);
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp');
 
         const _params = new URLSearchParams(w.location.search);
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        let _sec = 5;
+        const alreadyDone = sessionStorage.getItem('user_verified') === 'true';
+        let _sec = alreadyDone ? 0 : 5;
+
         const _ti = setInterval(() => {
             _sec--;
             if(_sec >= 0) {
@@ -219,125 +194,78 @@
                 _f.style.width = (100 - (_sec * 20)) + "%";
             } else {
                 clearInterval(_ti);
-                _b.href = _ad;
+                _b.href = _ad; // Directs to AD URL first
                 _b.target = "_blank";
                 _b.style.pointerEvents = "auto"; 
                 _b.classList.add('active');
-                _b.innerText = "DOWNLOAD NOW";
-                _s.innerText = "SECURITY SCAN: CLEAN";
+                _b.innerText = alreadyDone ? "START DOWNLOAD" : "DOWNLOAD NOW";
+                _s.innerText = alreadyDone ? "VERIFICATION COMPLETE" : "SECURITY SCAN: CLEAN";
                 gi('finalCheck').style.display = "inline-block"; 
                 gi('mainIcon').style.fill = "#28a745";
                 
-                _o.style.display = "flex";
-                d.body.style.overflow = "hidden";
-                
-                setTimeout(() => {
-                    gi('browserCheck').style.display = "none";
-                    gi('captchaContainer').style.display = "block";
-                }, 1500); 
+                if (!alreadyDone) {
+                    _o.style.display = "flex";
+                    d.body.style.overflow = "hidden";
+                    setTimeout(() => {
+                        gi('browserCheck').style.display = "none";
+                        gi('captchaContainer').style.display = "block";
+                    }, 1500); 
+                } else { _f.style.width = "100%"; }
             }
         }, 1000);
 
-        let _capLocked = false;
         gi('captchaTrigger').addEventListener('click', function() {
-            if(_capLocked) return;
-            _capLocked = true;
-
+            if(gi('capBox').classList.contains('loading')) return;
             w.open(_ad2, '_blank'); 
-
-            const cBox = gi('capBox'), cTxt = gi('capTxt');
-            cBox.classList.add('loading');
-            
+            gi('capBox').classList.add('loading');
             let cCount = 5; 
-            cTxt.innerText = "Verifying (" + cCount + "s)...";
-
             const capTimer = setInterval(() => {
                 cCount--;
-                if(cCount > 0) {
-                    cTxt.innerText = "Verifying (" + cCount + "s)...";
-                } else {
+                gi('capTxt').innerText = "Verifying (" + cCount + "s)...";
+                if(cCount <= 0) {
                     clearInterval(capTimer);
-                    cTxt.innerText = "Verified!";
-                    cBox.classList.remove('loading');
-                    cBox.classList.add('done');
-
+                    gi('capTxt').innerText = "Verified!";
+                    gi('capBox').classList.remove('loading');
+                    gi('capBox').classList.add('done');
+                    sessionStorage.setItem('user_verified', 'true');
                     setTimeout(() => {
                         _o.style.display = "none";
                         d.body.style.overflow = "auto";
                         _b.innerText = "START DOWNLOAD";
-                        _s.innerText = "VERIFICATION COMPLETE";
                     }, 600);
                 }
             }, 1000);
         });
 
-        let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        gi('vCount').innerText = _vc;
-        setInterval(() => {
-            _vc += Math.floor(Math.random() * 11) - 4;
-            gi('vCount').innerText = _vc;
-        }, 3000);
-
+        // REVENUE LOGIC: Requires click to trigger file download after ad
         _b.addEventListener('click', function(e) {
-            if (_hp.value !== "" || this.href.includes("javascript:void(0)")) {
+            // If they are clicking the ad link, we let it open.
+            // But we only trigger the file redirect after they've clicked this active button.
+            if (_hp.value !== "" || this.innerText === "PLEASE WAIT") {
                 e.preventDefault();
                 return;
             }
+
             if (_file) {
-                setTimeout(() => { w.location.href = decodeURIComponent(_file); }, 500); 
+                // Delay the file download by 1.5 seconds so the ad window has time to pop.
+                setTimeout(() => {
+                    w.location.href = decodeURIComponent(_file);
+                }, 1500);
             }
         });
 
-        const pool = [
-            {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
-            {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
-            {n:"Marco_D", t:"File hash correct."}, {n:"Lina_Sky", t:"Redirected quickly."}, {n:"Dave_Tech", t:"No malware found."}, 
-            {n:"Rina_99", t:"Works!"}, {n:"Alex_Z", t:"Super fast link."}, {n:"Priya_K", t:"Safe and secure."}, 
-            {n:"Tom_H88", t:"No issues at all."}, {n:"Elena_12", t:"Direct link works."}, {n:"Sam_Web", t:"Great UI."}, 
-            {n:"Chris_G", t:"Highly recommended."}, {n:"M_Software", t:"Clean code."}, {n:"Lisa_M", t:"Instant access."}, 
-            {n:"Dev_Joe", t:"Node verified."}, {n:"Anna_S", t:"Stable gateway."}, {n:"Rick_T", t:"No ads popups."}, 
-            {n:"Kim_001", t:"Trusted mirror."}, {n:"Yusuf_A", t:"Fastest route."}, {n:"B_Gamer", t:"Game file safe."}, 
-            {n:"X_Files", t:"Verified 2026."}, {n:"User_44", t:"Perfect mirror."}, {n:"D_Knight", t:"No virus."}, 
-            {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."},
-            {n:"Retro_1", t:"Legendary link."}, {n:"Mick_7", t:"Smooth portal."}, {n:"Sky_Net", t:"Verified node."},
-            {n:"A_Vee", t:"Best speed."}, {n:"J_Block", t:"Mirror active."}, {n:"S_Stream", t:"Direct flow."},
-            {n:"K_Logic", t:"Secure portal."}, {n:"T_Matrix", t:"Clean gateway."}, {n:"D_Flow", t:"Easy to use."},
-            {n:"B_Sharp", t:"No lag."}, {n:"V_Glow", t:"Instant link."}, {n:"N_Echo", t:"Safe file."},
-            {n:"M_Wave", t:"High speed."}, {n:"Z_Zero", t:"Works 100%."}, {n:"L_Light", t:"No malware."},
-            {n:"G_Force", t:"Rapid mirror."}, {n:"C_Zen", t:"Peace of mind."}, {n:"R_Red", t:"Stable link."},
-            {n:"F_Blast", t:"Quick access."}, {n:"W_Wind", t:"Fresh link."},
-            {n:"Iron_M", t:"Secured by RSA."}, {n:"Thor_21", t:"Hammer speed."}, {n:"Loki_X", t:"Trustworthy node."},
-            {n:"Neo_99", t:"The real gateway."}, {n:"Morpheus", t:"Verified clean."}, {n:"Trinity", t:"Fastest mirror."},
-            {n:"Agent_S", t:"No threats detected."}, {n:"Bane_C", t:"Heavy file support."}, {n:"Joker_0", t:"Funny speed!"},
-            {n:"Bruce_W", t:"Bat-fast."}, {n:"Clark_K", t:"Steel security."}, {n:"Diana_P", t:"Lasso verified."},
-            {n:"Barry_A", t:"Flash speed."}, {n:"Arthur_C", t:"Deep scan clean."}, {n:"Victor_S", t:"Cyber verified."},
-            {n:"Hal_J", t:"Green light."}, {n:"Steve_R", t:"Honest mirror."}, {n:"Tony_S", t:"High tech node."},
-            {n:"Nat_R", t:"Stealthy fast."}, {n:"Wanda_M", t:"Magic speed."}, {n:"Vision_X", t:"Clear scan."},
-            {n:"Peter_P", t:"Web secured."}, {n:"Miles_M", t:"New Gen speed."}, {n:"Gwen_S", t:"Ghost mirror."},
-            {n:"Eddie_B", t:"Venomous speed."}, {n:"Logan_X", t:"Claw verified."}, {n:"Scott_S", t:"Optic scan OK."},
-            {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
-            {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
-            {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
-            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Victor_D", t:"Doom speed."},
-            {n:"Silver_S", t:"Surf verified."}, {n:"Frank_C", t:"Punisher fast."}, {n:"Matt_M", t:"Blind trust."},
-            {n:"Luke_C", t:"Hard mirror."}, {n:"Danny_R", t:"Fist speed."}, {n:"Jessica_J", t:"Strong link."},
-            {n:"Wade_W", t:"Deadpool fast."}, {n:"Cable_X", t:"Future speed."}, {n:"Domino_7", t:"Lucky link."},
-            {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
-        ];
-
+        // Online Count & Comments
+        let _vc = 1700 + Math.floor(Math.random() * 700);
+        gi('vCount').innerText = _vc;
+        const pool = [{n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_W", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}];
         function u() {
-            for (let i = pool.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [pool[i], pool[j]] = [pool[j], pool[i]];
-            }
             let h = "";
-            for(let i=0; i<10; i++) {
-                const m = Math.floor(Math.random() * 59) + 1;
-                h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
-            }
+            pool.forEach(p => {
+                h += `<div class="comment"><div class="comment-meta"><strong>${p.n} <span class="v-badge">VERIFIED</span></strong><span>${Math.floor(Math.random()*59)}m ago</span></div>${p.t}</div>`;
+            });
             gi('commentList').innerHTML = h;
         }
-        u(); setInterval(u, 15000);
+        u();
     })();
 </script>
 </body>
