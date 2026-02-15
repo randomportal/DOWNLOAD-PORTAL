@@ -295,13 +295,8 @@
 
         const trigger = gi('captchaTrigger');
         
-        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
-        if (w.PointerEvent) {
-            trigger.addEventListener('pointerdown', runCaptcha);
-        } else {
-            trigger.addEventListener('touchstart', runCaptcha);
-            trigger.addEventListener('mousedown', runCaptcha);
-        }
+        // UPDATED LISTENER BLOCK: Using standard click for better timing
+        trigger.addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
