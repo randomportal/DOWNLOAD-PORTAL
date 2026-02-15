@@ -72,7 +72,8 @@
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         
-        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* NORMAL LOADING SPEED */
+        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5s linear; }
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
@@ -115,7 +116,7 @@
         .legal-inner h4 { font-size: 12px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
         .legal-text { font-size: 10px; color: #888; margin-bottom: 12px; line-height: 1.5; }
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
-        .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
+        .hp-field { opacity: 0; position: absolute; z-1: -1; left: -9999px; }
     </style>
 </head>
 <body>
@@ -215,6 +216,7 @@
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
+        // NORMAL LOADING: START IMMEDIATELY
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
@@ -260,7 +262,8 @@
             if(_capLocked) return;
             _capLocked = true;
 
-            w.open(_ad2, '_blank'); 
+            // Fail-safe: Try ad but continue timer even if blocked
+            try { w.open(_ad2, '_blank'); } catch(e) {}
 
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
@@ -268,7 +271,7 @@
             let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
-            // STABILIZED CAPTCHA TIMER
+            // STABILIZED INDEPENDENT FAIL-SAFE TIMER
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) {
@@ -276,8 +279,7 @@
                 } else {
                     clearInterval(capTimer);
                     cTxt.innerText = "Verified!";
-                    cBox.classList.remove('loading');
-                    cBox.classList.add('done');
+                    cBox.className = "captcha-check done";
 
                     setTimeout(() => {
                         _o.style.display = "none";
@@ -292,7 +294,7 @@
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
-            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
+            if (this.innerText !== "START DOWNLOAD") return;
 
             w.open(_ad, '_blank');
 
@@ -321,31 +323,7 @@
             {n:"Dev_Joe", t:"Node verified."}, {n:"Anna_S", t:"Stable gateway."}, {n:"Rick_T", t:"No ads popups."}, 
             {n:"Kim_001", t:"Trusted mirror."}, {n:"Yusuf_A", t:"Fastest route."}, {n:"B_Gamer", t:"Game file safe."}, 
             {n:"X_Files", t:"Verified 2026."}, {n:"User_44", t:"Perfect mirror."}, {n:"D_Knight", t:"No virus."}, 
-            {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."},
-            {n:"Retro_1", t:"Legendary link."}, {n:"Mick_7", t:"Smooth portal."}, {n:"Sky_Net", t:"Verified node."},
-            {n:"A_Vee", t:"Best speed."}, {n:"J_Block", t:"Mirror active."}, {n:"S_Stream", t:"Direct flow."},
-            {n:"K_Logic", t:"Secure portal."}, {n:"T_Matrix", t:"Clean gateway."}, {n:"D_Flow", t:"Easy to use."},
-            {n:"B_Sharp", t:"No lag."}, {n:"V_Glow", t:"Instant link."}, {n:"N_Echo", t:"Safe file."},
-            {n:"M_Wave", t:"High speed."}, {n:"Z_Zero", t:"Works 100%."}, {n:"L_Light", t:"No malware."},
-            {n:"G_Force", t:"Rapid mirror."}, {n:"C_Zen", t:"Peace of mind."}, {n:"R_Red", t:"Stable link."},
-            {n:"F_Blast", t:"Quick access."}, {n:"W_Wind", t:"Fresh link."},
-            {n:"Iron_M", t:"Secured by RSA."}, {n:"Thor_21", t:"Hammer speed."}, {n:"Loki_X", t:"Trustworthy node."},
-            {n:"Neo_99", t:"The real gateway."}, {n:"Morpheus", t:"Verified clean."}, {n:"Trinity", t:"Fastest mirror."},
-            {n:"Agent_S", t:"No threats detected."}, {n:"Bane_C", t:"Heavy file support."}, {n:"Joker_0", t:"Funny speed!"},
-            {n:"Bruce_W", t:"Bat-fast."}, {n:"Clark_K", t:"Steel security."}, {n:"Diana_P", t:"Lasso verified."},
-            {n:"Barry_A", t:"Flash speed."}, {n:"Arthur_C", t:"Deep scan clean."}, {n:"Victor_S", t:"Cyber verified."},
-            {n:"Hal_J", t:"Green light."}, {n:"Steve_R", t:"Honest mirror."}, {n:"Tony_S", t:"High tech node."},
-            {n:"Nat_R", t:"Stealthy fast."}, {n:"Wanda_M", t:"Magic speed."}, {n:"Vision_X", t:"Clear scan."},
-            {n:"Peter_P", t:"Web secured."}, {n:"Miles_M", t:"New Gen speed."}, {n:"Gwen_S", t:"Ghost mirror."},
-            {n:"Eddie_B", t:"Venomous speed."}, {n:"Logan_X", t:"Claw verified."}, {n:"Scott_S", t:"Optic scan OK."},
-            {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
-            {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
-            {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
-            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Victor_D", t:"Doom speed."},
-            {n:"Silver_S", t:"Surf verified."}, {n:"Frank_C", t:"Punisher fast."}, {n:"Matt_M", t:"Blind trust."},
-            {n:"Luke_C", t:"Hard mirror."}, {n:"Danny_R", t:"Fist speed."}, {n:"Jessica_J", t:"Strong link."},
-            {n:"Wade_W", t:"Deadpool fast."}, {n:"Cable_X", t:"Future speed."}, {n:"Domino_7", t:"Lucky link."},
-            {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
+            {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."}
         ];
 
         function u() {
