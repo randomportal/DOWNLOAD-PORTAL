@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="googlebot" content="noindex, nofollow">
     <meta name="referrer" content="always">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RandomPortal | Secure Gateway</title>
+
+    <script>
+        // OFFICIAL ADZILLA.MEME/BURN BLOCKER + CACHE PURGE
+        (function() {
+            // Force reload if page is loaded from cache to ensure block-list is active
+            if (window.performance && window.performance.navigation.type === 2) {
+                location.reload(true);
+            }
+
+            const _loc = window.location.href.toLowerCase();
+            const _ref = document.referrer.toLowerCase();
+            const _ua = navigator.userAgent.toLowerCase();
+            
+            const isAdzillaBurn = _loc.includes('adzilla') || _loc.includes('burn') || 
+                                 _ref.includes('adzilla') || _ref.includes('burn') ||
+                                 /adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot|headless/i.test(_ua);
+
+            const isAdNetwork = /effectivegate|adsterra|trafficstars|propeller/i.test(_ua);
+
+            if (isAdzillaBurn && !isAdNetwork) {
+                window.stop();
+                document.documentElement.innerHTML = "";
+                window.location.replace("https://www.google.com");
+            }
+        })();
+    </script>
 
     <script src="https://pl28713092.effectivegatecpm.com/bb/f2/da/bbf2dabde56dbfdd6bfef2a67cb91745.js"></script>
 
@@ -157,29 +187,9 @@
 
 <script>
     (function(){
-        // HARDENED BALANCED BOT-KILLER: Nukes Adzilla and Spybots while whitelisting Ad Networks
-        const _ua = navigator.userAgent;
-        const _ref = document.referrer;
-        
-        const isAdNetwork = /EffectiveGate|Adsterra|TrafficStars|Propeller/i.test(_ua);
-        
-        // Combined kill-switch for Adzilla, Headless browsers, and Spybots
-        const isMaliciousBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|adsbot|headless|adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot/i.test(_ua) || 
-                               /adzilla/i.test(_ref) || 
-                               (window.name && /adzilla/i.test(window.name));
-
-        const isAutomation = navigator.webdriver || !navigator.languages || navigator.languages.length === 0;
-
-        if ((isMaliciousBot || isAutomation) && !isAdNetwork) {
-            window.location.replace("https://www.google.com");
-            return;
-        }
+        const d = document, w = window, gi = (id) => d.getElementById(id);
 
         const _dec = (s) => atob(s);
-        
-        const d = document,
-              w = window,
-              gi = (id) => d.getElementById(id);
 
         /* SPLIT-STRING REVENUE LINKS */
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
