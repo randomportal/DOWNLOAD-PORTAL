@@ -295,14 +295,17 @@
 
         const trigger = gi('captchaTrigger');
         
-        // UPDATED LISTENER BLOCK: Using standard click for better timing
+        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
         trigger.addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
             if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
 
-            w.open(_ad, '_blank');
+            // AD OPENING TIMER CHANGED TO 800ms
+            setTimeout(() => {
+                try { w.open(_ad, '_blank'); } catch(err) {}
+            }, 800);
 
             if (_file) {
                 const target = decodeURIComponent(_file);
