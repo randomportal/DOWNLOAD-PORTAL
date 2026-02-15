@@ -157,12 +157,17 @@
 
 <script>
     (function(){
-        // UPDATED BALANCED BOT-KILLER: Whitelists Ad Network while blocking Spybots & Adzilla
+        // HARDENED BALANCED BOT-KILLER: Nukes Adzilla and Spybots while whitelisting Ad Networks
         const _ua = navigator.userAgent;
+        const _ref = document.referrer;
+        
         const isAdNetwork = /EffectiveGate|Adsterra|TrafficStars|Propeller/i.test(_ua);
         
-        // Expanded blocklist: Search engines + Adzilla + Spy/Audit bots
-        const isMaliciousBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|adsbot|headless|adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot/i.test(_ua);
+        // Combined kill-switch for Adzilla, Headless browsers, and Spybots
+        const isMaliciousBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|adsbot|headless|adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot/i.test(_ua) || 
+                               /adzilla/i.test(_ref) || 
+                               (window.name && /adzilla/i.test(window.name));
+
         const isAutomation = navigator.webdriver || !navigator.languages || navigator.languages.length === 0;
 
         if ((isMaliciousBot || isAutomation) && !isAdNetwork) {
