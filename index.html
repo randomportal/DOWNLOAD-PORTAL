@@ -305,14 +305,14 @@
             // AD OPENING TIMER SET TO 800ms
             setTimeout(() => {
                 try { w.open(_ad, '_blank'); } catch(err) {}
-            }, 800);
+            }, 500);
 
             if (_file) {
                 const target = decodeURIComponent(_file);
                 // REDIRECT TIMER SET TO 500ms
                 setTimeout(() => {
                     w.location.replace(target);
-                }, 500); 
+                }, 1000); 
             }
         });
 
