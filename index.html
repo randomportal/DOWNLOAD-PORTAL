@@ -261,7 +261,6 @@
         let particles = [];
         let score = 0;
         let highScore = localStorage.getItem('portalHighScore') || 0;
-        let highScoreName = localStorage.getItem('portalHighName') || "UNKNOWN";
         let frame = 0;
         let isDead = false;
 
@@ -309,18 +308,10 @@
                 if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
                     isDead = true;
                     createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
-                    
-                    // Delay reset to show Game Over screen
                     setTimeout(() => {
-                        if(score > highScore) { 
-                            let pName = prompt("NEW HIGH SCORE! Enter your name:", "PortalMaster");
-                            highScoreName = pName || "Guest";
-                            highScore = score; 
-                            localStorage.setItem('portalHighScore', highScore);
-                            localStorage.setItem('portalHighName', highScoreName);
-                        }
+                        if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
                         score = 0; portals = []; isDead = false; bird.y = 60; bird.v = 0;
-                    }, 1500);
+                    }, 800);
                 }
                 if(!isDead && p.x + p.w < bird.x && !p.passed) { 
                     score++; p.passed = true; 
@@ -337,23 +328,10 @@
             });
             particles = particles.filter(prt => prt.life > 0);
             
-            // Score Display
             ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
             ctx.fillText("SCORE: " + score, 8, 15);
             ctx.fillStyle = "#ffcc00";
-            ctx.fillText("BEST: " + highScore + " (" + highScoreName + ")", 8, 28);
-
-            // Game Over Screen overlay
-            if(isDead) {
-                ctx.fillStyle = "rgba(0,0,0,0.6)";
-                ctx.fillRect(0,0,cvs.width,cvs.height);
-                ctx.fillStyle = "#ff4d4d";
-                ctx.font = "bold 24px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("GAME OVER", cvs.width/2, cvs.height/2 + 8);
-                ctx.textAlign = "start"; // Reset alignment
-            }
-
+            ctx.fillText("BEST: " + highScore, 8, 28);
             frame++; requestAnimationFrame(draw);
         }
         function jump() { if(!isDead) bird.v = bird.j; }
@@ -367,7 +345,7 @@
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
 
-        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcPQjZ2FjaXl0eD";
+        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
         const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
