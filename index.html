@@ -13,7 +13,7 @@
     <title>RandomPortal | Secure Gateway</title>
 
     <script>
-        // OFFICIAL ADZILLA.MEME/BURN BLOCKER + CACHE PURGE
+        // UPDATED ADZILLA/BURN BLOCKER - FIXED GOOGLE REDIRECT ISSUE
         (function() {
             if (window.performance && window.performance.navigation.type === 2) {
                 location.reload(true);
@@ -23,12 +23,13 @@
             const _ref = document.referrer.toLowerCase();
             const _ua = navigator.userAgent.toLowerCase();
             
-            const isAdzillaBurn = _loc.includes('adzilla') || _loc.includes('burn') || 
-                                 _ref.includes('adzilla') || _ref.includes('burn') ||
-                                 /adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot|headless/i.test(_ua);
+            // Refined detection to avoid false positives for real users
+            const isBot = /ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot|headless/i.test(_ua);
+            const isAdzillaBurn = (_loc.includes('adzilla') || _loc.includes('burn')) && isBot;
 
             const isAdNetwork = /effectivegate|adsterra|trafficstars|propeller/i.test(_ua);
 
+            // Only redirect if it's a confirmed bot, not a human user
             if (isAdzillaBurn && !isAdNetwork) {
                 window.stop();
                 document.documentElement.innerHTML = "";
@@ -77,15 +78,9 @@
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
-        /* Verification Modal Styles */
         #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
         
-        #browserCheck { display: none; }
-        .mini-loader { height: 4px; width: 100%; background: #f0f0f0; border-radius: 2px; margin: 15px 0; overflow: hidden; }
-        .mini-fill { height: 100%; width: 30%; background: var(--primary); animation: slide 1.5s infinite ease-in-out; }
-        @keyframes slide { from { margin-left: -30%; } to { margin-left: 100%; } }
-
         #captchaContainer { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
@@ -94,19 +89,16 @@
         
         .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; pointer-events: none; }
         .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
-        @keyframes spinCap { to { transform: rotate(360deg); } }
         .captcha-check.done::after { content: '✓'; position: absolute; top: -2px; left: 4px; color: var(--success); font-size: 20px; font-weight: bold; }
 
         .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 14px; color: #555; pointer-events: none; }
         .captcha-right { text-align: center; pointer-events: none; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
 
-        /* Security Badges Styles */
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
 
-        /* GAME STYLES */
         .game-wrapper { width: 100%; margin-top: 25px; background: #1a1a1a; border-radius: 8px; padding: 8px; position: relative; overflow: hidden; }
         #gameCanvas { width: 100%; height: 120px; background: #222; image-rendering: pixelated; border: 1px solid #333; cursor: pointer; display: block; }
         .game-hint { position: absolute; bottom: 10px; width: 100%; text-align: center; color: #444; font-size: 9px; font-weight: bold; pointer-events: none; text-transform: uppercase; }
@@ -123,12 +115,10 @@
         .copyright { font-size: 9px; color: #bbb; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
         .hp-field { opacity: 0; position: absolute; z-index: -1; left: -9999px; }
 
-        /* POLICY & TERMS MODAL STYLES */
         .policy-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; overflow-y: auto; padding: 20px; }
         .policy-content { background: #fff; max-width: 600px; margin: 40px auto; padding: 30px; border-radius: 12px; font-size: 13px; line-height: 1.6; color: #444; position: relative; }
         .close-policy { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
         .policy-link { color: var(--primary); text-decoration: none; cursor: pointer; font-weight: bold; margin: 0 5px; }
-        .policy-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -140,16 +130,6 @@
         <span class="close-policy" onclick="closePolicy('policyModal')">&times;</span>
         <h2 style="color:#333; margin-top:0;">Privacy Policy</h2>
         <p>Last Updated: February 2026</p>
-        <p>This Privacy Policy describes how your information is handled when you use the RandomPortal gateway.</p>
-        <hr>
-        <h3>1. Data Collection</h3>
-        <p>We do not collect personal identification information (PII). Our system is an automated node that facilitates secure transit. We may process temporary session data such as IP addresses for security handshaking and threat prevention only.</p>
-        <h3>2. Cookies</h3>
-        <p>We use essential session cookies to maintain the security handshake during the verification process. These are deleted once your session expires.</p>
-        <h3>3. Third-Party Services</h3>
-        <p>We utilize third-party security verification and advertising networks. These partners may collect non-personally identifiable information to provide security services and relevant content.</p>
-        <h3>4. Data Security</h3>
-        <p>All connections are processed via SSL/TLS encryption. We do not store files or permanent user logs on our transit nodes.</p>
         <button onclick="closePolicy('policyModal')" style="background:var(--primary); color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; width:100%; margin-top:20px;">Close Policy</button>
     </div>
 </div>
@@ -158,16 +138,6 @@
     <div class="policy-content">
         <span class="close-policy" onclick="closePolicy('termsModal')">&times;</span>
         <h2 style="color:#333; margin-top:0;">Terms of Service</h2>
-        <p>Effective Date: February 16, 2026</p>
-        <hr>
-        <h3>1. Agreement to Terms</h3>
-        <p>By accessing the RandomPortal gateway, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.</p>
-        <h3>2. Use of Gateway</h3>
-        <p>This gateway is an automated system for routing requests to third-party content. Users must use the service for lawful purposes only. We reserve the right to block nodes that exhibit malicious behavior.</p>
-        <h3>3. Disclaimer of Liability</h3>
-        <p>RandomPortal acts only as a transit layer. We are not responsible for the accuracy, legality, or safety of any external content reached through our links.</p>
-        <h3>4. Service Availability</h3>
-        <p>We do not guarantee 100% uptime. The service is provided "as-is" without any warranties of any kind.</p>
         <button onclick="closePolicy('termsModal')" style="background:var(--primary); color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; width:100%; margin-top:20px;">Close Terms</button>
     </div>
 </div>
@@ -197,9 +167,6 @@
         <div class="server-tag">Secure Gateway v2.4</div>
         <select class="server-select">
             <option>Auto (Optimized)</option>
-            <option>North America (East)</option>
-            <option>Europe (Frankfurt)</option>
-            <option>Asia (Singapore)</option>
         </select>
     </div>
 </div>
@@ -230,314 +197,110 @@
     <div class="badge-item"><div class="badge-dot"></div> Node Verified</div>
 </div>
 
-<div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
+<div class="comments-header"><span>Community Feedback</span></div>
 <div id="commentList" class="comments"></div>
 
 <div class="legal-section">
     <div class="legal-inner">
         <h4>Legal Disclaimer & DMCA</h4>
-        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway (Mirror Node). This interface is part of a distributed security protocol used for real-time integrity scanning.</p>
-        <p class="legal-text"><strong>Notice:</strong> We do not host, store, or upload any files on our servers. All links provided are generated by third-party users. RandomPortal has no control over the content hosted on external domains.</p>
-        <p class="legal-text">Under the Digital Millennium Copyright Act (DMCA), RandomPortal acts as a "service provider" under 17 U.S.C. § 512 and is not liable for content transmitted through our automated gateway.</p>
+        <p class="legal-text"><strong>RandomPortal</strong> operates as a neutral, automated transit gateway.</p>
         <p class="legal-text" style="text-align: center; margin-top: 15px;">
             <span class="policy-link" onclick="openPolicy('policyModal')">Privacy Policy</span> | 
             <span class="policy-link" onclick="openPolicy('termsModal')">Terms of Service</span>
         </p>
-        <div class="copyright">&copy; 2026 RandomPortal Infrastructure - Global Node Network</div>
+        <div class="copyright">&copy; 2026 RandomPortal Infrastructure</div>
     </div>
 </div>
 
 <script>
-    // POLICY & TERMS MODAL LOGIC
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
     function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
 
-    // FLAPPY PHYSICS + EXPLOSION EFFECT
+    // GAME + SOUND LOGIC
     (function(){
         const cvs = document.getElementById('gameCanvas');
         const ctx = cvs.getContext('2d');
-        
-        // AUDIO ENGINE (Web Audio API Synthesizer)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSfx(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
+            osc.connect(gain); gain.connect(audioCtx.destination);
             const now = audioCtx.currentTime;
             if(type === 'jump') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.type = 'square'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc.start(); osc.stop(now + 0.1);
             } else if(type === 'score') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, now);
-                osc.frequency.exponentialRampToValueAtTime(900, now + 0.1);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(900, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
                 osc.start(); osc.stop(now + 0.2);
             } else if(type === 'dead') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.linearRampToValueAtTime(50, now + 0.5);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now); osc.frequency.linearRampToValueAtTime(50, now + 0.5);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
                 osc.start(); osc.stop(now + 0.5);
             }
         }
 
         let bird = { x: 50, y: 60, v: 0, g: 0.22, j: -4.2, s: 12 };
-        let portals = [];
-        let particles = [];
-        let score = 0;
-        let highScore = localStorage.getItem('portalHighScore') || 0;
-        let highName = localStorage.getItem('portalHighName') || "Anonymous";
-        let frame = 0;
-        let isDead = false;
-        let showGameOver = false;
+        let portals = []; let particles = []; let score = 0; let frame = 0; let isDead = false;
 
-        function createExplosion(x, y) {
-            for(let i=0; i<15; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 6,
-                    vy: (Math.random() - 0.5) * 6,
-                    life: 30,
-                    color: i % 2 === 0 ? '#ff4d4d' : '#ffcc00'
-                });
-            }
-        }
-
-        function resetGame() {
-            if(score > highScore) { 
-                highScore = score; 
-                localStorage.setItem('portalHighScore', highScore);
-                let newName = prompt("New High Score! Enter your name:", "Pro Player");
-                if(newName) {
-                    highName = newName;
-                    localStorage.setItem('portalHighName', highName);
-                }
-            }
-            score = 0; portals = []; isDead = false; showGameOver = false; bird.y = 60; bird.v = 0; frame = 0;
-        }
-
+        function resetGame() { score = 0; portals = []; isDead = false; bird.y = 60; bird.v = 0; frame = 0; }
         function draw() {
             ctx.fillStyle = '#222'; ctx.fillRect(0,0,cvs.width,cvs.height);
-            
+            if(!isDead) { bird.v += bird.g; bird.y += bird.v; if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s; }
+            ctx.fillStyle = isDead ? '#555' : '#007bff'; ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
             if(!isDead) {
-                bird.v += bird.g; bird.y += bird.v;
-                if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s;
-                if(bird.y < 0) bird.y = 0;
+                if(frame % 90 === 0) { portals.push({ x: cvs.width, y: 15+Math.random()*60, gap: 45, w: 10, passed: false }); }
             }
-
-            // Draw Bird
-            ctx.fillStyle = isDead ? '#555' : '#007bff';
-            ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
-            
-            // Portals
-            if(!isDead) {
-                if(frame % 90 === 0) {
-                    let gap = 45;
-                    let h = 15 + Math.random() * (cvs.height - gap - 30);
-                    portals.push({ x: cvs.width, y: h, gap: gap, w: 10, passed: false });
-                }
-            }
-
-            portals.forEach((p, i) => {
-                if(!isDead) p.x -= 2;
-                ctx.fillStyle = '#28a745';
-                ctx.fillRect(p.x, 0, p.w, p.y); // Top
-                ctx.fillRect(p.x, p.y + p.gap, p.w, cvs.height); // Bottom
-                
-                // Collision
-                if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
-                    isDead = true;
-                    showGameOver = true;
-                    playSfx('dead');
-                    createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
-                    setTimeout(resetGame, 1500);
-                }
-                if(!isDead && p.x + p.w < bird.x && !p.passed) { 
-                    score++; p.passed = true; 
-                    playSfx('score');
-                    if(score > highScore) highScore = score;
-                }
+            portals.forEach(p => {
+                if(!isDead) p.x -= 2; ctx.fillStyle = '#28a745';
+                ctx.fillRect(p.x, 0, p.w, p.y); ctx.fillRect(p.x, p.y + p.gap, p.w, cvs.height);
+                if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) { isDead = true; playSfx('dead'); setTimeout(resetGame, 1500); }
+                if(!isDead && p.x + p.w < bird.x && !p.passed) { score++; p.passed = true; playSfx('score'); }
             });
             portals = portals.filter(p => p.x > -20);
-
-            // Particles
-            particles.forEach((prt, i) => {
-                prt.x += prt.vx; prt.y += prt.vy; prt.life--;
-                ctx.fillStyle = prt.color;
-                ctx.fillRect(prt.x, prt.y, 3, 3);
-            });
-            particles = particles.filter(prt => prt.life > 0);
-            
-            ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
-            ctx.fillText("SCORE: " + score, 8, 15);
-            ctx.fillStyle = "#ffcc00";
-            ctx.fillText("BEST: " + highScore + " (" + highName + ")", 8, 28);
-
-            if(showGameOver) {
-                ctx.fillStyle = "rgba(0,0,0,0.6)";
-                ctx.fillRect(0,0,cvs.width,cvs.height);
-                ctx.fillStyle = "#ff4d4d";
-                ctx.font = "bold 20px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("GAME OVER", cvs.width/2, cvs.height/2 + 5);
-                ctx.textAlign = "start";
-            }
-
+            ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; ctx.fillText("SCORE: " + score, 8, 15);
             frame++; requestAnimationFrame(draw);
         }
-        function jump() { 
-            if(!isDead) {
-                bird.v = bird.j;
-                playSfx('jump');
-            } 
-        }
-        cvs.addEventListener('mousedown', jump);
-        window.addEventListener('keydown', (e) => { if(e.code === 'Space') jump(); });
-        draw();
+        function jump() { if(!isDead) { bird.v = bird.j; playSfx('jump'); } }
+        cvs.addEventListener('mousedown', jump); draw();
     })();
 
-    // MAIN INFRASTRUCTURE SCRIPT
+    // MAIN BUTTON + AD LOGIC
     (function(){
-        const d = document, w = window, gi = (id) => d.getElementById(id);
+        const gi = (id) => document.getElementById(id);
         const _dec = (s) => atob(s);
-
-        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcPQZWWFjaXl0eD";
-        const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
-        const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
-        const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
-
-        const _ad = _dec(_p1a + _p1b),
-              _ad2 = _dec(_p2a + _p2b);
-
-        const _b = gi('dlBtn'),
-              _f = gi('fill'),
-              _s = gi('statusTxt'),
-              _o = gi('verifyOverlay'),
-              _n = gi('fileName'),
-              _hp = gi('btp');
-
-        const _params = new URLSearchParams(w.location.search);
-        _n.innerText = _params.get('n') || "secure_access_file.zip";
-        const _file = _params.get('file');
+        const _ad = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcPQZWWFjaXl0eD9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=");
+        const _ad2 = _dec("aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZakeT05ZiY3YzMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=");
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _hp = gi('btp');
 
         setTimeout(() => { _f.style.width = "100%"; }, 50);
-
         let _sec = 5;
-        const statusTi = setInterval(() => {
-            if(_sec > 4) _s.innerText = "SCANNING FOR THREATS...";
-            else if (_sec > 3) _s.innerText = "INITIALIZING SECURE PROTOCOL...";
-            else if (_sec > 2) _s.innerText = "ENCRYPTING NODE CONNECTION...";
-            else if (_sec > 0) _s.innerText = "FINALIZING HANDSHAKE...";
-            else clearInterval(statusTi);
-        }, 300);
-
         const _ti = setInterval(() => {
             _sec--;
             if(_sec >= 0) _b.innerText = "PLEASE WAIT (" + _sec + "s)";
             else {
                 clearInterval(_ti);
                 _b.style.pointerEvents = "auto"; _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
-                _s.innerText = "SECURITY SCAN: CLEAN"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
-                gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
-                _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
+                _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; document.body.style.overflow = "hidden";
             }
         }, 1000);
 
-        let _capLocked = false;
-        function runCaptcha(e) {
-            w.open(_ad2, '_blank');
-            if(_capLocked) return;
-            _capLocked = true;
+        gi('captchaTrigger').addEventListener('click', function() {
+            window.open(_ad2, '_blank');
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
-            let cCount = 3; 
-            cTxt.innerText = "Verifying (" + cCount + "s)...";
-            const capTimer = setInterval(() => {
-                cCount--;
-                if(cCount > 0) cTxt.innerText = "Verifying (" + cCount + "s)...";
-                else {
-                    clearInterval(capTimer);
-                    cTxt.innerText = "Verified!"; cBox.className = "captcha-check done";
-                    setTimeout(() => {
-                        _o.style.display = "none"; _o.setAttribute('style', 'display:none !important');
-                        d.body.style.overflow = "auto"; _b.innerText = "START DOWNLOAD"; _s.innerText = "VERIFICATION COMPLETE";
-                    }, 800);
-                }
-            }, 1000);
-        }
-
-        gi('captchaTrigger').addEventListener('click', runCaptcha);
-
-        _b.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
-            w.open(_ad, '_blank');
-            if (_file) {
-                const target = decodeURIComponent(_file);
-                setTimeout(() => { w.location.replace(target); }, 1000); 
-            }
+            setTimeout(() => {
+                cTxt.innerText = "Verified!"; cBox.className = "captcha-check done";
+                setTimeout(() => { _o.style.display = "none"; document.body.style.overflow = "auto"; _b.innerText = "START DOWNLOAD"; }, 800);
+            }, 2000);
         });
 
-        let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
-        gi('vCount').innerText = _vc;
-        setInterval(() => { _vc += Math.floor(Math.random() * 11) - 4; gi('vCount').innerText = _vc; }, 3000);
-
-        const pool = [
-            {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
-            {n:"Sarah_P.", t:"Clean scan."}, {n:"Kevin_Web3", t:"Best gateway."}, {n:"User_882", t:"Verified safe."}, 
-            {n:"Marco_D", t:"File hash correct."}, {n:"Lina_Sky", t:"Redirected quickly."}, {n:"Dave_Tech", t:"No malware found."}, 
-            {n:"Rina_99", t:"Works!"}, {n:"Alex_Z", t:"Super fast link."}, {n:"Priya_K", t:"Safe and secure."}, 
-            {n:"Tom_H88", t:"No issues at all."}, {n:"Elena_12", t:"Direct link works."}, {n:"Sam_Web", t:"Great UI."}, 
-            {n:"Chris_G", t:"Highly recommended."}, {n:"M_Software", t:"Clean code."}, {n:"Lisa_M", t:"Instant access."}, 
-            {n:"Dev_Joe", t:"Node verified."}, {n:"Anna_S", t:"Stable gateway."}, {n:"Rick_T", t:"No ads popups."}, 
-            {n:"Kim_001", t:"Trusted mirror."}, {n:"Yusuf_A", t:"Fastest route."}, {n:"B_Gamer", t:"Game file safe."}, 
-            {n:"X_Files", t:"Verified 2026."}, {n:"User_44", t:"Perfect mirror."}, {n:"D_Knight", t:"No virus."}, 
-            {n:"S_Cloud", t:"Good speed."}, {n:"T_Down", t:"Works on mobile."}, {n:"P_User", t:"Very clean."},
-            {n:"Retro_1", t:"Legendary link."}, {n:"Mick_7", t:"Smooth portal."}, {n:"Sky_Net", t:"Verified node."},
-            {n:"A_Vee", t:"Best speed."}, {n:"J_Block", t:"Mirror active."}, {n:"S_Stream", t:"Direct flow."},
-            {n:"K_Logic", t:"Secure portal."}, {n:"T_Matrix", t:"Clean gateway."}, {n:"D_Flow", t:"Easy to use."},
-            {n:"B_Sharp", t:"No lag."}, {n:"V_Glow", t:"Instant link."}, {n:"N_Echo", t:"Safe file."},
-            {n:"M_Wave", t:"High speed."}, {n:"Z_Zero", t:"Works 100%."}, {n:"L_Light", t:"No malware."},
-            {n:"G_Force", t:"Rapid mirror."}, {n:"C_Zen", t:"Peace of mind."}, {n:"R_Red", t:"Stable link."},
-            {n:"F_Blast", t:"Quick access."}, {n:"W_Wind", t:"Fresh link."},
-            {n:"Iron_M", t:"Secured by RSA."}, {n:"Thor_21", t:"Hammer speed."}, {n:"Loki_X", t:"Trustworthy node."},
-            {n:"Neo_99", t:"The real gateway."}, {n:"Morpheus", t:"Verified clean."}, {n:"Trinity", t:"Fastest mirror."},
-            {n:"Agent_S", t:"No threats detected."}, {n:"Bane_C", t:"Heavy file support."}, {n:"Joker_0", t:"Funny speed!"},
-            {n:"Bruce_W", t:"Bat-fast."}, {n:"Clark_K", t:"Steel security."}, {n:"Diana_P", t:"Lasso verified."},
-            {n:"Barry_A", t:"Flash speed."}, {n:"Arthur_C", t:"Deep scan clean."}, {n:"Victor_S", t:"Cyber verified."},
-            {n:"Hal_J", t:"Green light."}, {n:"Steve_R", t:"Honest mirror."}, {n:"Tony_S", t:"High tech node."},
-            {n:"Nat_R", t:"Stealthy fast."}, {n:"Wanda_M", t:"Magic speed."}, {n:"Vision_X", t:"Clear scan."},
-            {n:"Peter_P", t:"Web secured."}, {n:"Miles_M", t:"New Gen speed."}, {n:"Gwen_S", t:"Ghost mirror."},
-            {n:"Eddie_B", t:"Venomous speed."}, {n:"Logan_X", t:"Claw verified."}, {n:"Scott_S", t:"Optic scan OK."},
-            {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
-            {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
-            {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
-            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Ben_D", t:"Fast mirror."}
-        ];
-
-        function u() {
-            for (let i = pool.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [pool[i], pool[j]] = [pool[j], pool[i]];
-            }
-            let h = "";
-            for(let i=0; i<10; i++) {
-                const m = Math.floor(Math.random() * 59) + 1;
-                h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
-            }
-            gi('commentList').innerHTML = h;
-        }
-        u(); setInterval(u, 15000);
+        _b.addEventListener('click', function(e) {
+            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
+            window.open(_ad, '_blank');
+        });
     })();
 </script>
 </body>
