@@ -254,10 +254,8 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
-            // SET 1000ms DELAY FOR AD OPENING
-            setTimeout(() => {
-                try { w.open(_ad2, '_blank'); } catch(err) {}
-            }, 1000);
+            // REDIRECT INSTANTLY (0ms)
+            try { w.open(_ad2, '_blank'); } catch(err) {}
             
             if (e) { 
                 if (typeof e.preventDefault === "function") e.preventDefault(); 
@@ -270,7 +268,8 @@
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
             
-            let cCount = 5; 
+            // TIMER START COUNTDOWN TO 3
+            let cCount = 3; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
 
             const capTimer = setInterval(() => {
@@ -295,7 +294,6 @@
 
         const trigger = gi('captchaTrigger');
         
-        // COMPATIBILITY HANDLERS: Support for Pointer (New), Touch (Old Mobile), and Mousedown (Old Desktop)
         if (w.PointerEvent) {
             trigger.addEventListener('pointerdown', runCaptcha);
         } else {
