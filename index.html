@@ -77,6 +77,11 @@
         .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         
+        /* AI TERMINAL STYLES */
+        .ai-terminal { width: 90%; max-width: 450px; background: #111; color: #00ff41; font-family: 'Courier New', monospace; padding: 12px; border-radius: 8px; font-size: 11px; margin-top: 20px; border: 1px solid #222; box-shadow: 0 4px 15px rgba(0,0,0,0.2); height: 55px; display: flex; align-items: center; overflow: hidden; }
+        .ai-cursor { display: inline-block; width: 7px; height: 13px; background: #00ff41; margin-left: 5px; animation: aiBlink 0.8s infinite; }
+        @keyframes aiBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
         .icon-svg { width: 100%; height: 100%; fill: #007bff; transition: 0.5s; }
@@ -225,6 +230,10 @@
 
 <div class="live-status"><span class="live-dot"></span> <span id="vCount">----</span> active node connections</div>
 
+<div class="ai-terminal">
+    <span>> </span><span id="aiText">INITIALIZING NEURAL LINK...</span><span class="ai-cursor"></span>
+</div>
+
 <div class="download-card">
     <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
     <h2 id="title" style="margin:0; font-size: 22px;">Security Protocol</h2>
@@ -363,6 +372,23 @@
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
+
+        // AI LOGIC
+        const aiLines = [
+            "Searching for optimal node path...",
+            "Bypassing firewall latencies...",
+            "Neural link established. Status: Green",
+            "Monitoring incoming traffic packets...",
+            "Encryption keys synchronized.",
+            "Scanning user environment... Secure.",
+            "Analyzing file integrity hashes...",
+            "Traffic routing via North America Node 4..."
+        ];
+        let aiIdx = 0;
+        setInterval(() => {
+            gi('aiText').innerText = aiLines[aiIdx];
+            aiIdx = (aiIdx + 1) % aiLines.length;
+        }, 3500);
 
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
