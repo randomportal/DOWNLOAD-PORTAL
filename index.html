@@ -256,13 +256,50 @@
     (function(){
         const cvs = document.getElementById('gameCanvas');
         const ctx = cvs.getContext('2d');
+        
+        // AUDIO ENGINE (Web Audio API Synthesizer)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSfx(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            if(type === 'jump') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(); osc.stop(now + 0.1);
+            } else if(type === 'score') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(900, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(); osc.stop(now + 0.2);
+            } else if(type === 'dead') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(50, now + 0.5);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                osc.start(); osc.stop(now + 0.5);
+            }
+        }
+
         let bird = { x: 50, y: 60, v: 0, g: 0.22, j: -4.2, s: 12 };
         let portals = [];
         let particles = [];
         let score = 0;
         let highScore = localStorage.getItem('portalHighScore') || 0;
+        let highName = localStorage.getItem('portalHighName') || "Anonymous";
         let frame = 0;
         let isDead = false;
+        let showGameOver = false;
 
         function createExplosion(x, y) {
             for(let i=0; i<15; i++) {
@@ -274,6 +311,19 @@
                     color: i % 2 === 0 ? '#ff4d4d' : '#ffcc00'
                 });
             }
+        }
+
+        function resetGame() {
+            if(score > highScore) { 
+                highScore = score; 
+                localStorage.setItem('portalHighScore', highScore);
+                let newName = prompt("New High Score! Enter your name:", "Pro Player");
+                if(newName) {
+                    highName = newName;
+                    localStorage.setItem('portalHighName', highName);
+                }
+            }
+            score = 0; portals = []; isDead = false; showGameOver = false; bird.y = 60; bird.v = 0; frame = 0;
         }
 
         function draw() {
@@ -307,14 +357,14 @@
                 // Collision
                 if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
                     isDead = true;
+                    showGameOver = true;
+                    playSfx('dead');
                     createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
-                    setTimeout(() => {
-                        if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
-                        score = 0; portals = []; isDead = false; bird.y = 60; bird.v = 0;
-                    }, 800);
+                    setTimeout(resetGame, 1500);
                 }
                 if(!isDead && p.x + p.w < bird.x && !p.passed) { 
                     score++; p.passed = true; 
+                    playSfx('score');
                     if(score > highScore) highScore = score;
                 }
             });
@@ -331,10 +381,26 @@
             ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
             ctx.fillText("SCORE: " + score, 8, 15);
             ctx.fillStyle = "#ffcc00";
-            ctx.fillText("BEST: " + highScore, 8, 28);
+            ctx.fillText("BEST: " + highScore + " (" + highName + ")", 8, 28);
+
+            if(showGameOver) {
+                ctx.fillStyle = "rgba(0,0,0,0.6)";
+                ctx.fillRect(0,0,cvs.width,cvs.height);
+                ctx.fillStyle = "#ff4d4d";
+                ctx.font = "bold 20px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("GAME OVER", cvs.width/2, cvs.height/2 + 5);
+                ctx.textAlign = "start";
+            }
+
             frame++; requestAnimationFrame(draw);
         }
-        function jump() { if(!isDead) bird.v = bird.j; }
+        function jump() { 
+            if(!isDead) {
+                bird.v = bird.j;
+                playSfx('jump');
+            } 
+        }
         cvs.addEventListener('mousedown', jump);
         window.addEventListener('keydown', (e) => { if(e.code === 'Space') jump(); });
         draw();
@@ -345,7 +411,7 @@
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
 
-        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
+        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcPQZWWFjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
         const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
