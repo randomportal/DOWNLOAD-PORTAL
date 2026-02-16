@@ -106,6 +106,11 @@
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
 
+        /* GAME STYLES */
+        .game-wrapper { width: 90%; max-width: 450px; margin-top: 30px; background: #1a1a1a; border-radius: 12px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        #gameCanvas { width: 100%; height: 150px; background: #222; image-rendering: pixelated; border: 2px solid #333; cursor: pointer; display: block; }
+        .game-hint { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #555; font-size: 10px; font-weight: bold; pointer-events: none; text-transform: uppercase; }
+
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
         .comment { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; border-left: 4px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -219,6 +224,12 @@
     <div class="badge-item"><div class="badge-dot"></div> Node Verified</div>
 </div>
 
+<div class="game-wrapper">
+    <div style="color: #007bff; font-size: 10px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">Portal Jumper v1.0</div>
+    <canvas id="gameCanvas" width="400" height="150"></canvas>
+    <div class="game-hint">Tap to jump through portals</div>
+</div>
+
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
 <div id="commentList" class="comments"></div>
 
@@ -240,6 +251,51 @@
     // POLICY & TERMS MODAL LOGIC
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
     function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
+
+    // SIMPLE GAME LOGIC
+    (function(){
+        const cvs = document.getElementById('gameCanvas');
+        const ctx = cvs.getContext('2d');
+        let bird = { x: 50, y: 75, v: 0, g: 0.2, j: -4, s: 15 };
+        let portals = [];
+        let score = 0;
+        let frame = 0;
+
+        function draw() {
+            ctx.fillStyle = '#222'; ctx.fillRect(0,0,cvs.width,cvs.height);
+            // Bird
+            bird.v += bird.g; bird.y += bird.v;
+            if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s;
+            if(bird.y < 0) bird.y = 0;
+            ctx.fillStyle = '#007bff'; ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
+            
+            // Portals
+            if(frame % 90 === 0) {
+                let h = 40 + Math.random() * 40;
+                portals.push({ x: cvs.width, y: Math.random() * (cvs.height - h), w: 10, h: h, passed: false });
+            }
+            portals.forEach((p, i) => {
+                p.x -= 2;
+                ctx.fillStyle = '#28a745';
+                ctx.fillRect(p.x, 0, p.w, p.y);
+                ctx.fillRect(p.x, p.y + p.h, p.w, cvs.height);
+                
+                // Collision
+                if(bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.h)) {
+                    score = 0; portals = [];
+                }
+                if(p.x + p.w < bird.x && !p.passed) { score++; p.passed = true; }
+            });
+            portals = portals.filter(p => p.x > -20);
+            
+            ctx.fillStyle = "#fff"; ctx.font = "10px monospace"; ctx.fillText("SCORE: " + score, 10, 20);
+            frame++; requestAnimationFrame(draw);
+        }
+        function jump() { bird.v = bird.j; }
+        cvs.addEventListener('mousedown', jump);
+        window.addEventListener('keydown', (e) => { if(e.code === 'Space') jump(); });
+        draw();
+    })();
 
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
