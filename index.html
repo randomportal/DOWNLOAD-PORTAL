@@ -385,9 +385,13 @@
             "Traffic routing via North America Node 4..."
         ];
         let aiIdx = 0;
-        setInterval(() => {
-            gi('aiText').innerText = aiLines[aiIdx];
-            aiIdx = (aiIdx + 1) % aiLines.length;
+        let aiPaused = false;
+        
+        const aiCycle = setInterval(() => {
+            if(!aiPaused) {
+                gi('aiText').innerText = aiLines[aiIdx];
+                aiIdx = (aiIdx + 1) % aiLines.length;
+            }
         }, 3500);
 
         const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
@@ -426,6 +430,14 @@
             else {
                 clearInterval(_ti);
                 _b.style.pointerEvents = "auto"; _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
+                
+                // --- AI TERMINAL REACTION START ---
+                aiPaused = true;
+                gi('aiText').innerText = "DOWNLOAD READY: ENCRYPTION HANDSHAKE SUCCESSFUL.";
+                gi('aiText').style.color = "#ffffff";
+                setTimeout(() => { gi('aiText').style.color = "#00ff41"; }, 1500);
+                // --- AI TERMINAL REACTION END ---
+
                 _s.innerText = "SECURITY SCAN: CLEAN"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
                 _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
