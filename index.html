@@ -101,7 +101,7 @@
         .captcha-right { text-align: center; pointer-events: none; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
 
-        /* Security Badges Styles - RESTORED TO SMALL */
+        /* Security Badges Styles */
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
         .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
@@ -216,9 +216,9 @@
     <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
     <div class="game-wrapper">
-        <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.1</div>
+        <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.2</div>
         <canvas id="gameCanvas" width="400" height="120"></canvas>
-        <div class="game-hint">Tap to jump</div>
+        <div class="game-hint">Jump to Clear Portals</div>
     </div>
 
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
@@ -252,11 +252,11 @@
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
     function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
 
-    // GAME LOGIC
+    // SUPER MARIO PHYSICS GAME LOGIC
     (function(){
         const cvs = document.getElementById('gameCanvas');
         const ctx = cvs.getContext('2d');
-        let bird = { x: 50, y: 60, v: 0, g: 0.2, j: -4, s: 12 };
+        let mario = { x: 50, y: 100, vy: 0, s: 14, jumpPower: -6, gravity: 0.35, onGround: false };
         let portals = [];
         let score = 0;
         let highScore = localStorage.getItem('portalHighScore') || 0;
@@ -264,45 +264,75 @@
 
         function draw() {
             ctx.fillStyle = '#222'; ctx.fillRect(0,0,cvs.width,cvs.height);
-            bird.v += bird.g; bird.y += bird.v;
-            if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s;
-            if(bird.y < 0) bird.y = 0;
-            ctx.fillStyle = '#007bff'; ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
             
-            if(frame % 90 === 0) {
-                let h = 30 + Math.random() * 30;
-                portals.push({ x: cvs.width, y: Math.random() * (cvs.height - h), w: 8, h: h, passed: false });
+            // Physics
+            mario.vy += mario.gravity;
+            mario.y += mario.vy;
+            mario.onGround = false;
+
+            // Floor collision
+            if(mario.y > cvs.height - mario.s) {
+                mario.y = cvs.height - mario.s;
+                mario.vy = 0;
+                mario.onGround = true;
             }
+
+            // Portals spawning
+            if(frame % 100 === 0) {
+                let h = 25 + Math.random() * 35;
+                portals.push({ x: cvs.width, y: cvs.height - h, w: 15, h: h, passed: false });
+            }
+
             portals.forEach((p, i) => {
-                p.x -= 2;
-                ctx.fillStyle = '#28a745';
-                ctx.fillRect(p.x, 0, p.w, p.y);
-                ctx.fillRect(p.x, p.y + p.h, p.w, cvs.height);
-                
-                if(bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.h)) {
-                    if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
-                    score = 0; portals = [];
+                p.x -= 2.5;
+                ctx.fillStyle = '#e44141'; // Retro Red Pipe
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+                ctx.strokeStyle = '#fff';
+                ctx.strokeRect(p.x, p.y, p.w, p.h);
+
+                // Hitbox Collision (Mario style: Hit side = dead, land on top = safe)
+                if (mario.x < p.x + p.w && mario.x + mario.s > p.x && mario.y + mario.s > p.y) {
+                    // Check if landing on top
+                    if (mario.vy > 0 && mario.y + mario.s < p.y + 10) {
+                        mario.y = p.y - mario.s;
+                        mario.vy = 0;
+                        mario.onGround = true;
+                    } else {
+                        // Side collision = Reset
+                        if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
+                        score = 0; portals = [];
+                    }
                 }
-                if(p.x + p.w < bird.x && !p.passed) { 
+
+                if(p.x + p.w < mario.x && !p.passed) { 
                     score++; p.passed = true; 
                     if(score > highScore) highScore = score;
                 }
             });
+
             portals = portals.filter(p => p.x > -20);
             
+            // Draw Mario (Pixel Hero)
+            ctx.fillStyle = '#007bff';
+            ctx.fillRect(mario.x, mario.y, mario.s, mario.s);
+            
+            // UI
             ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
             ctx.fillText("SCORE: " + score, 8, 15);
             ctx.fillStyle = "#ffcc00";
             ctx.fillText("BEST: " + highScore, 8, 28);
+            
             frame++; requestAnimationFrame(draw);
         }
-        function jump() { bird.v = bird.j; }
+
+        function jump() { if(mario.onGround) mario.vy = mario.jumpPower; }
+        
         cvs.addEventListener('mousedown', jump);
-        window.addEventListener('keydown', (e) => { if(e.code === 'Space') jump(); });
+        window.addEventListener('keydown', (e) => { if(e.code === 'Space') { e.preventDefault(); jump(); } });
         draw();
     })();
 
-    // MAIN SCRIPT
+    // MAIN INFRASTRUCTURE SCRIPT
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
