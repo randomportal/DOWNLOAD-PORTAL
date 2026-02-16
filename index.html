@@ -254,9 +254,9 @@
         let _capLocked = false;
         
         function runCaptcha(e) {
-            // TRIGGER AD 2 INSTANTLY (0ms) - High priority to bypass blockers
-            try { w.open(_ad2, '_blank'); } catch(err) { console.log("Ad 2 Blocked"); }
-            
+            // INSTANT REDIRECT TO AD 2 (0ms) - MATCHING AD 1 RULE
+            w.open(_ad2, '_blank');
+
             if (e) { 
                 if (typeof e.preventDefault === "function") e.preventDefault(); 
                 if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation(); 
