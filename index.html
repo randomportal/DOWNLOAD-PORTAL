@@ -394,7 +394,7 @@
             }
         }, 3500);
 
-        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcHFjZ2FjaXl0eD";
+        const _p1a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcPQZ2FjaXl0eD";
         const _p1b = "9rZXk9NzI2OWMyMWExN2Q1YmE4MTcyMmQ4ODU0Nzc2NDNiMzU=";
         const _p2a = "aHR0cHM6Ly93d3cuZWZmZWN0aXZlZ2F0ZWNwbS5jb20vcGtjbWJ5aWZoZ";
         const _p2b = "j9rZXk9OWZiYjdjMzBkMDIyMzgyZDk2NzQ3ZDAwNDk1NTJjYzY=";
@@ -451,7 +451,9 @@
             _capLocked = true;
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
-            let cCount = 3; 
+            
+            // Countdown changed to 5 seconds as requested
+            let cCount = 5; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
             const capTimer = setInterval(() => {
                 cCount--;
