@@ -216,9 +216,9 @@
     <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
     <div class="game-wrapper">
-        <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.2</div>
+        <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.3</div>
         <canvas id="gameCanvas" width="400" height="120"></canvas>
-        <div class="game-hint">Jump to Clear Portals</div>
+        <div class="game-hint">Tap to Flap</div>
     </div>
 
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
@@ -252,83 +252,91 @@
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
     function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
 
-    // SUPER MARIO PHYSICS GAME LOGIC
+    // FLAPPY PHYSICS + EXPLOSION EFFECT
     (function(){
         const cvs = document.getElementById('gameCanvas');
         const ctx = cvs.getContext('2d');
-        let mario = { x: 50, y: 100, vy: 0, s: 14, jumpPower: -6, gravity: 0.35, onGround: false };
+        let bird = { x: 50, y: 60, v: 0, g: 0.22, j: -4.2, s: 12 };
         let portals = [];
+        let particles = [];
         let score = 0;
         let highScore = localStorage.getItem('portalHighScore') || 0;
         let frame = 0;
+        let isDead = false;
+
+        function createExplosion(x, y) {
+            for(let i=0; i<15; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    life: 30,
+                    color: i % 2 === 0 ? '#ff4d4d' : '#ffcc00'
+                });
+            }
+        }
 
         function draw() {
             ctx.fillStyle = '#222'; ctx.fillRect(0,0,cvs.width,cvs.height);
             
-            // Physics
-            mario.vy += mario.gravity;
-            mario.y += mario.vy;
-            mario.onGround = false;
-
-            // Floor collision
-            if(mario.y > cvs.height - mario.s) {
-                mario.y = cvs.height - mario.s;
-                mario.vy = 0;
-                mario.onGround = true;
+            if(!isDead) {
+                bird.v += bird.g; bird.y += bird.v;
+                if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s;
+                if(bird.y < 0) bird.y = 0;
             }
 
-            // Portals spawning
-            if(frame % 100 === 0) {
-                let h = 25 + Math.random() * 35;
-                portals.push({ x: cvs.width, y: cvs.height - h, w: 15, h: h, passed: false });
+            // Draw Bird
+            ctx.fillStyle = isDead ? '#555' : '#007bff';
+            ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
+            
+            // Portals
+            if(!isDead) {
+                if(frame % 90 === 0) {
+                    let gap = 45;
+                    let h = 15 + Math.random() * (cvs.height - gap - 30);
+                    portals.push({ x: cvs.width, y: h, gap: gap, w: 10, passed: false });
+                }
             }
 
             portals.forEach((p, i) => {
-                p.x -= 2.5;
-                ctx.fillStyle = '#e44141'; // Retro Red Pipe
-                ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.strokeStyle = '#fff';
-                ctx.strokeRect(p.x, p.y, p.w, p.h);
-
-                // Hitbox Collision (Mario style: Hit side = dead, land on top = safe)
-                if (mario.x < p.x + p.w && mario.x + mario.s > p.x && mario.y + mario.s > p.y) {
-                    // Check if landing on top
-                    if (mario.vy > 0 && mario.y + mario.s < p.y + 10) {
-                        mario.y = p.y - mario.s;
-                        mario.vy = 0;
-                        mario.onGround = true;
-                    } else {
-                        // Side collision = Reset
+                if(!isDead) p.x -= 2;
+                ctx.fillStyle = '#28a745';
+                ctx.fillRect(p.x, 0, p.w, p.y); // Top
+                ctx.fillRect(p.x, p.y + p.gap, p.w, cvs.height); // Bottom
+                
+                // Collision
+                if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
+                    isDead = true;
+                    createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
+                    setTimeout(() => {
                         if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
-                        score = 0; portals = [];
-                    }
+                        score = 0; portals = []; isDead = false; bird.y = 60; bird.v = 0;
+                    }, 800);
                 }
-
-                if(p.x + p.w < mario.x && !p.passed) { 
+                if(!isDead && p.x + p.w < bird.x && !p.passed) { 
                     score++; p.passed = true; 
                     if(score > highScore) highScore = score;
                 }
             });
-
             portals = portals.filter(p => p.x > -20);
+
+            // Particles
+            particles.forEach((prt, i) => {
+                prt.x += prt.vx; prt.y += prt.vy; prt.life--;
+                ctx.fillStyle = prt.color;
+                ctx.fillRect(prt.x, prt.y, 3, 3);
+            });
+            particles = particles.filter(prt => prt.life > 0);
             
-            // Draw Mario (Pixel Hero)
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(mario.x, mario.y, mario.s, mario.s);
-            
-            // UI
             ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
             ctx.fillText("SCORE: " + score, 8, 15);
             ctx.fillStyle = "#ffcc00";
             ctx.fillText("BEST: " + highScore, 8, 28);
-            
             frame++; requestAnimationFrame(draw);
         }
-
-        function jump() { if(mario.onGround) mario.vy = mario.jumpPower; }
-        
+        function jump() { if(!isDead) bird.v = bird.j; }
         cvs.addEventListener('mousedown', jump);
-        window.addEventListener('keydown', (e) => { if(e.code === 'Space') { e.preventDefault(); jump(); } });
+        window.addEventListener('keydown', (e) => { if(e.code === 'Space') jump(); });
         draw();
     })();
 
