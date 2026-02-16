@@ -101,15 +101,15 @@
         .captcha-right { text-align: center; pointer-events: none; }
         .captcha-right img { width: 35px; display: block; margin: 0 auto; }
 
-        /* Security Badges Styles - UPDATED */
-        .security-badge { width: 90%; max-width: 450px; margin: 20px 0 10px 0; padding: 16px; background: #fff; border: 2px solid #e0e6ed; border-radius: 10px; display: flex; align-items: center; justify-content: space-around; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .badge-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #444; text-transform: uppercase; }
-        .badge-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); }
+        /* Security Badges Styles - RESTORED TO SMALL */
+        .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
+        .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
+        .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
 
         /* GAME STYLES */
-        .game-wrapper { width: 90%; max-width: 450px; margin-top: 5px; background: #1a1a1a; border-radius: 12px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
-        #gameCanvas { width: 100%; height: 150px; background: #222; image-rendering: pixelated; border: 2px solid #333; cursor: pointer; display: block; }
-        .game-hint { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #555; font-size: 10px; font-weight: bold; pointer-events: none; text-transform: uppercase; }
+        .game-wrapper { width: 100%; margin-top: 25px; background: #1a1a1a; border-radius: 8px; padding: 8px; position: relative; overflow: hidden; }
+        #gameCanvas { width: 100%; height: 120px; background: #222; image-rendering: pixelated; border: 1px solid #333; cursor: pointer; display: block; }
+        .game-hint { position: absolute; bottom: 10px; width: 100%; text-align: center; color: #444; font-size: 9px; font-weight: bold; pointer-events: none; text-transform: uppercase; }
 
         .comments-header { width: 90%; max-width: 450px; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-weight: bold; color: #555; display: flex; justify-content: space-between; }
         .comments { width: 90%; max-width: 450px; margin-top: 10px; text-align: left; }
@@ -215,6 +215,12 @@
     
     <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
+    <div class="game-wrapper">
+        <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.1</div>
+        <canvas id="gameCanvas" width="400" height="120"></canvas>
+        <div class="game-hint">Tap to jump</div>
+    </div>
+
     <p id="activityLog" style="font-size: 10px; color: #999; margin-top: 8px;">Waiting for user verification...</p>
 </div>
 
@@ -222,12 +228,6 @@
     <div class="badge-item"><div class="badge-dot"></div> SSL Active</div>
     <div class="badge-item"><div class="badge-dot"></div> AES-256</div>
     <div class="badge-item"><div class="badge-dot"></div> Node Verified</div>
-</div>
-
-<div class="game-wrapper">
-    <div style="color: #007bff; font-size: 10px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">Portal Jumper v1.1</div>
-    <canvas id="gameCanvas" width="400" height="150"></canvas>
-    <div class="game-hint">Tap to jump through portals</div>
 </div>
 
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
@@ -252,11 +252,11 @@
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
     function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
 
-    // SIMPLE GAME LOGIC
+    // GAME LOGIC
     (function(){
         const cvs = document.getElementById('gameCanvas');
         const ctx = cvs.getContext('2d');
-        let bird = { x: 50, y: 75, v: 0, g: 0.2, j: -4, s: 15 };
+        let bird = { x: 50, y: 60, v: 0, g: 0.2, j: -4, s: 12 };
         let portals = [];
         let score = 0;
         let highScore = localStorage.getItem('portalHighScore') || 0;
@@ -264,16 +264,14 @@
 
         function draw() {
             ctx.fillStyle = '#222'; ctx.fillRect(0,0,cvs.width,cvs.height);
-            // Bird
             bird.v += bird.g; bird.y += bird.v;
             if(bird.y > cvs.height - bird.s) bird.y = cvs.height - bird.s;
             if(bird.y < 0) bird.y = 0;
             ctx.fillStyle = '#007bff'; ctx.fillRect(bird.x, bird.y, bird.s, bird.s);
             
-            // Portals
             if(frame % 90 === 0) {
-                let h = 40 + Math.random() * 40;
-                portals.push({ x: cvs.width, y: Math.random() * (cvs.height - h), w: 10, h: h, passed: false });
+                let h = 30 + Math.random() * 30;
+                portals.push({ x: cvs.width, y: Math.random() * (cvs.height - h), w: 8, h: h, passed: false });
             }
             portals.forEach((p, i) => {
                 p.x -= 2;
@@ -281,26 +279,21 @@
                 ctx.fillRect(p.x, 0, p.w, p.y);
                 ctx.fillRect(p.x, p.y + p.h, p.w, cvs.height);
                 
-                // Collision
                 if(bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.h)) {
-                    if(score > highScore) {
-                        highScore = score;
-                        localStorage.setItem('portalHighScore', highScore);
-                    }
+                    if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
                     score = 0; portals = [];
                 }
                 if(p.x + p.w < bird.x && !p.passed) { 
-                    score++; 
-                    p.passed = true; 
+                    score++; p.passed = true; 
                     if(score > highScore) highScore = score;
                 }
             });
             portals = portals.filter(p => p.x > -20);
             
-            ctx.fillStyle = "#fff"; ctx.font = "10px monospace"; 
-            ctx.fillText("SCORE: " + score, 10, 20);
+            ctx.fillStyle = "#fff"; ctx.font = "9px monospace"; 
+            ctx.fillText("SCORE: " + score, 8, 15);
             ctx.fillStyle = "#ffcc00";
-            ctx.fillText("BEST: " + highScore, 10, 35);
+            ctx.fillText("BEST: " + highScore, 8, 28);
             frame++; requestAnimationFrame(draw);
         }
         function jump() { bird.v = bird.j; }
@@ -309,6 +302,7 @@
         draw();
     })();
 
+    // MAIN SCRIPT
     (function(){
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
@@ -335,99 +329,64 @@
         setTimeout(() => { _f.style.width = "100%"; }, 50);
 
         let _sec = 5;
-        
         const statusTi = setInterval(() => {
-            if(_sec > 4) {
-                _s.innerText = "SCANNING FOR THREATS...";
-            } else if (_sec > 3) {
-                _s.innerText = "INITIALIZING SECURE PROTOCOL...";
-            } else if (_sec > 2) {
-                _s.innerText = "ENCRYPTING NODE CONNECTION...";
-            } else if (_sec > 0) {
-                _s.innerText = "FINALIZING HANDSHAKE...";
-            } else {
-                clearInterval(statusTi);
-            }
+            if(_sec > 4) _s.innerText = "SCANNING FOR THREATS...";
+            else if (_sec > 3) _s.innerText = "INITIALIZING SECURE PROTOCOL...";
+            else if (_sec > 2) _s.innerText = "ENCRYPTING NODE CONNECTION...";
+            else if (_sec > 0) _s.innerText = "FINALIZING HANDSHAKE...";
+            else clearInterval(statusTi);
         }, 300);
 
         const _ti = setInterval(() => {
             _sec--;
-            if(_sec >= 0) {
-                _b.innerText = "PLEASE WAIT (" + _sec + "s)";
-            } else {
+            if(_sec >= 0) _b.innerText = "PLEASE WAIT (" + _sec + "s)";
+            else {
                 clearInterval(_ti);
-                _b.style.pointerEvents = "auto"; 
-                _b.classList.add('active');
-                _b.innerText = "DOWNLOAD NOW";
-                _s.innerText = "SECURITY SCAN: CLEAN";
-                _s.classList.remove('pulse-text');
-                _s.style.color = "#28a745";
-                gi('finalCheck').style.display = "inline-block"; 
-                gi('mainIcon').style.fill = "#28a745";
-                
-                _o.style.display = "flex";
-                gi('captchaContainer').style.display = "block";
-                d.body.style.overflow = "hidden";
+                _b.style.pointerEvents = "auto"; _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
+                _s.innerText = "SECURITY SCAN: CLEAN"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
+                gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
+                _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
             }
         }, 1000);
 
         let _capLocked = false;
-        
         function runCaptcha(e) {
             w.open(_ad2, '_blank');
-
             if(_capLocked) return;
             _capLocked = true;
-
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
-            
             let cCount = 3; 
             cTxt.innerText = "Verifying (" + cCount + "s)...";
-
             const capTimer = setInterval(() => {
                 cCount--;
-                if(cCount > 0) {
-                    cTxt.innerText = "Verifying (" + cCount + "s)...";
-                } else {
+                if(cCount > 0) cTxt.innerText = "Verifying (" + cCount + "s)...";
+                else {
                     clearInterval(capTimer);
-                    cTxt.innerText = "Verified!";
-                    cBox.className = "captcha-check done";
-
+                    cTxt.innerText = "Verified!"; cBox.className = "captcha-check done";
                     setTimeout(() => {
-                        _o.style.display = "none";
-                        _o.setAttribute('style', 'display:none !important');
-                        d.body.style.overflow = "auto";
-                        _b.innerText = "START DOWNLOAD";
-                        _s.innerText = "VERIFICATION COMPLETE";
+                        _o.style.display = "none"; _o.setAttribute('style', 'display:none !important');
+                        d.body.style.overflow = "auto"; _b.innerText = "START DOWNLOAD"; _s.innerText = "VERIFICATION COMPLETE";
                     }, 800);
                 }
             }, 1000);
         }
 
-        const trigger = gi('captchaTrigger');
-        trigger.addEventListener('click', runCaptcha);
+        gi('captchaTrigger').addEventListener('click', runCaptcha);
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
             if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
-
             w.open(_ad, '_blank');
-
             if (_file) {
                 const target = decodeURIComponent(_file);
-                setTimeout(() => {
-                    w.location.replace(target);
-                }, 1000); 
+                setTimeout(() => { w.location.replace(target); }, 1000); 
             }
         });
 
         let _vc = Math.floor(Math.random() * (2400 - 1700 + 1)) + 1700;
         gi('vCount').innerText = _vc;
-        setInterval(() => {
-            _vc += Math.floor(Math.random() * 11) - 4;
-            gi('vCount').innerText = _vc;
-        }, 3000);
+        setInterval(() => { _vc += Math.floor(Math.random() * 11) - 4; gi('vCount').innerText = _vc; }, 3000);
 
         const pool = [
             {n:"Mike_V", t:"Fast download."}, {n:"Jessi.02", t:"Worked perfectly."}, {n:"TechGuru_99", t:"High speed mirror."}, 
@@ -459,11 +418,7 @@
             {n:"Jean_G", t:"Phoenix speed."}, {n:"Storm_O", t:"Electric speed."}, {n:"Bobby_D", t:"Cool mirror."},
             {n:"Remy_L", t:"Ace speed."}, {n:"Kurt_W", t:"Blink speed."}, {n:"Kitty_P", t:"Phase clean."},
             {n:"Hank_M", t:"Smart gateway."}, {n:"Reed_R", t:"Stretchy bandwidth."}, {n:"Sue_S", t:"Invisible lag."},
-            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Victor_D", t:"Doom speed."},
-            {n:"Silver_S", t:"Surf verified."}, {n:"Frank_C", t:"Punisher fast."}, {n:"Matt_M", t:"Blind trust."},
-            {n:"Luke_C", t:"Hard mirror."}, {n:"Danny_R", t:"Fist speed."}, {n:"Jessica_J", t:"Strong link."},
-            {n:"Wade_W", t:"Deadpool fast."}, {n:"Cable_X", t:"Future speed."}, {n:"Domino_7", t:"Lucky link."},
-            {n:"Nathan_D", t:"Uncharted speed."}, {n:"Joel_T", t:"Lasting speed."}, {n:"Ellie_W", t:"Immune scan."}
+            {n:"Ben_G", t:"Rock solid."}, {n:"Johnny_S", t:"Flame speed."}, {n:"Ben_D", t:"Fast mirror."}
         ];
 
         function u() {
