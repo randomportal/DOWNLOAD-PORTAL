@@ -167,7 +167,7 @@
         .close-game { position: absolute; top: 10px; right: 15px; color: #fff; font-size: 24px; cursor: pointer; }
         .game-canvas-alt { background: #000; display: block; margin: 15px auto; border: 1px solid #444; width: 100%; }
         
-        /* SNAKE & MATCH SPECIFICS */
+        /* MATCH SPECIFICS */
         .match-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
         .match-tile { aspect-ratio: 1; background: #333; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; color: transparent; border: 1px solid #444; transition: 0.2s; }
         .match-tile.flipped { background: var(--primary); color: #fff; }
@@ -280,9 +280,9 @@
 <div id="commentList" class="comments"></div>
 
 <div class="game-row">
-    <div class="game-card" onclick="openGame('snake')">
-        <span>🐍</span>
-        <h6>Retro Snake</h6>
+    <div class="game-card" onclick="openGame('racer')">
+        <span>🏎️</span>
+        <h6>Neon Racer</h6>
     </div>
     <div class="game-card" onclick="openGame('click')">
         <span>⚡</span>
@@ -299,9 +299,9 @@
         <span class="close-game" onclick="closeGame()">&times;</span>
         <h4 id="gameTitle" style="color:#fff; margin:0; text-transform:uppercase; font-size:14px;">Game</h4>
         
-        <div id="snakeView" style="display:none;">
-            <canvas id="snakeCvs" width="280" height="280" class="game-canvas-alt"></canvas>
-            <p style="color:#666; font-size:10px;">Use arrow keys or swipe to move</p>
+        <div id="racerView" style="display:none;">
+            <canvas id="racerCvs" width="280" height="280" class="game-canvas-alt"></canvas>
+            <p style="color:#666; font-size:10px;">Tap Left/Right side of box to steer</p>
         </div>
 
         <div id="clickView" style="display:none;">
@@ -451,7 +451,7 @@
         }, 3500);
 
         
-        const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcHFjZ2FjaXl0eA==";
+        const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcPQyZ2FjaXl0eA==";
         const _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==";
         const _p2a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGtjbWJ5aWZoZg==";
         const _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
@@ -591,15 +591,15 @@
     // NEW GAME CENTER LOGIC
     function openGame(type) {
         document.getElementById('gameOverlay').style.display = 'flex';
-        document.getElementById('snakeView').style.display = 'none';
+        document.getElementById('racerView').style.display = 'none';
         document.getElementById('clickView').style.display = 'none';
         document.getElementById('matchView').style.display = 'none';
         document.body.style.overflow = 'hidden';
 
-        if(type === 'snake') {
-            document.getElementById('gameTitle').innerText = "🐍 RETRO SNAKE";
-            document.getElementById('snakeView').style.display = 'block';
-            startSnake();
+        if(type === 'racer') {
+            document.getElementById('gameTitle').innerText = "🏎️ NEON RACER";
+            document.getElementById('racerView').style.display = 'block';
+            startRacer();
         } else if(type === 'click') {
             document.getElementById('gameTitle').innerText = "⚡ NODE TAP";
             document.getElementById('clickView').style.display = 'block';
@@ -614,36 +614,57 @@
     function closeGame() {
         document.getElementById('gameOverlay').style.display = 'none';
         document.body.style.overflow = 'auto';
+        if(racerInterval) clearInterval(racerInterval);
     }
 
-    // 1. SNAKE LOGIC
-    let snakeInterval;
-    function startSnake() {
-        const c = document.getElementById('snakeCvs'), x = c.getContext('2d');
-        let s = [{x:10, y:10}], f = {x:15, y:15}, d = 'R';
-        if(snakeInterval) clearInterval(snakeInterval);
+    // 1. RACER LOGIC
+    let racerInterval;
+    function startRacer() {
+        const c = document.getElementById('racerCvs'), x = c.getContext('2d');
+        let carX = 1; // 0, 1, 2 lanes
+        let obstacles = [];
+        let rFrame = 0;
+        if(racerInterval) clearInterval(racerInterval);
         
-        window.onkeydown = (e) => {
-            if(e.key === "ArrowUp" && d !== 'D') d = 'U';
-            if(e.key === "ArrowDown" && d !== 'U') d = 'D';
-            if(e.key === "ArrowLeft" && d !== 'R') d = 'L';
-            if(e.key === "ArrowRight" && d !== 'L') d = 'R';
+        c.onclick = (e) => {
+            const rect = c.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            if(clickX < 140) { if(carX > 0) carX--; }
+            else { if(carX < 2) carX++; }
         };
 
-        snakeInterval = setInterval(() => {
-            let h = {...s[0]};
-            if(d === 'U') h.y--; if(d === 'D') h.y++;
-            if(d === 'L') h.x--; if(d === 'R') h.x++;
+        racerInterval = setInterval(() => {
+            x.fillStyle = "#111"; x.fillRect(0,0,280,280);
             
-            if(h.x<0||h.x>=20||h.y<0||h.y>=20) { s = [{x:10,y:10}]; d = 'R'; }
-            s.unshift(h);
-            if(h.x === f.x && h.y === f.y) f = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
-            else s.pop();
+            // Draw lanes
+            x.strokeStyle = "#333"; x.setLineDash([10, 10]);
+            x.beginPath(); x.moveTo(93,0); x.lineTo(93,280); x.stroke();
+            x.beginPath(); x.moveTo(186,0); x.lineTo(186,280); x.stroke();
+            x.setLineDash([]);
 
-            x.fillStyle = "#000"; x.fillRect(0,0,280,280);
-            x.fillStyle = "#28a745"; s.forEach(p => x.fillRect(p.x*14, p.y*14, 13, 13));
-            x.fillStyle = "#ff4d4d"; x.fillRect(f.x*14, f.y*14, 13, 13);
-        }, 120);
+            if(rFrame % 40 === 0) {
+                obstacles.push({lane: Math.floor(Math.random()*3), y: -50});
+            }
+
+            obstacles.forEach((o, index) => {
+                o.y += 5;
+                x.fillStyle = "#ff4d4d";
+                x.fillRect(o.lane * 93 + 20, o.y, 50, 40);
+
+                // Collision
+                if(o.lane === carX && o.y > 200 && o.y < 260) {
+                    obstacles = [];
+                }
+            });
+
+            obstacles = obstacles.filter(o => o.y < 300);
+
+            // Draw Player
+            x.fillStyle = "#007bff";
+            x.fillRect(carX * 93 + 25, 220, 40, 50);
+
+            rFrame++;
+        }, 30);
     }
 
     // 2. CLICKER LOGIC
