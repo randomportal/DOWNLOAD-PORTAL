@@ -153,24 +153,6 @@
         .close-policy { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
         .policy-link { color: var(--primary); text-decoration: none; cursor: pointer; font-weight: bold; margin: 0 5px; }
         .policy-link:hover { text-decoration: underline; }
-
-        /* GAME CENTER HORIZONTAL STYLES */
-        .game-row { display: flex; justify-content: space-between; width: 90%; max-width: 450px; margin-top: 20px; gap: 10px; }
-        .game-card { flex: 1; aspect-ratio: 1/1; background: #111; border: 1px solid #333; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        .game-card:hover { border-color: var(--primary); transform: translateY(-3px); }
-        .game-card span { font-size: 30px; margin-bottom: 5px; }
-        .game-card h6 { margin: 0; color: #eee; font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
-
-        /* GAME POPUP OVERLAY */
-        #gameOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 40000; align-items: center; justify-content: center; padding: 20px; }
-        .game-container { background: #1a1a1a; width: 100%; max-width: 380px; padding: 20px; border-radius: 15px; border: 2px solid #333; position: relative; text-align: center; }
-        .close-game { position: absolute; top: 10px; right: 15px; color: #fff; font-size: 24px; cursor: pointer; }
-        .game-canvas-alt { background: #000; display: block; margin: 15px auto; border: 1px solid #444; width: 100%; }
-        
-        /* MATCH SPECIFICS */
-        .match-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
-        .match-tile { aspect-ratio: 1; background: #333; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; color: transparent; border: 1px solid #444; transition: 0.2s; }
-        .match-tile.flipped { background: var(--primary); color: #fff; }
     </style>
 </head>
 <body>
@@ -278,44 +260,6 @@
 
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
 <div id="commentList" class="comments"></div>
-
-<div class="game-row">
-    <div class="game-card" onclick="openGame('racer')">
-        <span>🏎️</span>
-        <h6>Neon Racer</h6>
-    </div>
-    <div class="game-card" onclick="openGame('click')">
-        <span>⚡</span>
-        <h6>Node Tap</h6>
-    </div>
-    <div class="game-card" onclick="openGame('match')">
-        <span>🧩</span>
-        <h6>Memory</h6>
-    </div>
-</div>
-
-<div id="gameOverlay">
-    <div class="game-container">
-        <span class="close-game" onclick="closeGame()">&times;</span>
-        <h4 id="gameTitle" style="color:#fff; margin:0; text-transform:uppercase; font-size:14px;">Game</h4>
-        
-        <div id="racerView" style="display:none;">
-            <canvas id="racerCvs" width="280" height="280" class="game-canvas-alt"></canvas>
-            <p style="color:#666; font-size:10px;">Tap Left/Right side of box to steer</p>
-        </div>
-
-        <div id="clickView" style="display:none;">
-            <div id="clickScore" style="color:var(--primary); font-weight:bold; margin:20px 0;">SCORE: 0</div>
-            <div id="clickArea" style="height:200px; position:relative; background:#000; overflow:hidden; border-radius:10px;">
-                <div id="target" style="width:40px; height:40px; background:var(--success); border-radius:50%; position:absolute; cursor:pointer;"></div>
-            </div>
-        </div>
-
-        <div id="matchView" style="display:none;">
-            <div id="matchGrid" class="match-grid"></div>
-        </div>
-    </div>
-</div>
 
 <div class="legal-section">
     <div class="legal-inner">
@@ -451,7 +395,7 @@
         }, 3500);
 
         
-        const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcPQyZ2FjaXl0eA==";
+        const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcHFjZ2FjaXl0eA==";
         const _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==";
         const _p2a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGtjbWJ5aWZoZg==";
         const _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
@@ -587,118 +531,6 @@
         }
         u(); setInterval(u, 15000);
     })();
-
-    // NEW GAME CENTER LOGIC
-    function openGame(type) {
-        document.getElementById('gameOverlay').style.display = 'flex';
-        document.getElementById('racerView').style.display = 'none';
-        document.getElementById('clickView').style.display = 'none';
-        document.getElementById('matchView').style.display = 'none';
-        document.body.style.overflow = 'hidden';
-
-        if(type === 'racer') {
-            document.getElementById('gameTitle').innerText = "🏎️ NEON RACER";
-            document.getElementById('racerView').style.display = 'block';
-            startRacer();
-        } else if(type === 'click') {
-            document.getElementById('gameTitle').innerText = "⚡ NODE TAP";
-            document.getElementById('clickView').style.display = 'block';
-            startClicker();
-        } else if(type === 'match') {
-            document.getElementById('gameTitle').innerText = "🧩 MEMORY SHUFFLE";
-            document.getElementById('matchView').style.display = 'block';
-            startMatch();
-        }
-    }
-
-    function closeGame() {
-        document.getElementById('gameOverlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        if(racerInterval) clearInterval(racerInterval);
-    }
-
-    // 1. RACER LOGIC
-    let racerInterval;
-    function startRacer() {
-        const c = document.getElementById('racerCvs'), x = c.getContext('2d');
-        let carX = 1; // 0, 1, 2 lanes
-        let obstacles = [];
-        let rFrame = 0;
-        if(racerInterval) clearInterval(racerInterval);
-        
-        c.onclick = (e) => {
-            const rect = c.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            if(clickX < 140) { if(carX > 0) carX--; }
-            else { if(carX < 2) carX++; }
-        };
-
-        racerInterval = setInterval(() => {
-            x.fillStyle = "#111"; x.fillRect(0,0,280,280);
-            
-            // Draw lanes
-            x.strokeStyle = "#333"; x.setLineDash([10, 10]);
-            x.beginPath(); x.moveTo(93,0); x.lineTo(93,280); x.stroke();
-            x.beginPath(); x.moveTo(186,0); x.lineTo(186,280); x.stroke();
-            x.setLineDash([]);
-
-            if(rFrame % 40 === 0) {
-                obstacles.push({lane: Math.floor(Math.random()*3), y: -50});
-            }
-
-            obstacles.forEach((o, index) => {
-                o.y += 5;
-                x.fillStyle = "#ff4d4d";
-                x.fillRect(o.lane * 93 + 20, o.y, 50, 40);
-
-                // Collision
-                if(o.lane === carX && o.y > 200 && o.y < 260) {
-                    obstacles = [];
-                }
-            });
-
-            obstacles = obstacles.filter(o => o.y < 300);
-
-            // Draw Player
-            x.fillStyle = "#007bff";
-            x.fillRect(carX * 93 + 25, 220, 40, 50);
-
-            rFrame++;
-        }, 30);
-    }
-
-    // 2. CLICKER LOGIC
-    function startClicker() {
-        let score = 0;
-        const t = document.getElementById('target'), s = document.getElementById('clickScore');
-        t.onclick = () => {
-            score++; s.innerText = "SCORE: " + score;
-            t.style.left = Math.random()*240 + "px";
-            t.style.top = Math.random()*160 + "px";
-        };
-    }
-
-    // 3. MATCH LOGIC
-    function startMatch() {
-        const g = document.getElementById('matchGrid'), items = ["🚀","🚀","💎","💎","🔥","🔥","👻","👻","⭐","⭐","🍎","🍎","💣","💣","🌀","🌀"];
-        items.sort(() => Math.random() - 0.5); g.innerHTML = '';
-        let open = [];
-        items.forEach(val => {
-            const tile = document.createElement('div');
-            tile.className = "match-tile"; tile.innerText = val;
-            tile.onclick = () => {
-                if(open.length < 2 && !tile.classList.contains('flipped')) {
-                    tile.classList.add('flipped'); open.push(tile);
-                    if(open.length === 2) {
-                        if(open[0].innerText !== open[1].innerText) {
-                            setTimeout(() => { open.forEach(o => o.classList.remove('flipped')); open = []; }, 500);
-                        } else open = [];
-                    }
-                }
-            };
-            g.appendChild(tile);
-        });
-    }
 </script>
    
     <style>
