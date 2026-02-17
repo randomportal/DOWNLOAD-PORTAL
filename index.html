@@ -531,5 +531,33 @@
         u(); setInterval(u, 15000);
     })();
 </script>
+   
+    <style>
+/* Prevents highlighting text */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style>
+
+<script type="text/javascript">
+// Detects the Print Screen key (doesn't stop it, but can blur the screen)
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText('');
+        alert('Screenshots are disabled on this blog.');
+    }
+});
+
+// Prevents Ctrl+S, Ctrl+C, and Ctrl+U (View Source)
+document.onkeydown = function(e) {
+    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83)) {
+        return false;
+    }
+};
+</script>
+    
 </body>
 </html>
