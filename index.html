@@ -153,6 +153,18 @@
         .close-policy { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
         .policy-link { color: var(--primary); text-decoration: none; cursor: pointer; font-weight: bold; margin: 0 5px; }
         .policy-link:hover { text-decoration: underline; }
+
+        /* NEW GAMES CSS */
+        .game-launch-btn { width: 90%; max-width: 450px; background: var(--dark); color: #fff; padding: 12px; margin-top: 15px; border-radius: 8px; border: 1px solid #444; font-weight: bold; cursor: pointer; font-size: 13px; display: block; text-align: center; }
+        #gameHub { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 30000; overflow-y: auto; padding: 20px; color: #fff; }
+        .hub-inner { max-width: 400px; margin: 0 auto; }
+        .hub-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .mini-game-card { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .mini-game-card h5 { margin: 0 0 10px 0; color: var(--primary); text-transform: uppercase; font-size: 12px; }
+        .game-canvas-alt { background: #000; border: 1px solid #222; max-width: 100%; }
+        .mem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .mem-tile { aspect-ratio: 1; background: #333; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 4px; color: transparent; border: 1px solid #444; }
+        .mem-tile.flipped { background: var(--primary); color: #fff; }
     </style>
 </head>
 <body>
@@ -260,6 +272,36 @@
 
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
 <div id="commentList" class="comments"></div>
+
+<div class="game-launch-btn" onclick="toggleHub(true)">SECURE GAMES POP-UP [PLAY]</div>
+
+<div id="gameHub">
+    <div class="hub-inner">
+        <div class="hub-header">
+            <span style="font-weight:bold; color:var(--primary); font-size:14px;">SECURE_GAMES.EXE</span>
+            <span onclick="toggleHub(false)" style="cursor:pointer; font-size:20px;">[X]</span>
+        </div>
+
+        <div class="mini-game-card">
+            <h5>1. Retro Snake</h5>
+            <canvas id="snakeCvs" width="200" height="200" class="game-canvas-alt"></canvas>
+            <p style="font-size:9px; color:#666; margin-top:5px;">USE SWIPE OR ARROWS</p>
+        </div>
+
+        <div class="mini-game-card">
+            <h5>2. Node Clicker</h5>
+            <div id="clickScore" style="font-size:11px; margin-bottom:5px;">SCORE: 0</div>
+            <div id="clickTarget" style="width:50px; height:50px; background:var(--primary); margin:0 auto; border-radius:50%; cursor:pointer; position:relative;"></div>
+            <p style="font-size:9px; color:#666; margin-top:10px;">HIT THE ACTIVE NODE</p>
+        </div>
+
+        <div class="mini-game-card">
+            <h5>3. Memory Match</h5>
+            <div id="memGame" class="mem-grid"></div>
+            <p style="font-size:9px; color:#666; margin-top:10px;">FIND MATCHING SYMBOLS</p>
+        </div>
+    </div>
+</div>
 
 <div class="legal-section">
     <div class="legal-inner">
@@ -530,6 +572,89 @@
             gi('commentList').innerHTML = h;
         }
         u(); setInterval(u, 15000);
+    })();
+
+    // GAME HUB LOGIC
+    function toggleHub(show) {
+        document.getElementById('gameHub').style.display = show ? 'block' : 'none';
+        document.body.style.overflow = show ? 'hidden' : 'auto';
+    }
+
+    // 1. SNAKE GAME
+    (function(){
+        const cvs = document.getElementById('snakeCvs');
+        const ctx = cvs.getContext('2d');
+        let snake = [{x: 10, y: 10}];
+        let food = {x: 5, y: 5};
+        let dx = 0, dy = 0;
+        let lastMove = "";
+
+        function update() {
+            if(dx === 0 && dy === 0) return;
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) { reset(); return; }
+            snake.unshift(head);
+            if(head.x === food.x && head.y === food.y) {
+                food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)};
+            } else { snake.pop(); }
+        }
+
+        function draw() {
+            ctx.fillStyle = "#000"; ctx.fillRect(0,0,200,200);
+            ctx.fillStyle = "#28a745";
+            snake.forEach(s => ctx.fillRect(s.x*10, s.y*10, 9, 9));
+            ctx.fillStyle = "#ff4d4d";
+            ctx.fillRect(food.x*10, food.y*10, 9, 9);
+        }
+
+        function reset() { snake = [{x: 10, y: 10}]; dx = 0; dy = 0; }
+
+        setInterval(() => { update(); draw(); }, 100);
+
+        window.addEventListener('keydown', e => {
+            if(e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -1; }
+            if(e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 1; }
+            if(e.key === "ArrowLeft" && dx === 0) { dx = -1; dy = 0; }
+            if(e.key === "ArrowRight" && dx === 0) { dx = 1; dy = 0; }
+        });
+    })();
+
+    // 2. CLICKER GAME
+    (function(){
+        let score = 0;
+        const target = document.getElementById('clickTarget');
+        const scoreEl = document.getElementById('clickScore');
+        target.addEventListener('click', () => {
+            score++;
+            scoreEl.innerText = "SCORE: " + score;
+            target.style.left = (Math.random() * 80) + "%";
+            target.style.top = (Math.random() * 30) + "px";
+        });
+    })();
+
+    // 3. MEMORY GAME
+    (function(){
+        const icons = ["#", "#", "&", "&", "@", "@", "!", "!", "?", "?", "%", "%", "+", "+", "*", "*"];
+        icons.sort(() => Math.random() - 0.5);
+        const grid = document.getElementById('memGame');
+        let flipped = [];
+        icons.forEach((icon, i) => {
+            const tile = document.createElement('div');
+            tile.className = "mem-tile";
+            tile.innerText = icon;
+            tile.onclick = () => {
+                if(flipped.length < 2 && !tile.classList.contains('flipped')) {
+                    tile.classList.add('flipped');
+                    flipped.push(tile);
+                    if(flipped.length === 2) {
+                        if(flipped[0].innerText !== flipped[1].innerText) {
+                            setTimeout(() => { flipped.forEach(t => t.classList.remove('flipped')); flipped = []; }, 500);
+                        } else { flipped = []; }
+                    }
+                }
+            };
+            grid.appendChild(tile);
+        });
     })();
 </script>
    
