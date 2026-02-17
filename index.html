@@ -154,17 +154,23 @@
         .policy-link { color: var(--primary); text-decoration: none; cursor: pointer; font-weight: bold; margin: 0 5px; }
         .policy-link:hover { text-decoration: underline; }
 
-        /* NEW GAMES CSS */
-        .game-launch-btn { width: 90%; max-width: 450px; background: var(--dark); color: #fff; padding: 12px; margin-top: 15px; border-radius: 8px; border: 1px solid #444; font-weight: bold; cursor: pointer; font-size: 13px; display: block; text-align: center; }
-        #gameHub { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 30000; overflow-y: auto; padding: 20px; color: #fff; }
-        .hub-inner { max-width: 400px; margin: 0 auto; }
-        .hub-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-        .mini-game-card { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-        .mini-game-card h5 { margin: 0 0 10px 0; color: var(--primary); text-transform: uppercase; font-size: 12px; }
-        .game-canvas-alt { background: #000; border: 1px solid #222; max-width: 100%; }
-        .mem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
-        .mem-tile { aspect-ratio: 1; background: #333; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 4px; color: transparent; border: 1px solid #444; }
-        .mem-tile.flipped { background: var(--primary); color: #fff; }
+        /* GAME CENTER HORIZONTAL STYLES */
+        .game-row { display: flex; justify-content: space-between; width: 90%; max-width: 450px; margin-top: 20px; gap: 10px; }
+        .game-card { flex: 1; aspect-ratio: 1/1; background: #111; border: 1px solid #333; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .game-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .game-card span { font-size: 30px; margin-bottom: 5px; }
+        .game-card h6 { margin: 0; color: #eee; font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+
+        /* GAME POPUP OVERLAY */
+        #gameOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 40000; align-items: center; justify-content: center; padding: 20px; }
+        .game-container { background: #1a1a1a; width: 100%; max-width: 380px; padding: 20px; border-radius: 15px; border: 2px solid #333; position: relative; text-align: center; }
+        .close-game { position: absolute; top: 10px; right: 15px; color: #fff; font-size: 24px; cursor: pointer; }
+        .game-canvas-alt { background: #000; display: block; margin: 15px auto; border: 1px solid #444; width: 100%; }
+        
+        /* SNAKE & MATCH SPECIFICS */
+        .match-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
+        .match-tile { aspect-ratio: 1; background: #333; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; color: transparent; border: 1px solid #444; transition: 0.2s; }
+        .match-tile.flipped { background: var(--primary); color: #fff; }
     </style>
 </head>
 <body>
@@ -273,32 +279,40 @@
 <div class="comments-header"><span>Community Feedback</span><span style="font-weight: normal; font-size: 12px; color: #28a745;">100% Safe</span></div>
 <div id="commentList" class="comments"></div>
 
-<div class="game-launch-btn" onclick="toggleHub(true)">SECURE GAMES POP-UP [PLAY]</div>
+<div class="game-row">
+    <div class="game-card" onclick="openGame('snake')">
+        <span>🐍</span>
+        <h6>Retro Snake</h6>
+    </div>
+    <div class="game-card" onclick="openGame('click')">
+        <span>⚡</span>
+        <h6>Node Tap</h6>
+    </div>
+    <div class="game-card" onclick="openGame('match')">
+        <span>🧩</span>
+        <h6>Memory</h6>
+    </div>
+</div>
 
-<div id="gameHub">
-    <div class="hub-inner">
-        <div class="hub-header">
-            <span style="font-weight:bold; color:var(--primary); font-size:14px;">SECURE_GAMES.EXE</span>
-            <span onclick="toggleHub(false)" style="cursor:pointer; font-size:20px;">[X]</span>
+<div id="gameOverlay">
+    <div class="game-container">
+        <span class="close-game" onclick="closeGame()">&times;</span>
+        <h4 id="gameTitle" style="color:#fff; margin:0; text-transform:uppercase; font-size:14px;">Game</h4>
+        
+        <div id="snakeView" style="display:none;">
+            <canvas id="snakeCvs" width="280" height="280" class="game-canvas-alt"></canvas>
+            <p style="color:#666; font-size:10px;">Use arrow keys or swipe to move</p>
         </div>
 
-        <div class="mini-game-card">
-            <h5>1. Retro Snake</h5>
-            <canvas id="snakeCvs" width="200" height="200" class="game-canvas-alt"></canvas>
-            <p style="font-size:9px; color:#666; margin-top:5px;">USE SWIPE OR ARROWS</p>
+        <div id="clickView" style="display:none;">
+            <div id="clickScore" style="color:var(--primary); font-weight:bold; margin:20px 0;">SCORE: 0</div>
+            <div id="clickArea" style="height:200px; position:relative; background:#000; overflow:hidden; border-radius:10px;">
+                <div id="target" style="width:40px; height:40px; background:var(--success); border-radius:50%; position:absolute; cursor:pointer;"></div>
+            </div>
         </div>
 
-        <div class="mini-game-card">
-            <h5>2. Node Clicker</h5>
-            <div id="clickScore" style="font-size:11px; margin-bottom:5px;">SCORE: 0</div>
-            <div id="clickTarget" style="width:50px; height:50px; background:var(--primary); margin:0 auto; border-radius:50%; cursor:pointer; position:relative;"></div>
-            <p style="font-size:9px; color:#666; margin-top:10px;">HIT THE ACTIVE NODE</p>
-        </div>
-
-        <div class="mini-game-card">
-            <h5>3. Memory Match</h5>
-            <div id="memGame" class="mem-grid"></div>
-            <p style="font-size:9px; color:#666; margin-top:10px;">FIND MATCHING SYMBOLS</p>
+        <div id="matchView" style="display:none;">
+            <div id="matchGrid" class="match-grid"></div>
         </div>
     </div>
 </div>
@@ -574,88 +588,96 @@
         u(); setInterval(u, 15000);
     })();
 
-    // GAME HUB LOGIC
-    function toggleHub(show) {
-        document.getElementById('gameHub').style.display = show ? 'block' : 'none';
-        document.body.style.overflow = show ? 'hidden' : 'auto';
+    // NEW GAME CENTER LOGIC
+    function openGame(type) {
+        document.getElementById('gameOverlay').style.display = 'flex';
+        document.getElementById('snakeView').style.display = 'none';
+        document.getElementById('clickView').style.display = 'none';
+        document.getElementById('matchView').style.display = 'none';
+        document.body.style.overflow = 'hidden';
+
+        if(type === 'snake') {
+            document.getElementById('gameTitle').innerText = "🐍 RETRO SNAKE";
+            document.getElementById('snakeView').style.display = 'block';
+            startSnake();
+        } else if(type === 'click') {
+            document.getElementById('gameTitle').innerText = "⚡ NODE TAP";
+            document.getElementById('clickView').style.display = 'block';
+            startClicker();
+        } else if(type === 'match') {
+            document.getElementById('gameTitle').innerText = "🧩 MEMORY SHUFFLE";
+            document.getElementById('matchView').style.display = 'block';
+            startMatch();
+        }
     }
 
-    // 1. SNAKE GAME
-    (function(){
-        const cvs = document.getElementById('snakeCvs');
-        const ctx = cvs.getContext('2d');
-        let snake = [{x: 10, y: 10}];
-        let food = {x: 5, y: 5};
-        let dx = 0, dy = 0;
-        let lastMove = "";
+    function closeGame() {
+        document.getElementById('gameOverlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 
-        function update() {
-            if(dx === 0 && dy === 0) return;
-            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) { reset(); return; }
-            snake.unshift(head);
-            if(head.x === food.x && head.y === food.y) {
-                food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)};
-            } else { snake.pop(); }
-        }
+    // 1. SNAKE LOGIC
+    let snakeInterval;
+    function startSnake() {
+        const c = document.getElementById('snakeCvs'), x = c.getContext('2d');
+        let s = [{x:10, y:10}], f = {x:15, y:15}, d = 'R';
+        if(snakeInterval) clearInterval(snakeInterval);
+        
+        window.onkeydown = (e) => {
+            if(e.key === "ArrowUp" && d !== 'D') d = 'U';
+            if(e.key === "ArrowDown" && d !== 'U') d = 'D';
+            if(e.key === "ArrowLeft" && d !== 'R') d = 'L';
+            if(e.key === "ArrowRight" && d !== 'L') d = 'R';
+        };
 
-        function draw() {
-            ctx.fillStyle = "#000"; ctx.fillRect(0,0,200,200);
-            ctx.fillStyle = "#28a745";
-            snake.forEach(s => ctx.fillRect(s.x*10, s.y*10, 9, 9));
-            ctx.fillStyle = "#ff4d4d";
-            ctx.fillRect(food.x*10, food.y*10, 9, 9);
-        }
+        snakeInterval = setInterval(() => {
+            let h = {...s[0]};
+            if(d === 'U') h.y--; if(d === 'D') h.y++;
+            if(d === 'L') h.x--; if(d === 'R') h.x++;
+            
+            if(h.x<0||h.x>=20||h.y<0||h.y>=20) { s = [{x:10,y:10}]; d = 'R'; }
+            s.unshift(h);
+            if(h.x === f.x && h.y === f.y) f = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
+            else s.pop();
 
-        function reset() { snake = [{x: 10, y: 10}]; dx = 0; dy = 0; }
+            x.fillStyle = "#000"; x.fillRect(0,0,280,280);
+            x.fillStyle = "#28a745"; s.forEach(p => x.fillRect(p.x*14, p.y*14, 13, 13));
+            x.fillStyle = "#ff4d4d"; x.fillRect(f.x*14, f.y*14, 13, 13);
+        }, 120);
+    }
 
-        setInterval(() => { update(); draw(); }, 100);
-
-        window.addEventListener('keydown', e => {
-            if(e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -1; }
-            if(e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 1; }
-            if(e.key === "ArrowLeft" && dx === 0) { dx = -1; dy = 0; }
-            if(e.key === "ArrowRight" && dx === 0) { dx = 1; dy = 0; }
-        });
-    })();
-
-    // 2. CLICKER GAME
-    (function(){
+    // 2. CLICKER LOGIC
+    function startClicker() {
         let score = 0;
-        const target = document.getElementById('clickTarget');
-        const scoreEl = document.getElementById('clickScore');
-        target.addEventListener('click', () => {
-            score++;
-            scoreEl.innerText = "SCORE: " + score;
-            target.style.left = (Math.random() * 80) + "%";
-            target.style.top = (Math.random() * 30) + "px";
-        });
-    })();
+        const t = document.getElementById('target'), s = document.getElementById('clickScore');
+        t.onclick = () => {
+            score++; s.innerText = "SCORE: " + score;
+            t.style.left = Math.random()*240 + "px";
+            t.style.top = Math.random()*160 + "px";
+        };
+    }
 
-    // 3. MEMORY GAME
-    (function(){
-        const icons = ["#", "#", "&", "&", "@", "@", "!", "!", "?", "?", "%", "%", "+", "+", "*", "*"];
-        icons.sort(() => Math.random() - 0.5);
-        const grid = document.getElementById('memGame');
-        let flipped = [];
-        icons.forEach((icon, i) => {
+    // 3. MATCH LOGIC
+    function startMatch() {
+        const g = document.getElementById('matchGrid'), items = ["🚀","🚀","💎","💎","🔥","🔥","👻","👻","⭐","⭐","🍎","🍎","💣","💣","🌀","🌀"];
+        items.sort(() => Math.random() - 0.5); g.innerHTML = '';
+        let open = [];
+        items.forEach(val => {
             const tile = document.createElement('div');
-            tile.className = "mem-tile";
-            tile.innerText = icon;
+            tile.className = "match-tile"; tile.innerText = val;
             tile.onclick = () => {
-                if(flipped.length < 2 && !tile.classList.contains('flipped')) {
-                    tile.classList.add('flipped');
-                    flipped.push(tile);
-                    if(flipped.length === 2) {
-                        if(flipped[0].innerText !== flipped[1].innerText) {
-                            setTimeout(() => { flipped.forEach(t => t.classList.remove('flipped')); flipped = []; }, 500);
-                        } else { flipped = []; }
+                if(open.length < 2 && !tile.classList.contains('flipped')) {
+                    tile.classList.add('flipped'); open.push(tile);
+                    if(open.length === 2) {
+                        if(open[0].innerText !== open[1].innerText) {
+                            setTimeout(() => { open.forEach(o => o.classList.remove('flipped')); open = []; }, 500);
+                        } else open = [];
                     }
                 }
             };
-            grid.appendChild(tile);
+            g.appendChild(tile);
         });
-    })();
+    }
 </script>
    
     <style>
