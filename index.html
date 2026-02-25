@@ -296,6 +296,7 @@
         let highScore = localStorage.getItem('portalHighScore') || 0;
         let frame = 0;
         let isDead = false;
+        let showGameOver = false; // Flag to trigger game over screen
 
         function createExplosion(x, y) {
             for(let i=0; i<15; i++) {
@@ -325,14 +326,27 @@
                 ctx.fillRect(p.x, 0, p.w, p.y); ctx.fillRect(p.x, p.y + p.gap, p.w, cvs.height);
                 if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
                     isDead = true;
+                    showGameOver = true; // Trigger Game Over visual
                     createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
                     setTimeout(() => {
                         if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
-                        score = 0; portals = []; isDead = false; bird.y = 60; bird.v = 0;
-                    }, 800);
+                        score = 0; portals = []; isDead = false; showGameOver = false; bird.y = 60; bird.v = 0;
+                    }, 1200); // 1.2 second pause for the Game Over screen
                 }
                 if(!isDead && p.x + p.w < bird.x && !p.passed) { score++; p.passed = true; }
             });
+
+            // GAME OVER FUNCTIONALITY
+            if(showGameOver) {
+                ctx.fillStyle = "rgba(255, 0, 0, 0.2)"; // Slight red tint
+                ctx.fillRect(0,0,cvs.width,cvs.height);
+                ctx.fillStyle = "#ff4d4d";
+                ctx.font = "bold 16px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("GAME OVER", cvs.width/2, cvs.height/2 + 5);
+                ctx.textAlign = "left"; // Reset for other text
+            }
+
             portals = portals.filter(p => p.x > -20);
             particles.forEach((prt, i) => { prt.x += prt.vx; prt.y += prt.vy; prt.life--; ctx.fillStyle = prt.color; ctx.fillRect(prt.x, prt.y, 3, 3); });
             particles = particles.filter(prt => prt.life > 0);
