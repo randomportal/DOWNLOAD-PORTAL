@@ -65,7 +65,20 @@
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5s linear; }
+
+        /* DATABASE BOX STYLING */
+        .db-matrix { width: 100%; border: 1px solid #ddd; margin: 15px 0; border-radius: 4px; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
+        .db-row { display: flex; border-bottom: 1px solid #eee; background: #fdfdfd; }
+        .db-row:last-child { border-bottom: none; }
+        .db-cell-key { width: 40%; background: #f4f4f4; padding: 6px 10px; font-size: 10px; text-transform: uppercase; color: #777; font-weight: bold; text-align: left; border-right: 1px solid #ddd; }
+        .db-cell-val { width: 60%; padding: 6px 10px; font-size: 11px; color: #333; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
+        /* SCROLLING CONSOLE BOX */
+        .console-box { width: 100%; height: 60px; background: #0f111a; border-radius: 4px; margin-top: 15px; padding: 8px; overflow-y: hidden; text-align: left; font-family: 'Courier New', monospace; border: 1px solid #333; }
+        .console-line { font-size: 9px; line-height: 1.4; color: #8a9199; margin: 0; white-space: nowrap; }
+        .console-line span { color: #51afef; }
+        .console-line.success { color: #98be65; }
+
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
@@ -200,11 +213,34 @@
     </div>
     <h2 id="title" style="margin:0; font-size: 22px;">DATABASE</h2>
     <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#17a2b8">QUERYING DATABASE...</span><div id="finalCheck" class="css-check"></div></div>
-    <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
+    
+    <div class="db-matrix">
+        <div class="db-row">
+            <div class="db-cell-key">Object Name</div>
+            <div class="db-cell-val" id="fileName">Loading...</div>
+        </div>
+        <div class="db-row">
+            <div class="db-cell-key">System UID</div>
+            <div class="db-cell-val" id="dbID">FETCHING...</div>
+        </div>
+        <div class="db-row">
+            <div class="db-cell-key">SHA-256 Hash</div>
+            <div class="db-cell-val" id="dbHash">---</div>
+        </div>
+        <div class="db-row">
+            <div class="db-cell-key">Encryption</div>
+            <div class="db-cell-val" id="dbEnc">---</div>
+        </div>
+    </div>
+
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
     <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
+    <div class="console-box" id="consoleLogs">
+        <p class="console-line"><span>[SYS]</span> Booting transit kernel...</p>
+    </div>
+
     <div class="game-wrapper">
         <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.3</div>
         <canvas id="gameCanvas" width="400" height="120"></canvas>
@@ -316,19 +352,42 @@
               _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
 
         const _ad = _dec(_p1a) + _dec(_p1b), _ad2 = _dec(_p2a) + _dec(_p2b);
-        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp');
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp'), _con = gi('consoleLogs');
 
         const _params = new URLSearchParams(w.location.search);
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
+        function addLog(txt, cls='') {
+            const p = d.createElement('p'); p.className = 'console-line ' + cls;
+            p.innerHTML = `<span>[${new Date().toLocaleTimeString([], {hour12:false})}]</span> ${txt}`;
+            _con.appendChild(p); _con.scrollTop = _con.scrollHeight;
+        }
+
+        gi('dbID').innerText = "RN-" + Math.floor(100000 + Math.random() * 900000);
+
         setTimeout(() => { _f.style.width = "100%"; }, 50);
         let _sec = 5;
         const statusTi = setInterval(() => {
-            if(_sec > 4) { _s.innerText = "INITIALIZING DB_LINK..."; _s.style.color = "#17a2b8"; }
-            else if (_sec > 3) { _s.innerText = "QUERYING SHARDED STORAGE..."; _s.style.color = "#007bff"; }
-            else if (_sec > 2) { _s.innerText = "RETRIEVING BINARY BLOB..."; _s.style.color = "#007bff"; }
-            else if (_sec > 1) { _s.innerText = "FINALIZING INTEGRITY SCAN..."; _s.style.color = "#28a745"; }
+            if(_sec > 4) { 
+                _s.innerText = "INITIALIZING DB_LINK..."; 
+                addLog("Connecting to distributed mirror cluster...");
+            }
+            else if (_sec > 3) { 
+                _s.innerText = "QUERYING SHARDED STORAGE..."; 
+                gi('dbHash').innerText = "CALCULATING...";
+                addLog("Querying SQL Shard ID: " + Math.random().toString(16).slice(2,8));
+            }
+            else if (_sec > 2) { 
+                _s.innerText = "RETRIEVING BINARY BLOB..."; 
+                gi('dbHash').innerText = "e3b0c44298fc1c149afbf4c8996...";
+                gi('dbEnc').innerText = "AES-XTC-256";
+                addLog("Handshake success. AES-256 key decrypted.");
+            }
+            else if (_sec > 1) { 
+                _s.innerText = "FINALIZING INTEGRITY SCAN..."; 
+                addLog("File integrity scan: 100% clean.", "success");
+            }
         }, 1000);
 
         const _ti = setInterval(() => {
@@ -341,6 +400,7 @@
                 _s.innerText = "FILE LOCATED: INTEGRITY VERIFIED"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
                 _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
+                addLog("All systems nominal. Ready for transit.", "success");
             }
         }, 1000);
 
@@ -349,23 +409,16 @@
             w.open(_ad2, '_blank');
             if(_capLocked) return; _capLocked = true;
             const cBox = gi('capBox'), cTxt = gi('capTxt');
-            const originalText = cTxt.innerHTML;
             cBox.classList.add('loading');
             let cCount = 5;
             const capTimer = setInterval(() => {
                 cCount--;
-                if(cCount > 0) {
-                    cTxt.innerText = "Handshaking (" + cCount + "s)...";
-                }
+                if(cCount > 0) { cTxt.innerText = "Handshaking (" + cCount + "s)..."; }
                 else {
                     clearInterval(capTimer); 
                     cTxt.innerText = "Transit Authorized!"; 
                     cBox.className = "captcha-check done";
-                    setTimeout(() => { 
-                        _o.style.display = "none"; 
-                        d.body.style.overflow = "auto"; 
-                        _b.innerText = "START DOWNLOAD"; 
-                    }, 800);
+                    setTimeout(() => { _o.style.display = "none"; d.body.style.overflow = "auto"; _b.innerText = "START DOWNLOAD"; }, 800);
                 }
             }, 1000);
         });
