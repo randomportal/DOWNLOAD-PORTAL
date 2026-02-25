@@ -237,7 +237,7 @@
 <div class="download-card">
     <div class="icon-box"><div id="scanLine" class="scan-line"></div><svg id="mainIcon" class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
     <h2 id="title" style="margin:0; font-size: 22px;">DATABASE</h2>
-    <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#007bff">SCANNING FOR THREATS...</span><div id="finalCheck" class="css-check"></div></div>
+    <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#17a2b8">QUERYING DATABASE...</span><div id="finalCheck" class="css-check"></div></div>
     <p style="color: #666; font-size: 13px;">File: <span id="fileName" style="font-weight:bold; color:#000;">Loading...</span></p>
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
@@ -418,12 +418,12 @@
 
         let _sec = 5;
         const statusTi = setInterval(() => {
-            if(_sec > 4) _s.innerText = "SCANNING FOR THREATS...";
-            else if (_sec > 3) _s.innerText = "INITIALIZING SECURE PROTOCOL...";
-            else if (_sec > 2) _s.innerText = "ENCRYPTING NODE CONNECTION...";
-            else if (_sec > 0) _s.innerText = "FINALIZING HANDSHAKE...";
+            if(_sec > 4) _s.innerText = "QUERYING DATABASE...";
+            else if (_sec > 3) _s.innerText = "CONNECTING TO STORAGE CLUSTER...";
+            else if (_sec > 2) _s.innerText = "RETRIEVING FILE METADATA...";
+            else if (_sec > 0) _s.innerText = "FINALIZING DATABASE SYNC...";
             else clearInterval(statusTi);
-        }, 300);
+        }, 1000);
 
         const _ti = setInterval(() => {
             _sec--;
@@ -434,12 +434,12 @@
                 
                 // --- AI TERMINAL REACTION START ---
                 aiPaused = true;
-                gi('aiText').innerText = "DOWNLOAD READY: ENCRYPTION HANDSHAKE SUCCESSFUL.";
+                gi('aiText').innerText = "DOWNLOAD READY: DATABASE SYNC SUCCESSFUL.";
                 gi('aiText').style.color = "#ffffff";
                 setTimeout(() => { gi('aiText').style.color = "#00ff41"; }, 1500);
                 // --- AI TERMINAL REACTION END ---
 
-                _s.innerText = "SECURITY SCAN: CLEAN"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
+                _s.innerText = "FILE LOCATED: INTEGRITY VERIFIED"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
                 _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
             }
