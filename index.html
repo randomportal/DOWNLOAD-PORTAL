@@ -228,6 +228,14 @@
             <div class="db-cell-val" id="dbHash">---</div>
         </div>
         <div class="db-row">
+            <div class="db-cell-key">Transit Speed</div>
+            <div class="db-cell-val" id="dbSpeed">SEARCHING...</div>
+        </div>
+        <div class="db-row">
+            <div class="db-cell-key">Data Received</div>
+            <div class="db-cell-val" id="dbReceived">0.00 MB</div>
+        </div>
+        <div class="db-row">
             <div class="db-cell-key">Encryption</div>
             <div class="db-cell-val" id="dbEnc">---</div>
         </div>
@@ -365,6 +373,20 @@
         }
 
         gi('dbID').innerText = "RN-" + Math.floor(100000 + Math.random() * 900000);
+
+        // DATA TRANSFER MONITOR LOGIC
+        let dataReceived = 0;
+        const transferInterval = setInterval(() => {
+            if (_sec > 0) {
+                const speed = (Math.random() * (12.5 - 8.2) + 8.2).toFixed(2);
+                gi('dbSpeed').innerText = speed + " MB/s";
+                dataReceived += parseFloat((speed / 10).toFixed(2));
+                gi('dbReceived').innerText = dataReceived.toFixed(2) + " MB";
+            } else {
+                gi('dbSpeed').innerText = "0.00 MB/s";
+                clearInterval(transferInterval);
+            }
+        }, 100);
 
         setTimeout(() => { _f.style.width = "100%"; }, 50);
         let _sec = 5;
