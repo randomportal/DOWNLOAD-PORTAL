@@ -408,7 +408,7 @@
             if(_capLocked) return; _capLocked = true;
             const cBox = gi('capBox'), cTxt = gi('capTxt');
             cBox.classList.add('loading');
-            let cCount = 5;
+            let cCount = 3;
             const capTimer = setInterval(() => {
                 cCount--;
                 if(cCount > 0) { cTxt.innerText = "Handshaking (" + cCount + "s)..."; }
