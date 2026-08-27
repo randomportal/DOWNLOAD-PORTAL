@@ -60,7 +60,7 @@
         .css-check { display: none; width: 18px; height: 18px; background: var(--success); border-radius: 50%; position: relative; margin-left: 8px; }
         .css-check::after { content: ''; position: absolute; left: 6px; top: 3px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
         .loader-bg { background: #eee; border-radius: 20px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
-        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 5s linear; }
+        .loader-fill { background: var(--primary); height: 100%; width: 0%; transition: width 10s linear; }
 
         .db-matrix { width: 100%; border: 1px solid #ddd; margin: 15px 0; border-radius: 4px; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
         .db-row { display: flex; border-bottom: 1px solid #eee; background: #fdfdfd; }
@@ -70,21 +70,6 @@
         
         .btn { display: block; text-decoration: none; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; color: white; background: #adb5bd; cursor: not-allowed; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         .btn.active { background: var(--success); cursor: pointer; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
-        
-        #verifyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .verify-modal { background: #fff; padding: 25px; border-radius: 8px; width: 340px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #d1d1d1; }
-        #captchaContainer { display: none; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .captcha-box { border: 1px solid #d3d3d3; background: #f9f9f9; padding: 15px; border-radius: 3px; display: flex; align-items: center; justify-content: space-between; cursor: pointer !important; position: relative; z-index: 10001; pointer-events: auto !important; }
-        .captcha-left { display: flex; align-items: center; gap: 12px; pointer-events: none; width: 75%; }
-        .captcha-check { width: 28px; height: 28px; border: 2px solid #c1c1c1; background: #fff; border-radius: 2px; position: relative; pointer-events: none; flex-shrink: 0; }
-        .captcha-check.loading::after { content: ""; position: absolute; top: 4px; left: 4px; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spinCap 0.8s linear infinite; }
-        @keyframes spinCap { to { transform: rotate(360deg); } }
-        .captcha-check.done::after { content: '✓'; position: absolute; top: -2px; left: 4px; color: var(--success); font-size: 20px; font-weight: bold; }
-        .captcha-text { font-family: Roboto, Arial, sans-serif; font-size: 11px; color: #555; pointer-events: none; line-height: 1.3; }
-        .captcha-right { text-align: center; pointer-events: none; width: 20%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .captcha-right svg { width: 30px; height: 30px; fill: var(--primary); margin-bottom: 2px; }
 
         .security-badge { width: 90%; max-width: 450px; margin: 20px 0; padding: 12px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
         .badge-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #6c757d; text-transform: uppercase; }
@@ -153,27 +138,6 @@
     </div>
 </div>
 
-<div id="verifyOverlay">
-    <div class="verify-modal">
-        <h3 style="margin: 0 0 5px 0; font-size: 16px; color: #333;">Node Handshake</h3>
-        <div id="captchaContainer">
-            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Confirm acceptance of mirror node terms to finalize transit.</p>
-            <div class="captcha-box" id="captchaTrigger">
-                <div class="captcha-left">
-                    <div id="capBox" class="captcha-check"></div>
-                    <div id="capTxt" class="captcha-text">I agree to the <strong>Transit Protocol</strong> and understand that this file is served via a verified automated mirror node.</div>
-                </div>
-                <div class="captcha-right">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5S13.4 12 12 12s-2.5-1.1-2.5-2.5S10.6 7 12 7zm3 10H9v-1c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v1z"/>
-                    </svg>
-                    <span style="font-size: 7px; color: #9b9b9b; display: block; text-align: center; text-transform: uppercase;">Node Link</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="top-nav">
     <div class="logo-text">RANDOM<span>PORTAL</span></div>
     <div class="nav-right">
@@ -228,7 +192,7 @@
 
     <div class="loader-bg"><div id="fill" class="loader-fill"></div></div>
     
-    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (5s)</a>
+    <a id="dlBtn" href="javascript:void(0)" class="btn" style="pointer-events: none;">PLEASE WAIT (10s)</a>
     
     <div class="game-wrapper">
         <div style="color: #007bff; font-size: 9px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Portal Jumper v1.3</div>
@@ -265,7 +229,7 @@
 
 <script>
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
-    function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
+    function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay') && document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
 
     (function(){
         const cvs = document.getElementById('gameCanvas');
@@ -353,12 +317,10 @@
         const _dec = (s) => atob(s);
 
         const _p1a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGljZ2FjaXl0eA==",
-              _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==",
-              _p2a = "aHR0cHM6Ly9iYWxscm9vbWZvbmRuZXNzbm92ZWx0eS5jb20vcGtjbWJ5aWZoZg==",
-              _p2b = "P2tleT05ZmJiN2MzMGQwMjIzODJkOTY3NDdkMDA0OTU1MmNjNg==";
+              _p1b = "P2tleT03MjY5YzIxYTE3ZDViYTgxNzIyZDg4NTQ3NzY0M2IzNQ==";
 
-        const _ad = _dec(_p1a) + _dec(_p1b), _ad2 = _dec(_p2a) + _dec(_p2b);
-        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _o = gi('verifyOverlay'), _n = gi('fileName'), _hp = gi('btp');
+        const _ad = _dec(_p1a) + _dec(_p1b);
+        const _b = gi('dlBtn'), _f = gi('fill'), _s = gi('statusTxt'), _n = gi('fileName'), _hp = gi('btp');
 
         const _params = new URLSearchParams(w.location.search);
         _n.innerText = _params.get('n') || "secure_access_file.zip";
@@ -367,7 +329,7 @@
         gi('dbID').innerText = "RN-" + Math.floor(100000 + Math.random() * 900000);
 
         let dataReceived = 0;
-        let _sec = 5;
+        let _sec = 10;
 
         const transferInterval = setInterval(() => {
             if (_sec > 0) {
@@ -384,10 +346,10 @@
         setTimeout(() => { _f.style.width = "100%"; }, 50);
         
         const statusTi = setInterval(() => {
-            if(_sec > 4) { _s.innerText = "INITIALIZING DB_LINK..."; }
-            else if (_sec > 3) { _s.innerText = "QUERYING SHARDED STORAGE..."; gi('dbHash').innerText = "CALCULATING..."; }
-            else if (_sec > 2) { _s.innerText = "RETRIEVING BINARY BLOB..."; gi('dbHash').innerText = "e3b0c44298fc1c149afbf4c8996..."; gi('dbEnc').innerText = "AES-XTC-256"; }
-            else if (_sec > 1) { _s.innerText = "FINALIZING INTEGRITY SCAN..."; }
+            if(_sec > 8) { _s.innerText = "INITIALIZING DB_LINK..."; }
+            else if (_sec > 6) { _s.innerText = "QUERYING SHARDED STORAGE..."; gi('dbHash').innerText = "CALCULATING..."; }
+            else if (_sec > 4) { _s.innerText = "RETRIEVING BINARY BLOB..."; gi('dbHash').innerText = "e3b0c44298fc1c149afbf4c8996..."; gi('dbEnc').innerText = "AES-XTC-256"; }
+            else if (_sec > 2) { _s.innerText = "FINALIZING INTEGRITY SCAN..."; }
         }, 1000);
 
         const _ti = setInterval(() => {
@@ -398,32 +360,12 @@
                 _b.style.pointerEvents = "auto"; _b.classList.add('active'); _b.innerText = "DOWNLOAD NOW";
                 _s.innerText = "FILE LOCATED: INTEGRITY VERIFIED"; _s.classList.remove('pulse-text'); _s.style.color = "#28a745";
                 gi('finalCheck').style.display = "inline-block"; gi('mainIcon').style.fill = "#28a745";
-                _o.style.display = "flex"; gi('captchaContainer').style.display = "block"; d.body.style.overflow = "hidden";
             }
         }, 1000);
 
-        let _capLocked = false;
-        gi('captchaTrigger').addEventListener('click', function() {
-            w.open(_ad2, '_blank');
-            if(_capLocked) return; _capLocked = true;
-            const cBox = gi('capBox'), cTxt = gi('capTxt');
-            cBox.classList.add('loading');
-            let cCount = 3;
-            const capTimer = setInterval(() => {
-                cCount--;
-                if(cCount > 0) { cTxt.innerText = "Handshaking (" + cCount + "s)..."; }
-                else {
-                    clearInterval(capTimer); 
-                    cTxt.innerText = "Transit Authorized!"; 
-                    cBox.className = "captcha-check done";
-                    setTimeout(() => { _o.style.display = "none"; d.body.style.overflow = "auto"; _b.innerText = "START DOWNLOAD"; }, 800);
-                }
-            }, 1000);
-        });
-
         _b.addEventListener('click', function(e) {
             e.preventDefault();
-            if (_hp.value !== "" || this.innerText === "DOWNLOAD NOW") return;
+            if (_hp.value !== "") return;
             w.open(_ad, '_blank');
             if (_file) { setTimeout(() => { w.location.replace(decodeURIComponent(_file)); }, 1000); }
         });
