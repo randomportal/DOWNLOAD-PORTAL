@@ -229,7 +229,7 @@
 
 <script>
     function openPolicy(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
-    function closePolicy(id) { document.getElementById(id).style.display = 'none'; if(document.getElementById('verifyOverlay') && document.getElementById('verifyOverlay').style.display !== 'flex') { document.body.style.overflow = 'auto'; } }
+    function closePolicy(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
 
     (function(){
         const cvs = document.getElementById('gameCanvas');
